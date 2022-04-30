@@ -15,6 +15,16 @@ use DateTimeImmutable;
 class UserController extends AbstractController
 {
     /**
+     * @Route("/user/", name="app_user_index")
+     */
+    public function index(UserService $userService)
+    {
+        return $this->render('user/index.html.twig', [
+            'users' => $userService->findAll()
+        ]);
+    }
+
+    /**
      * @Route("/user/profile/{id<\d+>?1}", name="app_user_profile", methods={"GET"})
      */
     public function showProfile(User $user): Response
