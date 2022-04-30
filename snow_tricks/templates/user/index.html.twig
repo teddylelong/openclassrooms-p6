@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des utilisateurs</h1>
+
+    {% for user in users %}
+        <p>{{user.username}} ({{ user.roles[0] }}) - Inscrit le {{ user.createdat|date('d/m/Y à H\\hi') }} - <a href="{{ path('app_user_profile', {'id': user.id}) }}">Voir le profil</a></p>
+    {% endfor %}
+
+{% endblock %}
