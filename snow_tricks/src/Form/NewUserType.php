@@ -18,11 +18,27 @@ class NewUserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'required' => true
+                'invalid_message' => "Le nom d'utilisateur ne peut pas dépasser 45 caractères.",
+                'attr' => [
+                    'maxlength' => 45,
+                    'placeholder' => "Saisissez un nom d'utilisateur unique",
+                ]
+            ])
+
+            ->add('email', EmailType::class, [
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => "Adresse@domaine.com"
+                ]
+            ])
+
+            ->add('password', PasswordType::class, [
+                'attr' => [
+                    'placeholder' => "Saisissez un mot de passe"
+                ]
             ])
 
             ->add('roles', ChoiceType::class, [
-                'required' => true,
                 'multiple' => false,
                 'expanded' => false,
                 'choices'  => [
@@ -30,14 +46,6 @@ class NewUserType extends AbstractType
                     'Modérateur'     => 'ROLE_MODO',
                     'Administrateur' => 'ROLE_ADMIN',
                 ]
-            ])
-
-            ->add('password', PasswordType::class, [
-                'required' => true
-            ])
-
-            ->add('email', EmailType::class, [
-                'required' => true
             ])
         ;
 
