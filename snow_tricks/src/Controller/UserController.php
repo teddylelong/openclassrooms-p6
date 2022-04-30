@@ -41,6 +41,7 @@ class UserController extends AbstractController
                 )
             );
             $user->setCreatedAt(new DateTimeImmutable());
+            $user->setUpdatedAt(new DateTimeImmutable());
 
             $userService->add($user);
 
