@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ user.userIdentifier|capitalize }}{% endblock %}
+
+{% block body %}
+
+    <h1>Modifier {{ user.userIdentifier|capitalize }}</h1>
+
+    {{ form_start(newUserType) }}
+
+        {{ form_row(newUserType.username, {
+            label: "Nom d'utilisateur :"
+        }) }}
+        {{ form_row(newUserType.email, {
+            label: "Adresse email :"
+        }) }}
+        {{ form_row(newUserType.password, {
+            label: "Mot de passe :",
+            attr: {placeholder: "Laissez vide pour ne pas le modifier"}
+        }) }}
+        {{ form_row(newUserType.roles, {
+            label: "Sélectionnez son role :"
+        }) }}
+
+        <button type="submit">Enregistrer les modifications</button>
+    {{ form_end(newUserType) }}
+
+
+{% endblock %}
