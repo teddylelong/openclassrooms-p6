@@ -6,24 +6,24 @@
 
     <h1>Modifier {{ user.userIdentifier|capitalize }}</h1>
 
-    {{ form_start(newUserType) }}
+    {{ form_start(editForm) }}
 
-        {{ form_row(newUserType.username, {
+        {{ form_row(editForm.username, {
             label: "Nom d'utilisateur :"
         }) }}
-        {{ form_row(newUserType.email, {
+        {{ form_row(editForm.email, {
             label: "Adresse email :"
         }) }}
-        {{ form_row(newUserType.password, {
+        {{ form_row(editForm.password, {
             label: "Mot de passe :",
             attr: {placeholder: "Laissez vide pour ne pas le modifier"}
         }) }}
-        {{ form_row(newUserType.roles, {
+        {{ form_row(editForm.roles, {
             label: "Sélectionnez son role :"
         }) }}
 
         <button type="submit">Enregistrer les modifications</button>
-    {{ form_end(newUserType) }}
+    {{ form_end(editForm) }}
 
 
 {% endblock %}
