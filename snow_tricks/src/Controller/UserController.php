@@ -3,9 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\NewUserType;
+use App\Form\UserType;
 use App\Service\UserService;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +40,7 @@ class UserController extends AbstractController
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
     {
         $user = new User();
-        $form = $this->createForm(NewUserType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,7 +69,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
     {
-        $form = $this->createForm(NewUserType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -99,7 +98,7 @@ class UserController extends AbstractController
 
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
-            'newUserType' => $form,
+            'editForm' => $form,
         ]);
     }
 }
