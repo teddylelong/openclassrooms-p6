@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\NewUserType;
+use App\Form\UserType;
 use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +17,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/", name="app_user_index")
      */
-    public function index(UserService $userService)
+    public function index(UserService $userService): Response
     {
         return $this->render('user/index.html.twig', [
             'users' => $userService->findAll()
@@ -25,7 +25,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile/{id<\d+>?1}", name="app_user_profile", methods={"GET"})
+     * @Route("/user/profile/{id<\d+>}", name="app_user_profile", methods={"GET"})
      */
     public function showProfile(User $user): Response
     {
@@ -40,7 +40,7 @@ class UserController extends AbstractController
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
     {
         $user = new User();
-        $form = $this->createForm(NewUserType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,6 +61,44 @@ class UserController extends AbstractController
         }
         return $this->render('user/new.html.twig', [
             'newUserType' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("user/edit/{id}", name="app_user_edit")
+     */
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            /* If password field is empty, keep the old one in DB
+             * Else, hash & record the new */
+            $originalPswd = $user->getPassword();
+            $user->setPassword($originalPswd);
+
+            if (!empty($form->get('password')->getData())) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+            }
+            $user->setUpdatedAt(new DateTimeImmutable());
+
+            $userService->add($user);
+
+            $this->addFlash('success', "L'utilisateur a été mis à jour avec succès !");
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'editForm' => $form,
         ]);
     }
 }

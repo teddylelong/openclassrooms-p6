@@ -10,9 +10,11 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NewUserType extends AbstractType
+class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -47,6 +49,12 @@ class NewUserType extends AbstractType
                     'Administrateur' => 'ROLE_ADMIN',
                 ]
             ])
+
+            // the event that will handle the conditional field
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                array($this, 'onPreSetData')
+            );;
         ;
 
         // Data transformer
@@ -68,5 +76,23 @@ class NewUserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);
+    }
+
+    public function onPreSetData(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $data = $event->getData();
+
+        // Add an optional password field if is a user editing form
+        if ( $data instanceof User ) {
+            $form->add(
+                'password',
+                PasswordType::class,
+                [
+                    'required' => false,
+                    'mapped' => false
+                ]
+            );
+        }
     }
 }
