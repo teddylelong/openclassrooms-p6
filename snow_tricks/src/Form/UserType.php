@@ -13,6 +13,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserType extends AbstractType
 {
@@ -30,14 +32,26 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'attr' => [
                     'maxlength' => 255,
-                    'placeholder' => "Adresse@domaine.com"
+                    'placeholder' => "Adresse@domaine.com",
                 ]
             ])
 
             ->add('password', PasswordType::class, [
                 'attr' => [
-                    'placeholder' => "Saisissez un mot de passe"
-                ]
+                    'placeholder' => "Saisissez un mot de passe",
+                    'autocomplete' => 'new-password',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un mot de passe.',
+                    ]),
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
             ])
 
             ->add('roles', ChoiceType::class, [
