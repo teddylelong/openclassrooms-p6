@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,7 +61,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_user_new');
         }
         return $this->render('user/new.html.twig', [
-            'newUserType' => $form->createView()
+            'userType' => $form->createView()
         ]);
     }
 
@@ -101,4 +102,18 @@ class UserController extends AbstractController
             'editForm' => $form,
         ]);
     }
+
+    /**
+     * @Route("/user/delete/{id<\d+>}", name="app_user_delete", methods={"POST"})
+     */
+    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $userRepository->remove($user);
+            $this->addFlash('success', "L'utilisateur a été supprimé avec succès !");
+        }
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
+

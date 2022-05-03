@@ -12,6 +12,7 @@
             Inscrit le {{ user.createdat|date('d/m/Y à H\\hi') }} -
             <a href="{{ path('app_user_profile', {'id': user.id}) }}">Voir le profil</a> -
             <a href="{{ path('app_user_edit', {'id': user.id}) }}">Éditer</a>
+            {% include('user/_delete_form.html.twig') %}
         </p>
     {% endfor %}
 
