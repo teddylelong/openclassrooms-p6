@@ -13,6 +13,7 @@
         <li>Adresse email : {{ user.email }}</li>
         <li>Role : {{ user.roles[0] }}</li>
         <li>Inscrit le {{ user.createdAt|date('d/m/Y à H\\hi') }}</li>
+        <li>Compte vérifié : {{ user.isVerified }}</li>
     </ul>
 
     <p><a href="{{ path('app_user_index') }}">Retour</a></p>
