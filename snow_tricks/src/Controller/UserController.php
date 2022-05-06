@@ -53,8 +53,9 @@ class UserController extends AbstractController
             );
             $user->setCreatedAt(new DateTimeImmutable());
             $user->setUpdatedAt(new DateTimeImmutable());
-            $user->setIsVerified(1);
+            $user->setIsVerified(true);
 
+            // @Todo : Use Manager\UserManager + Validateurs
             $userService->add($user);
 
             $this->addFlash('success', "Le nouvel utilisateur a été créé avec succès !");
