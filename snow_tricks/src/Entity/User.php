@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//@Todo : créer constructeur pour gérer dates modifs/créa + assertAll
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur est déjà utilisé.")
@@ -31,6 +32,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * minMessage = "Le nom d'utilisateur doit faire au moins {{ limit }} caractères.",
      * maxMessage = "Le nom d'utilisateur ne peut pas dépasser {{ limit }} caractères."
      * )
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     private $username;
 
