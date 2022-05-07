@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une nouvelle figure{% endblock %}
+
+{% block body %}
+
+    <h1>Ajouter une nouvelle figure</h1>
+
+    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+
+    {{ form_start(figureType) }}
+
+        {{ form_errors(figureType) }}
+
+        {{ form_row(figureType.name, {
+            label: "Nom :"
+        }) }}
+        {{ form_row(figureType.description, {
+            label: "Décrivez et expliquez la figure :"
+        }) }}
+
+        <button type="submit">Soumettre ma figure</button>
+    {{ form_end(figureType) }}
+
+
+{% endblock %}

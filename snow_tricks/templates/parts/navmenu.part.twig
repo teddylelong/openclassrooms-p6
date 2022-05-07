@@ -1,6 +1,7 @@
-{% if app.user %}
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <p>
         <span>Bonjour, {{ app.user.username }} !</span> -
+        <a href="{{ path('app_figure_new') }}">Ajouter une figure</a> -
         <a href="{{ path('app_user_profile', {'id': app.user.id})}}">Mon profil</a> -
         <a href="{{ path('app_user_index') }}">Utilisateurs</a> -
         <a href="{{ path('app_logout') }}">Déconnexion</a>

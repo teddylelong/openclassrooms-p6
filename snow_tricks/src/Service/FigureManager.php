@@ -32,7 +32,7 @@ class FigureManager
      */
     public function findAll(): array
     {
-        $this->figureRepository->findAll()
+        $this->figureRepository->findAll();
     }
 
     /**
