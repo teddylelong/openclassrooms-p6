@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -62,6 +64,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * minMessage = "Une adresse email valide est composée d'au moins {{ limit }} caractères.",
      * maxMessage = "Une adresse email valide ne dépasse pas {{ limit }} caractères."
      * )
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $email;
 
@@ -80,10 +84,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user_id")
+     */
+    private $figures;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
+        $this->figures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +224,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Figure>
+     */
+    public function getFigures(): Collection
+    {
+        return $this->figures;
+    }
+
+    public function addFigure(Figure $figure): self
+    {
+        if (!$this->figures->contains($figure)) {
+            $this->figures[] = $figure;
+            $figure->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFigure(Figure $figure): self
+    {
+        if ($this->figures->removeElement($figure)) {
+            // set the owning side to null (unless already changed)
+            if ($figure->getUserId() === $this) {
+                $figure->setUserId(null);
+            }
+        }
 
         return $this;
     }
