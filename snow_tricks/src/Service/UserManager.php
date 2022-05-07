@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 
-class UserService
+class UserManager
 {
     private $userRepository;
 
@@ -34,5 +34,13 @@ class UserService
     public function findAll(): array
     {
         return $this->userRepository->findAll();
+    }
+
+    /**
+     * Delete a User in database
+     */
+    public function delete(User $user)
+    {
+        $this->userRepository->remove($user);
     }
 }

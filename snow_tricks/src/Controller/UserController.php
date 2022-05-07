@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use App\Service\UserService;
+use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/", name="app_user_index")
      */
-    public function index(UserService $userService): Response
+    public function index(UserManager $userService): Response
     {
         return $this->render('user/index.html.twig', [
             'users' => $userService->findAll()
@@ -38,7 +38,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/new", name="app_user_new")
      */
-    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
+    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -51,16 +51,14 @@ class UserController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-            $user->setCreatedAt(new DateTimeImmutable());
-            $user->setUpdatedAt(new DateTimeImmutable());
             $user->setIsVerified(true);
 
-            // @Todo : Use Manager\UserManager + Validateurs
-            $userService->add($user);
+            // @Todo : Validateurs
+            $userManager->add($user);
 
             $this->addFlash('success', "Le nouvel utilisateur a été créé avec succès !");
 
-            return $this->redirectToRoute('app_user_new');
+            return $this->redirectToRoute('app_user_index');
         }
         return $this->render('user/new.html.twig', [
             'userType' => $form->createView()
@@ -70,7 +68,7 @@ class UserController extends AbstractController
     /**
      * @Route("user/edit/{id}", name="app_user_edit")
      */
-    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserService $userService): Response
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -92,11 +90,13 @@ class UserController extends AbstractController
             }
             $user->setUpdatedAt(new DateTimeImmutable());
 
-            $userService->add($user);
+            $userManager->add($user);
 
             $this->addFlash('success', "L'utilisateur a été mis à jour avec succès !");
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_edit', [
+                'id' => $user->getId()
+            ]);
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -108,10 +108,10 @@ class UserController extends AbstractController
     /**
      * @Route("/user/delete/{id<\d+>}", name="app_user_delete", methods={"POST"})
      */
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, User $user, UserManager $userManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($user);
+            $userManager->delete($user);
             $this->addFlash('success', "L'utilisateur a été supprimé avec succès !");
         }
 
