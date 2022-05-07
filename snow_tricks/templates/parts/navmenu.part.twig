@@ -1,0 +1,13 @@
+{% if app.user %}
+    <p>
+        <span>Bonjour, {{ app.user.username }} !</span> -
+        <a href="{{ path('app_user_profile', {'id': app.user.id})}}">Mon profil</a> -
+        <a href="{{ path('app_user_index') }}">Utilisateurs</a> -
+        <a href="{{ path('app_logout') }}">Déconnexion</a>
+    </p>
+{% else %}
+    <p>
+        <a href="{{ path('app_register') }}">Créer un compte</a> -
+        <a href="{{ path('app_login') }}">Se connecter</a>
+    </p>
+{% endif %}
