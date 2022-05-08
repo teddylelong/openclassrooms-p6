@@ -83,4 +83,17 @@ class FigureController extends AbstractController
             'editForm' => $form
         ]);
     }
+
+    /**
+     * @Route("/figure/delete/{id<\d+>}", name="app_figure_delete", methods={"POST"})
+     */
+    public function delete(Request $request, Figure $figure, FigureManager $figureManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->request->get('_token'))) {
+            $figureManager->delete($figure);
+            $this->addFlash('success', "La figure a été supprimée avec succès");
+        }
+
+        return $this->redirectToRoute('app_figure_index');
+    }
 }
