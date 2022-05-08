@@ -1,20 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FigureController!{% endblock %}
+{% block title %}Liste des figures{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Liste des figures</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/snow_tricks/src/Controller/FigureController.php'|file_link(0) }}">src/Controller/FigureController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/snow_tricks/templates/figure/index.html.twig'|file_link(0) }}">templates/figure/index.html.twig</a></code></li>
-    </ul>
-</div>
+    {% if figures is empty %}
+
+        <h2>Désolé...</h2>
+        <p>Il n'y a pas encore de figure. Revenez un peu plus tard !</p>
+
+    {% else %}
+
+        <p>Sélectionnez une figure ci-dessous pour l'afficher :</p>
+
+        {% for figure in figures %}
+            <h2>{{ figure.name }}</h2>
+            <p>{{ figure.description }}</p>
+            <hr>
+        {% endfor %}
+
+    {% endif %}
+
 {% endblock %}

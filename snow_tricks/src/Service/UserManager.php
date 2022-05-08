@@ -21,7 +21,7 @@ class UserManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function add(User $user)
+    public function add(User $user): void
     {
         $this->userRepository->add($user);
     }
@@ -34,9 +34,9 @@ class UserManager
     /**
      * Find all Users in database
      *
-     * @return array
+     * @return array|null
      */
-    public function findAll(): array
+    public function findAll(): ?array
     {
         return $this->userRepository->findAll();
     }

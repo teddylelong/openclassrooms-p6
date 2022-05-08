@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 use App\Form\FigureType;
+use App\Repository\FigureRepository;
 use App\Service\FigureManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +16,10 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure", name="app_figure_index")
      */
-    public function index(): Response
+    public function index(FigureManager $figureManager): Response
     {
         return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
+            'figures' => $figureManager->findAll(),
         ]);
     }
 
@@ -35,7 +36,7 @@ class FigureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
-            $figure->setUserId($user);
+            $figure->setUser($user);
 
             $figureManager->add($figure);
 

@@ -20,7 +20,7 @@ class FigureManager
      * @param Figure $figure
      * @return void
      */
-    public function add(Figure $figure)
+    public function add(Figure $figure): void
     {
         $this->figureRepository->add($figure);
     }
@@ -28,11 +28,11 @@ class FigureManager
     /**
      * Find all Figures from database
      *
-     * @return array
+     * @return array|null
      */
-    public function findAll(): array
+    public function findAll(): ?array
     {
-        $this->figureRepository->findAll();
+        return $this->figureRepository->findAll();
     }
 
     /**
@@ -43,7 +43,7 @@ class FigureManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(Figure $figure)
+    public function delete(Figure $figure): void
     {
         $this->figureRepository->remove($figure);
     }

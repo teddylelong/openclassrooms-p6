@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user")
      */
     private $figures;
 
