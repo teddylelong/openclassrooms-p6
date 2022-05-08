@@ -24,7 +24,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id}", name="app_figure_show", methods={"GET"})
+     * @Route("/figure/show/{id<\d+>}", name="app_figure_show", methods={"GET"})
      */
     public function show(Figure $figure): Response
     {
@@ -56,6 +56,31 @@ class FigureController extends AbstractController
         }
         return $this->render('figure/new.html.twig', [
             'figureType' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/figure/edit/{id<\d+>}/", name="app_figure_edit")
+     */
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager)
+    {
+        $form = $this->createForm(FigureType::class, $figure);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $figure->setUpdatedAt(new \DateTimeImmutable());
+            $figure->setStatus(Figure::STATUS_PENDING);
+
+            $figureManager->add($figure);
+
+            $this->addFlash('success', "La figure a été mise à jour avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés.");
+
+            return $this->redirectToRoute('app_figure_index');
+        }
+
+        return $this->renderForm('figure/edit.html.twig', [
+            'figure' => $figure,
+            'editForm' => $form
         ]);
     }
 }

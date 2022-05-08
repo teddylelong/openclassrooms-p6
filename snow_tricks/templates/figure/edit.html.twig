@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ figure.name }}{% endblock %}
+
+{% block body %}
+
+    <h1>Modifier {{ figure.name }}</h1>
+
+    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+
+    {{ form_start(editForm) }}
+
+        {{ form_errors(editForm) }}
+
+        {{ form_row(editForm.name, {
+            label: "Nom :"
+        }) }}
+        {{ form_row(editForm.description, {
+            label: "Décrivez et expliquez la figure :"
+        }) }}
+
+        <button type="submit">Soumettre ma figure</button>
+    {{ form_end(editForm) }}
+
+
+{% endblock %}
