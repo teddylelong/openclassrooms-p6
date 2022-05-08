@@ -71,7 +71,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/email", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserManager $userManager): Response
     {
         $id = $request->get('id');
 
@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $user = $userRepository->find($id);
+        $user = $userManager->find($id);
 
         if (null === $user) {
             return $this->redirectToRoute('app_register');
@@ -102,12 +102,12 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/resend", name="app_verify_resend_email")
      */
-    public function resendVerifyEmail(Request $request, UserRepository $userRepository)
+    public function resendVerifyEmail(Request $request, UserManager $userManager)
     {
         if ($request->isMethod('POST')) {
 
             $email = $request->getSession()->get('non_verified_email');
-            $user = $userRepository->findOneBy(['email' => $email]);
+            $user = $userManager->findOneBy(['email' => $email]);
             if (!$user) {
                 throw $this->createNotFoundException("Cette adresse email n'est liée à aucun utilisateur");
             }

@@ -26,6 +26,11 @@ class UserManager
         $this->userRepository->add($user);
     }
 
+    public function find($id)
+    {
+        return $this->userRepository->find($id);
+    }
+
     /**
      * Find all Users in database
      *
@@ -34,6 +39,14 @@ class UserManager
     public function findAll(): array
     {
         return $this->userRepository->findAll();
+    }
+
+    /**
+     * Find a User by one given criteria
+     */
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        return $this->userRepository->findOneBy($criteria, $orderBy);
     }
 
     /**
