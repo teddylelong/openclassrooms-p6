@@ -18,6 +18,10 @@
         {% for figure in figures %}
             <h2>{{ figure.name }}</h2>
             <p>{{ figure.description }}</p>
+            <small>Par {{ figure.user.userIdentifier }}, le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}</small>
+            <p>
+                <a href="{{ path('app_figure_show', {'id': figure.id}) }}">Voir</a>
+            </p>
             <hr>
         {% endfor %}
 

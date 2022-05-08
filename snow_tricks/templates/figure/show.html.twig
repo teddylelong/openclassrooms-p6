@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ figure.name }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ figure.name }}</h1>
+
+    <small>Publiée par {{ figure.user.userIdentifier }} le {{ figure.createdAt|date('d/m/Y \à H\\hi')}}</small>
+
+    <p>{{ figure.description }}</p>
+
+    <p><a href="{{ path('app_figure_index') }}">Retour</a></p>
+
+{% endblock %}

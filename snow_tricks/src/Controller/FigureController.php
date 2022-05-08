@@ -24,6 +24,16 @@ class FigureController extends AbstractController
     }
 
     /**
+     * @Route("/figure/show/{id}", name="app_figure_show", methods={"GET"})
+     */
+    public function show(Figure $figure): Response
+    {
+        return $this->render('figure/show.html.twig', [
+           'figure' => $figure
+        ]);
+    }
+
+    /**
      * @Route("/figure/new", name="app_figure_new")
      */
     public function new(Request $request, FigureManager $figureManager): Response
