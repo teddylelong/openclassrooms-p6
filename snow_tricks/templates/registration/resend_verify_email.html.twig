@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation de votre compte{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="login-form bg-light mt-4 p-4">
+                <h1 class="h3 mb-3 font-weight-normal">Validation de votre compte</h1>
+
+                <p>
+                    Un email de vérification vous a été envoyé. Veuillez cliquer le lien afin de valider votre compte et
+                    profiter de toutes les fonctionnalités du site.
+                </p>
+
+                <p>
+                    Si le lien a expiré, ou si vous ne retrouvez pas le message, vous pouvez renvoyer une demande de vérification en
+                    cliquant sur le bouton ci-dessous.
+                </p>
+
+                <p>
+                    Pensez à vérifier vos courriers indésirables, il se peut que l'email se retrouve ici...
+                </p>
+
+                <form method="POST">
+                    <button type="submit" class="btn btn-primary">Envoyer une nouvelle demande de vérification</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
