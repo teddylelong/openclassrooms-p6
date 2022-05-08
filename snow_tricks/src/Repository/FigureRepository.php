@@ -36,6 +36,21 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findByStatusOrderByDate($value = Figure::STATUS_ACCEPTED)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.status = :val')
+            ->setParameter('val', $value)
+            ->orderBy('f.created_at', 'DESC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @throws ORMException
      * @throws OptimisticLockException
      */

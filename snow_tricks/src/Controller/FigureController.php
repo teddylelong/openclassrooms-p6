@@ -19,7 +19,7 @@ class FigureController extends AbstractController
     public function index(FigureManager $figureManager): Response
     {
         return $this->render('figure/index.html.twig', [
-            'figures' => $figureManager->findAll(),
+            'figures' => $figureManager->findByStatusOrderByDate(),
         ]);
     }
 

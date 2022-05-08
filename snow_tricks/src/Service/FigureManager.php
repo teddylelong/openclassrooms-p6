@@ -26,6 +26,14 @@ class FigureManager
     }
 
     /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findByStatusOrderByDate($value = Figure::STATUS_ACCEPTED)
+    {
+        return $this->figureRepository->findByStatusOrderByDate($value);
+    }
+
+    /**
      * Find all Figures from database
      *
      * @return array|null
