@@ -71,6 +71,11 @@ class Figure
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->setStatus(self::STATUS_PENDING);
@@ -151,6 +156,18 @@ class Figure
     public function setUser(?User $user_id): self
     {
         $this->user = $user_id;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

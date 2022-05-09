@@ -4,15 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 use App\Form\FigureType;
-use App\Repository\FigureRepository;
 use App\Service\FigureManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FigureController extends AbstractController
 {
+    protected $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
     /**
      * @Route("/figure", name="app_figure_index")
      */
@@ -47,6 +53,7 @@ class FigureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $figure->setUser($user);
+            $figure->setSlug(strtolower($this->slugger->slug($figure->getName())));
 
             $figureManager->add($figure);
 
@@ -69,6 +76,7 @@ class FigureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $figure->setUpdatedAt(new \DateTimeImmutable());
+            $figure->setSlug(strtolower($this->slugger->slug($figure->getName())));
             $figure->setStatus(Figure::STATUS_PENDING);
 
             $figureManager->add($figure);
