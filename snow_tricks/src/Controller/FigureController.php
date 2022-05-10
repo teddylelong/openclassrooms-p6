@@ -30,10 +30,11 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id<\d+>}", name="app_figure_show", methods={"GET"})
+     * @Route("/figure/show/{slug}", name="app_figure_show", methods={"GET"})
      */
     public function show(Figure $figure): Response
     {
+        // Todo : add restriction to slug URL param
         return $this->render('figure/show.html.twig', [
            'figure' => $figure
         ]);
@@ -67,10 +68,11 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/edit/{id<\d+>}/", name="app_figure_edit")
+     * @Route("/figure/edit/{slug}/", name="app_figure_edit")
      */
     public function edit(Request $request, Figure $figure, FigureManager $figureManager)
     {
+        // Todo : add restriction to slug URL param
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 

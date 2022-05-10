@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
  * @UniqueEntity(fields={"name"}, message="Ce nom de figure est déjà utilisé")
+ * @UniqueEntity(fields={"slug"}, message="Le slug généré est déjà utilisé en base de données. Veuillez modifier le titre de la figure.")
  */
 class Figure
 {
