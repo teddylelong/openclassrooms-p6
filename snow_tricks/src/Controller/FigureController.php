@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Form\FigureType;
 use App\Service\FigureManager;
+use App\Service\FigureService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{slug}", name="app_figure_show", methods={"GET"})
+     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show", methods={"GET"})
      */
     public function show(Figure $figure): Response
     {
@@ -54,7 +55,6 @@ class FigureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $figure->setUser($user);
-            $figure->setSlug(strtolower($this->slugger->slug($figure->getName())));
 
             $figureManager->add($figure);
 
@@ -68,7 +68,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/edit/{slug}/", name="app_figure_edit")
+     * @Route("/figure/edit/{id<\d+>}-{slug}/", name="app_figure_edit")
      */
     public function edit(Request $request, Figure $figure, FigureManager $figureManager)
     {
@@ -78,7 +78,6 @@ class FigureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $figure->setUpdatedAt(new \DateTimeImmutable());
-            $figure->setSlug(strtolower($this->slugger->slug($figure->getName())));
             $figure->setStatus(Figure::STATUS_PENDING);
 
             $figureManager->add($figure);

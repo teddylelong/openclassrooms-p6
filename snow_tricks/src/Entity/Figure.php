@@ -5,12 +5,13 @@ namespace App\Entity;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"name"}, message="Ce nom de figure est déjà utilisé")
- * @UniqueEntity(fields={"slug"}, message="Le slug généré est déjà utilisé en base de données. Veuillez modifier le titre de la figure.")
  */
 class Figure
 {
@@ -73,7 +74,7 @@ class Figure
     private $user;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
@@ -82,6 +83,13 @@ class Figure
         $this->setStatus(self::STATUS_PENDING);
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    public function computeSlug(SluggerInterface $slugger)
+    {
+        if (!$this->getSlug() || '-' === $this->getSlug()) {
+            $this->setSlug($slugger->slug($this->getName())->lower());
+        }
     }
 
     public function getId(): ?int
