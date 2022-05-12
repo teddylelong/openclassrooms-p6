@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Form\FigureType;
 use App\Service\FigureManager;
-use App\Service\FigureService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,7 +72,14 @@ class FigureController extends AbstractController
      */
     public function edit(Request $request, Figure $figure, FigureManager $figureManager)
     {
-        // Todo : add restriction to slug URL param
+        // @Todo : maybe use a Voter here ? Compare ID is great ?
+        $authorId = $figure->getUser()->getId();
+        $userId = $this->getUser()->getId();
+
+        if ( $authorId !== $userId && !$this->isGranted('ROLE_ADMIN') ) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
