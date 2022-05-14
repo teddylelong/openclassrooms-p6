@@ -86,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user")
+     * @Assert\Collection()
      */
     private $figures;
 

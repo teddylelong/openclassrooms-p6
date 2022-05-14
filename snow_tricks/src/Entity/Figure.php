@@ -44,16 +44,21 @@ class Figure
      * @ORM\Column(type="text")
      * @Assert\NotNull()
      * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime_immutable", options={"default": "CURRENT_TIMESTAMP"})
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime_immutable", options={"default": "CURRENT_TIMESTAMP"})
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $updated_at;
 
@@ -64,12 +69,16 @@ class Figure
      *     options={"default": "status.pending"},
      *     nullable=false
      * )
+     * @Assert\Type("string")
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("App\Entity\User")
      */
     private $user;
 
