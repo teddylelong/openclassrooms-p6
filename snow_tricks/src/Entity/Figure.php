@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FigureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -87,11 +89,17 @@ class Figure
      */
     private $slug;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FigureMedias::class, mappedBy="figure")
+     */
+    private $figureMedias;
+
     public function __construct()
     {
         $this->setStatus(self::STATUS_PENDING);
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
+        $this->figureMedias = new ArrayCollection();
     }
 
     public function computeSlug(SluggerInterface $slugger)
@@ -186,6 +194,36 @@ class Figure
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FigureMedias>
+     */
+    public function getFigureMedias(): Collection
+    {
+        return $this->figureMedias;
+    }
+
+    public function addFigureMedia(FigureMedias $figureMedia): self
+    {
+        if (!$this->figureMedias->contains($figureMedia)) {
+            $this->figureMedias[] = $figureMedia;
+            $figureMedia->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFigureMedia(FigureMedias $figureMedia): self
+    {
+        if ($this->figureMedias->removeElement($figureMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($figureMedia->getFigure() === $this) {
+                $figureMedia->setFigure(null);
+            }
+        }
 
         return $this;
     }
