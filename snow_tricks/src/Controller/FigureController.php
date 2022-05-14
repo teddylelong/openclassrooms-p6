@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
-use App\Entity\User;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
 use App\Service\FigureManager;
@@ -40,7 +39,7 @@ class FigureController extends AbstractController
      */
     public function new(Request $request, FigureManager $figureManager): Response
     {
-        $this->denyAccessUnlessGranted(FigureVoter::CREATE);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -93,6 +92,8 @@ class FigureController extends AbstractController
      */
     public function delete(Request $request, Figure $figure, FigureManager $figureManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->request->get('_token'))) {
             $figureManager->delete($figure);
             $this->addFlash('success', "La figure a été supprimée avec succès");

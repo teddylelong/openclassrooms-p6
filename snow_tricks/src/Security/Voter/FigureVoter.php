@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class FigureVoter extends Voter
 {
     public const EDIT = 'FIGURE_EDIT';
-    public const CREATE = 'FIGURE_CREATE';
 
     private $security;
 
@@ -25,7 +24,7 @@ class FigureVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::CREATE])
+        return in_array($attribute, [self::EDIT])
             && $subject instanceof \App\Entity\Figure;
     }
 
@@ -44,8 +43,6 @@ class FigureVoter extends Voter
         switch ($attribute) {
             case self::EDIT:
                 return $this->canEdit($figure, $user);
-            case self::CREATE:
-                return $this->canCreate();
         }
 
         return false;
@@ -57,12 +54,5 @@ class FigureVoter extends Voter
             return true;
         }
         return $user === $figure->getUser();
-    }
-
-    private function canCreate(): bool
-    {
-        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return true;
-        }
     }
 }
