@@ -92,7 +92,7 @@ class FigureController extends AbstractController
      */
     public function delete(Request $request, Figure $figure, FigureManager $figureManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(FigureVoter::DELETE, $figure);
 
         if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->request->get('_token'))) {
             $figureManager->delete($figure);

@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class FigureVoter extends Voter
 {
     public const EDIT = 'FIGURE_EDIT';
+    public const DELETE = 'FIGURE_DELETE';
 
     private $security;
 
@@ -24,7 +25,7 @@ class FigureVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT])
+        return in_array($attribute, [self::EDIT, self::DELETE])
             && $subject instanceof \App\Entity\Figure;
     }
 
@@ -43,12 +44,22 @@ class FigureVoter extends Voter
         switch ($attribute) {
             case self::EDIT:
                 return $this->canEdit($figure, $user);
+            case self::DELETE:
+                return $this->canDelete($figure, $user);
         }
 
         return false;
     }
 
     private function canEdit(Figure $figure, User $user): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        return $user === $figure->getUser();
+    }
+
+    private function canDelete(Figure $figure, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
