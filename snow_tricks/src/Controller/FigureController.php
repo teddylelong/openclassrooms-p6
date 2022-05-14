@@ -3,23 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\User;
 use App\Form\FigureType;
+use App\Security\Voter\FigureVoter;
 use App\Service\FigureManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FigureController extends AbstractController
 {
-    protected $slugger;
-
-    public function __construct(SluggerInterface $slugger)
-    {
-        $this->slugger = $slugger;
-    }
     /**
      * @Route("/figure", name="app_figure_index")
      */
@@ -46,7 +40,7 @@ class FigureController extends AbstractController
      */
     public function new(Request $request, FigureManager $figureManager): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted(FigureVoter::CREATE);
 
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -70,15 +64,9 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/edit/{id<\d+>}-{slug}/", name="app_figure_edit")
      */
-    public function edit(Request $request, Figure $figure, FigureManager $figureManager)
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager): Response
     {
-        // @Todo : maybe use a Voter here ? Compare ID is great ?
-        $authorId = $figure->getUser()->getId();
-        $userId = $this->getUser()->getId();
-
-        if ( $authorId !== $userId && !$this->isGranted('ROLE_ADMIN') ) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $figure);
 
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
