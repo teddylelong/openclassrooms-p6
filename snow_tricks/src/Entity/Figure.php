@@ -90,7 +90,7 @@ class Figure
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=FigureMedias::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=FigureMedias::class, mappedBy="figure", cascade={"persist"}, orphanRemoval=true)
      */
     private $figureMedias;
 

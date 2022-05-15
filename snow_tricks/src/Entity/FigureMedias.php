@@ -4,12 +4,15 @@ namespace App\Entity;
 
 use App\Repository\FigureMediasRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FigureMediasRepository::class)
  */
 class FigureMedias
 {
+    public const VIDEO_TYPE = 'video';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,6 +22,9 @@ class FigureMedias
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $url;
 
@@ -34,8 +40,15 @@ class FigureMedias
 
     /**
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="figureMedias")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $figure;
+
+    public function __construct()
+    {
+        $this->setType(self::VIDEO_TYPE);
+        $this->setCreatedAt(new \DateTimeImmutable());
+    }
 
     public function getId(): ?int
     {

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\FigureMedias;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
 use App\Service\FigureManager;
@@ -28,7 +29,6 @@ class FigureController extends AbstractController
      */
     public function show(Figure $figure): Response
     {
-        // Todo : add restriction to slug URL param
         return $this->render('figure/show.html.twig', [
            'figure' => $figure
         ]);
@@ -41,7 +41,11 @@ class FigureController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $media = new FigureMedias(); // Add a new blank media field
+
         $figure = new Figure();
+        $figure->addFigureMedia($media);
+
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Figure;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,6 +38,18 @@ class FigureType extends AbstractType
                         'message' => 'Veuillez saisir une description',
                     ]),
                 ],
+            ])
+
+            ->add('FigureMedias', CollectionType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => "Collez ici le code d'une vidéo embarquée"
+                ],
+                'entry_type' => FigureMediasType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ])
         ;
     }
