@@ -94,12 +94,18 @@ class Figure
      */
     private $figureMedias;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FigureImages::class, mappedBy="figure", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $figureImages;
+
     public function __construct()
     {
         $this->setStatus(self::STATUS_PENDING);
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
         $this->figureMedias = new ArrayCollection();
+        $this->figureImages = new ArrayCollection();
     }
 
     public function computeSlug(SluggerInterface $slugger)
@@ -222,6 +228,36 @@ class Figure
             // set the owning side to null (unless already changed)
             if ($figureMedia->getFigure() === $this) {
                 $figureMedia->setFigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FigureImages>
+     */
+    public function getFigureImages(): Collection
+    {
+        return $this->figureImages;
+    }
+
+    public function addFigureImage(FigureImages $figureImage): self
+    {
+        if (!$this->figureImages->contains($figureImage)) {
+            $this->figureImages[] = $figureImage;
+            $figureImage->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFigureImage(FigureImages $figureImage): self
+    {
+        if ($this->figureImages->removeElement($figureImage)) {
+            // set the owning side to null (unless already changed)
+            if ($figureImage->getFigure() === $this) {
+                $figureImage->setFigure(null);
             }
         }
 
