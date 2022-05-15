@@ -10,6 +10,18 @@
 
     <p>{{ figure.description }}</p>
 
+    <h3>Médias</h3>
+
+    {% if figure.FigureMedias|length < 1 %}
+        <p>Aucun média n'a été ajouté pour l'instant.</p>
+    {% else %}
+        {% for media in figure.FigureMedias %}
+            <div class="responsive-iframe">
+                {{ media.url }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <p><a href="{{ path('app_figure_index') }}">Retour</a></p>
 
 {% endblock %}

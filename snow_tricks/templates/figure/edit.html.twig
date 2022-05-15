@@ -4,6 +4,12 @@
 
 {% block body %}
 
+    <style>
+        ol li {
+            display: flex;
+        }
+    </style>
+
     <h1>Modifier {{ figure.name }}</h1>
 
     <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
@@ -19,8 +25,24 @@
             label: "Décrivez et expliquez la figure :"
         }) }}
 
+        <h3>Médias</h3>
+        <p>Ajoutez ou modifiez les vidéos liées à la figure</p>
+
+        <ol class="medias"
+            data-index="{{ editForm.FigureMedias|length > 0 ? editForm.FigureMedias|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(editForm.FigureMedias.vars.prototype)|e('html_attr') }}"
+        >
+            {% for media in editForm.FigureMedias %}
+                <li class="media-item">{{ form_row(media.url) }}</li>
+            {% endfor %}
+        </ol>
+
+
+        <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+
         <button type="submit">Soumettre ma figure</button>
     {{ form_end(editForm) }}
 
+    <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
 
 {% endblock %}
