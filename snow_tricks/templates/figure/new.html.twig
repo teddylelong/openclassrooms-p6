@@ -37,10 +37,16 @@
             {% endfor %}
         </ol>
 
-
         <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
 
-        <button type="submit">Soumettre ma figure</button>
+        <h3>Images</h3>
+        <p>Sélectionnez les images d'illustration pour cette figure</p>
+
+        {{ form_row(figureType.images) }}
+
+        <div style="margin-top: 20px">
+            <button type="submit">Soumettre ma figure</button>
+        </div>
     {{ form_end(figureType) }}
 
     <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>

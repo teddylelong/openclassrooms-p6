@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\FigureImages;
 use App\Entity\FigureMedias;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
 use App\Service\FigureManager;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,12 +40,11 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/new", name="app_figure_new")
      */
-    public function new(Request $request, FigureManager $figureManager): Response
+    public function new(Request $request, FigureManager $figureManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $media = new FigureMedias(); // Add a new blank media field
-
         $figure = new Figure();
         $figure->addFigureMedia($media);
 
@@ -50,6 +52,19 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('images')->getData();
+
+            foreach ($images as $image) {
+                /** @var UploadedFile $image */
+                $fileName = $fileUploader->upload($image);
+
+                $figureImage = new FigureImages();
+                $figureImage->setFilename($fileName);
+                $figureImage->setAlt('alt'); // TODO : add Alt support
+
+                $figure->addFigureImage($figureImage);
+            }
+
             $user = $this->getUser();
             $figure->setUser($user);
 

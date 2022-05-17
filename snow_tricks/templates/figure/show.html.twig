@@ -22,6 +22,18 @@
         {% endfor %}
     {% endif %}
 
+    <h3>Galerie</h3>
+
+    {% if figure.FigureImages|length < 1 %}
+        <p>Aucune image n'a été ajoutée pour l'instant.</p>
+    {% else %}
+        <div class="gallery">
+            {% for image in figure.FigureImages %}
+                <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ image.alt }}">
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <p><a href="{{ path('app_figure_index') }}">Retour</a></p>
 
 {% endblock %}

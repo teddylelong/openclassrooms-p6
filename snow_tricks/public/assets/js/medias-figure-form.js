@@ -36,8 +36,10 @@ document
         btn.addEventListener("click", addFormToCollection)
     });
 
+/*
 document
     .querySelectorAll('ol.medias li')
     .forEach((li) => {
         addTagFormDeleteLink(li)
     })
+*/
