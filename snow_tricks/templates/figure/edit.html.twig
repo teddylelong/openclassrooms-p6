@@ -39,16 +39,33 @@
 
         <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
 
-        <h3>Images</h3>
-        <p>Ajoutez de nouvelles images à cette figure en les sélectionnant ci-dessous</p>
+        <h3>Galerie</h3>
+
+        <p>Ajoutez de nouvelles images à cette figure (optionnel), ou supprimez les images existantes</p>
 
         {{ form_row(editForm.images, {
             required: false
         }) }}
 
+        {% if figure.FigureImages|length < 1 %}
+            <p>Aucune image n'a été ajoutée pour l'instant.</p>
+        {% else %}
+            <div class="gallery">
+                {% for image in figure.FigureImages %}
+                    <div>
+                        <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ image.alt }}">
+                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <button type="submit">Soumettre ma figure</button>
     {{ form_end(editForm) }}
 
-    <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
+    {% block javascript %}
+        <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
+        <script src="{{ asset('assets/js/delete-figure-image.js') }}"></script>
+    {% endblock %}
 
 {% endblock %}
