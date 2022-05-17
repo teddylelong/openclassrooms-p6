@@ -37,8 +37,14 @@
             {% endfor %}
         </ol>
 
-
         <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+
+        <h3>Images</h3>
+        <p>Ajoutez de nouvelles images à cette figure en les sélectionnant ci-dessous</p>
+
+        {{ form_row(editForm.images, {
+            required: false
+        }) }}
 
         <button type="submit">Soumettre ma figure</button>
     {{ form_end(editForm) }}

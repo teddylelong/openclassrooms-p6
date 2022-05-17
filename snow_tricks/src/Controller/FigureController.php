@@ -82,7 +82,7 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/edit/{id<\d+>}-{slug}/", name="app_figure_edit")
      */
-    public function edit(Request $request, Figure $figure, FigureManager $figureManager): Response
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted(FigureVoter::EDIT, $figure);
 
@@ -90,6 +90,18 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('images')->getData();
+
+            foreach ($images as $image) {
+                /** @var UploadedFile $image */
+                $fileName = $fileUploader->upload($image);
+
+                $figureImage = new FigureImages();
+                $figureImage->setFilename($fileName);
+                $figureImage->setAlt('alt'); // TODO : add Alt support
+
+                $figure->addFigureImage($figureImage);
+            }
             $figure->setUpdatedAt(new \DateTimeImmutable());
             $figure->setStatus(Figure::STATUS_PENDING);
 
