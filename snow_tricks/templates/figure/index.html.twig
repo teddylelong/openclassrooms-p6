@@ -17,6 +17,11 @@
 
         {% for figure in figures %}
             <h2>{{ figure.name }}</h2>
+            {% set firstImage = figure.FigureImages|first %}
+            {% if firstImage %}
+                <img src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+            {% else %}
+            {% endif %}
             <p>{{ figure.description }}</p>
             <small>Par {{ figure.user.userIdentifier }}, le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}</small>
             <p>
