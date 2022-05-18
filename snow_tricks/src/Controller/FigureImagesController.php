@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\FigureImages;
 use App\Repository\FigureImagesRepository;
+use App\Security\Voter\FigureVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,9 @@ class FigureImagesController extends AbstractController
      */
     public function delete(Request $request, FigureImages $image, FigureImagesRepository $figureImagesRepository)
     {
+        $figure = $image->getFigure();
+        $this->denyAccessUnlessGranted(FigureVoter::DELETE, $figure);
+
         $data = json_decode($request->getContent(), true);
 
         if ($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])) {
