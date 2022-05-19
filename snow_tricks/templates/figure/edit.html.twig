@@ -54,7 +54,7 @@
                 {% for image in figure.FigureImages %}
                     <div>
                         <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ image.alt }}">
-                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}" data-item="cette image">Supprimer</a>
                     </div>
                 {% endfor %}
             </div>
@@ -65,7 +65,7 @@
 
     {% block javascript %}
         <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
-        <script src="{{ asset('assets/js/delete-figure-image.js') }}"></script>
+        <script src="{{ asset('assets/js/delete-figure-media-ajax.js') }}"></script>
     {% endblock %}
 
 {% endblock %}

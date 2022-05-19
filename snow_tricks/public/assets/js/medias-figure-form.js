@@ -36,10 +36,12 @@ document
         btn.addEventListener("click", addFormToCollection)
     });
 
-/*
-document
-    .querySelectorAll('ol.medias li')
-    .forEach((li) => {
-        addTagFormDeleteLink(li)
-    })
-*/
+var matches = !!location.href.match('/figure/edit/');
+
+if (matches) {
+    document
+        .querySelectorAll('ol.medias li')
+        .forEach((li) => {
+            addTagFormDeleteLink(li)
+        })
+}

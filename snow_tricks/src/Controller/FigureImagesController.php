@@ -15,7 +15,7 @@ class FigureImagesController extends AbstractController
     /**
      * @Route("/figure/images/delete/{id<\d+>}", name="app_figure_image_delete")
      */
-    public function delete(Request $request, FigureImages $image, FigureImagesRepository $figureImagesRepository)
+    public function delete(Request $request, FigureImages $image, FigureImagesRepository $figureImagesRepository): JsonResponse
     {
         $figure = $image->getFigure();
         $this->denyAccessUnlessGranted(FigureVoter::DELETE, $figure);
