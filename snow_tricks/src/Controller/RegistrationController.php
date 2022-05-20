@@ -4,11 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\UserManager;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +54,7 @@ class RegistrationController extends AbstractController
             );
             $this->addFlash('success', "Merci pour votre inscription ! Un email contenant un lien de validation vient de vous être envoyé. Pour pouvoir vous connecter et profiter du site, veuillez valider votre compte.");
 
-            return $this->redirectToRoute('app_user_index');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -68,7 +65,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/email", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserManager $userManager): Response
     {
         $id = $request->get('id');
 
@@ -76,7 +73,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $user = $userRepository->find($id);
+        $user = $userManager->find($id);
 
         if (null === $user) {
             return $this->redirectToRoute('app_register');
@@ -93,6 +90,35 @@ class RegistrationController extends AbstractController
 
         $this->addFlash('success', 'Votre adresse email à été vérifiée avec succès. Merci ! :)');
 
-        return $this->redirectToRoute('app_user_index');
+        return $this->redirectToRoute('app_login');
+    }
+
+    /**
+     * @Route("/verify/resend", name="app_verify_resend_email")
+     */
+    public function resendVerifyEmail(Request $request, UserManager $userManager)
+    {
+        if ($request->isMethod('POST')) {
+
+            $email = $request->getSession()->get('non_verified_email');
+            $user = $userManager->findOneBy(['email' => $email]);
+            if (!$user) {
+                throw $this->createNotFoundException("Cette adresse email n'est liée à aucun utilisateur");
+            }
+
+            // generate a signed url and email it to the user
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('noreply@localhost.test', 'SnowTricks'))
+                    ->to($user->getEmail())
+                    ->subject('Bienvenue chez SnowTricks !')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
+
+            $this->addFlash('success', 'Un email contenant un nouveau lien de validation vous a été envoyé.');
+
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->render('registration/resend_verify_email.html.twig');
     }
 }

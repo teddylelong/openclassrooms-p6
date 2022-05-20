@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ figure.name }}{% endblock %}
+
+{% block body %}
+
+    <style>
+        ol li {
+            display: flex;
+        }
+    </style>
+
+    <h1>Modifier {{ figure.name }}</h1>
+
+    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+
+    {{ form_start(editForm) }}
+
+        {{ form_errors(editForm) }}
+
+        {{ form_row(editForm.name, {
+            label: "Nom :"
+        }) }}
+        {{ form_row(editForm.description, {
+            label: "Décrivez et expliquez la figure :"
+        }) }}
+
+        <h3>Médias</h3>
+        <p>Ajoutez ou modifiez les vidéos liées à la figure</p>
+
+        <ol class="medias"
+            data-index="{{ editForm.FigureMedias|length > 0 ? editForm.FigureMedias|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(editForm.FigureMedias.vars.prototype)|e('html_attr') }}"
+        >
+            {% for media in editForm.FigureMedias %}
+                <li class="media-item">{{ form_row(media.url) }}</li>
+            {% endfor %}
+        </ol>
+
+        <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+
+        <h3>Galerie</h3>
+
+        <p>Ajoutez de nouvelles images à cette figure (optionnel), ou supprimez les images existantes</p>
+
+        {{ form_row(editForm.images, {
+            required: false
+        }) }}
+
+        {% if figure.FigureImages|length < 1 %}
+            <p>Aucune image n'a été ajoutée pour l'instant.</p>
+        {% else %}
+            <div class="gallery">
+                {% for image in figure.FigureImages %}
+                    <div>
+                        <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit">Soumettre ma figure</button>
+    {{ form_end(editForm) }}
+
+    {% block javascript %}
+        <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
+        <script src="{{ asset('assets/js/delete-figure-media-ajax.js') }}"></script>
+    {% endblock %}
+
+{% endblock %}

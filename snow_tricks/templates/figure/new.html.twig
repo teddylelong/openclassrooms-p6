@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une nouvelle figure{% endblock %}
+
+{% block body %}
+
+    <style>
+        ol li {
+            display: flex;
+        }
+    </style>
+
+    <h1>Ajouter une nouvelle figure</h1>
+
+    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+
+    {{ form_start(figureType) }}
+
+        {{ form_errors(figureType) }}
+
+        {{ form_row(figureType.name, {
+            label: "Nom :"
+        }) }}
+        {{ form_row(figureType.description, {
+            label: "Décrivez et expliquez la figure :"
+        }) }}
+
+        <h3>Médias</h3>
+        <p>Sélectionnez une ou plusieurs vidéos en copiant directement l'URL ci-dessous.</p>
+
+        <ol class="medias"
+            data-index="{{ figureType.FigureMedias|length > 0 ? figureType.FigureMedias|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(figureType.FigureMedias.vars.prototype)|e('html_attr') }}"
+        >
+            {% for media in figureType.FigureMedias %}
+                <li class="media-item">{{ form_row(media.url) }}</li>
+            {% endfor %}
+        </ol>
+
+        <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+
+        <h3>Images</h3>
+        <p>Sélectionnez les images d'illustration pour cette figure</p>
+
+        {{ form_row(figureType.images) }}
+
+        <div style="margin-top: 20px">
+            <button type="submit">Soumettre ma figure</button>
+        </div>
+    {{ form_end(figureType) }}
+
+    <script src="{{ asset('assets/js/medias-figure-form.js') }}"></script>
+
+{% endblock %}

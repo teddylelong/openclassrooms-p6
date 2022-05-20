@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\UserRepository;
 use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,10 +17,10 @@ class UserController extends AbstractController
     /**
      * @Route("/user/", name="app_user_index")
      */
-    public function index(UserManager $userService): Response
+    public function index(UserManager $userManager): Response
     {
         return $this->render('user/index.html.twig', [
-            'users' => $userService->findAll()
+            'users' => $userManager->findAll()
         ]);
     }
 
@@ -53,7 +52,6 @@ class UserController extends AbstractController
             );
             $user->setIsVerified(true);
 
-            // @Todo : Validateurs
             $userManager->add($user);
 
             $this->addFlash('success', "Le nouvel utilisateur a été créé avec succès !");
@@ -111,11 +109,17 @@ class UserController extends AbstractController
     public function delete(Request $request, User $user, UserManager $userManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+
+            // Check if user are not deleting himself
+            if($user === $this->getUser()) {
+                $this->addFlash('error', "Vous ne pouvez pas vous supprimer vous-même...");
+                return $this->redirectToRoute('app_user_index');
+            }
             $userManager->delete($user);
             $this->addFlash('success', "L'utilisateur a été supprimé avec succès !");
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_index');
     }
 }
 

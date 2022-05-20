@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ figure.name }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ figure.name }}</h1>
+
+    <small>Publiée par {{ figure.user.userIdentifier }} le {{ figure.createdAt|date('d/m/Y \à H\\hi')}}</small>
+
+    <p>{{ figure.description }}</p>
+
+    <h3>Médias</h3>
+
+    {% if figure.FigureMedias|length < 1 %}
+        <p>Aucun média n'a été ajouté pour l'instant.</p>
+    {% else %}
+        {% for media in figure.FigureMedias %}
+            <div class="responsive-iframe">
+                {{ media.url|raw }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h3>Galerie</h3>
+
+    {% if figure.FigureImages|length < 1 %}
+        <p>Aucune image n'a été ajoutée pour l'instant.</p>
+    {% else %}
+        <div class="gallery">
+            {% for image in figure.FigureImages %}
+                <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <p><a href="{{ path('app_figure_index') }}">Retour</a></p>
+
+{% endblock %}

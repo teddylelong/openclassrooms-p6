@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des figures{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des figures</h1>
+
+    {% if figures is empty %}
+
+        <h2>Désolé...</h2>
+        <p>Il n'y a pas encore de figure. Revenez un peu plus tard !</p>
+
+    {% else %}
+
+        <p>Sélectionnez une figure ci-dessous pour l'afficher :</p>
+
+        {% for figure in figures %}
+            <h2>{{ figure.name }}</h2>
+            {% set firstImage = figure.FigureImages|first %}
+            {% if firstImage %}
+                <img src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+            {% else %}
+            {% endif %}
+            <p>{{ figure.description }}</p>
+            <small>Par {{ figure.user.userIdentifier }}, le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}</small>
+            <p>
+                <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">Voir</a> -
+                <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}">Éditer</a>
+                {% include('figure/_delete_form.html.twig') %}
+            </p>
+            <hr>
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
