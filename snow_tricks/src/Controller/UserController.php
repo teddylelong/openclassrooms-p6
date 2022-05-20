@@ -52,7 +52,6 @@ class UserController extends AbstractController
             );
             $user->setIsVerified(true);
 
-            // @Todo : Validateurs
             $userManager->add($user);
 
             $this->addFlash('success', "Le nouvel utilisateur a été créé avec succès !");

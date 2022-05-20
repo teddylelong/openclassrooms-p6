@@ -22,9 +22,12 @@ class FigureMedias
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Type("string")
      * @Assert\NotNull()
      * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^<iframe[^>]*>\s*<\/iframe>/",
+     *     message="Copiez/collez le code d'une vidéo embarquée. Ce code commence par <iframe>."
+     * )
      */
     private $url;
 

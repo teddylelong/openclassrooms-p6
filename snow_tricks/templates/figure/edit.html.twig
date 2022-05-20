@@ -53,8 +53,8 @@
             <div class="gallery">
                 {% for image in figure.FigureImages %}
                     <div>
-                        <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ image.alt }}">
-                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}" data-item="cette image">Supprimer</a>
+                        <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
                     </div>
                 {% endfor %}
             </div>

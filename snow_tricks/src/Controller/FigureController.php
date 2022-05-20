@@ -60,7 +60,6 @@ class FigureController extends AbstractController
 
                 $figureImage = new FigureImages();
                 $figureImage->setFilename($fileName);
-                $figureImage->setAlt('alt'); // TODO : add Alt support
 
                 $figure->addFigureImage($figureImage);
             }
@@ -98,7 +97,6 @@ class FigureController extends AbstractController
 
                 $figureImage = new FigureImages();
                 $figureImage->setFilename($fileName);
-                $figureImage->setAlt('alt'); // TODO : add Alt support
 
                 $figure->addFigureImage($figureImage);
             }
@@ -112,9 +110,9 @@ class FigureController extends AbstractController
             return $this->redirectToRoute('app_figure_index');
         }
 
-        return $this->renderForm('figure/edit.html.twig', [
+        return $this->render('figure/edit.html.twig', [
             'figure' => $figure,
-            'editForm' => $form
+            'editForm' => $form->createView()
         ]);
     }
 

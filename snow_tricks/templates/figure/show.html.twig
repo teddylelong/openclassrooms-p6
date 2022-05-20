@@ -17,7 +17,7 @@
     {% else %}
         {% for media in figure.FigureMedias %}
             <div class="responsive-iframe">
-                {{ media.url }}
+                {{ media.url|raw }}
             </div>
         {% endfor %}
     {% endif %}
@@ -29,7 +29,7 @@
     {% else %}
         <div class="gallery">
             {% for image in figure.FigureImages %}
-                <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ image.alt }}">
+                <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
             {% endfor %}
         </div>
     {% endif %}

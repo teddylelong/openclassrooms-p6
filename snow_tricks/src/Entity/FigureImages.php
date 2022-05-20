@@ -24,12 +24,6 @@ class FigureImages
     private $filename;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Type("text")
-     */
-    private $alt;
-
-    /**
      * @ORM\Column(type="datetime_immutable", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $created_at;
