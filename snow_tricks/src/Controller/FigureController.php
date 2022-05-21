@@ -118,7 +118,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id<\d+>}-{slug})", name="app_figures_by_category")
+     * @Route("/category/{id<\d+>}-{slug}", name="app_figures_by_category")
      */
     public function indexByCategory(Request $request, Category $category, FigureManager $figureManager): Response
     {
