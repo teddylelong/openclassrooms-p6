@@ -51,6 +51,20 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findAllByCategoryOrderByDate($categoryId)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.category = :cat')
+            ->orderBy('f.created_at', 'DESC')
+            ->setParameter('cat', $categoryId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
      * @throws ORMException
      * @throws OptimisticLockException
      */

@@ -33,6 +33,11 @@ class FigureManager
         return $this->figureRepository->findByStatusOrderByDate($value);
     }
 
+    public function findAllByCategoryOrderByDate($categoryId)
+    {
+        return $this->figureRepository->findAllByCategoryOrderByDate($categoryId);
+    }
+
     /**
      * Find all Figures from database
      *
