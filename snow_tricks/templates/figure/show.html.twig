@@ -6,7 +6,7 @@
 
     <h1>{{ figure.name }}</h1>
 
-    <small>Publiée par {{ figure.user.userIdentifier }} le {{ figure.createdAt|date('d/m/Y \à H\\hi')}}</small>
+    <small>Publiée par {{ figure.user.userIdentifier|default("Anonyme") }} dans la catégorie {{ figure.category.name|default("Non-classé") }} le {{ figure.createdAt|date('d/m/Y \à H\\hi')}}</small>
 
     <p>{{ figure.description }}</p>
 
