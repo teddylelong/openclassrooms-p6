@@ -34,7 +34,7 @@ class Figure
      * min = 2,
      * max = 45,
      * minMessage = "Le nom doit faire au moins {{ limit }} caractères.",
-     * maxMessage = "Le nom  ne peut pas dépasser {{ limit }} caractères."
+     * maxMessage = "Le nom ne peut pas dépasser {{ limit }} caractères."
      * )
      * @Assert\NotNull()
      * @Assert\NotBlank()
@@ -98,6 +98,11 @@ class Figure
      * @ORM\OneToMany(targetEntity=FigureImages::class, mappedBy="figure", cascade={"persist"}, orphanRemoval=true)
      */
     private $figureImages;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="figure")
+     */
+    private $category;
 
     public function __construct()
     {
@@ -260,6 +265,18 @@ class Figure
                 $figureImage->setFigure(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
