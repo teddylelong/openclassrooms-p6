@@ -11,7 +11,7 @@
         {% for category in categories %}
             <div class="mb-2">
                 <span class="fw-bold">{{ category.name|capitalize }}</span> -
-                <a class="link-primary" href="#">Modifier</a> -
+                <a class="link-primary" href="{{ path('app_category_edit', {id: category.id}) }}">Modifier</a> -
                 <a class="link-danger" href="#">Supprimer</a>
             </div>
         {% endfor %}

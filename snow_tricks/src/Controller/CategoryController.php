@@ -47,4 +47,29 @@ class CategoryController extends AbstractController
             'categoryType' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/category/edit/{id<\d+>}", name="app_category_edit")
+     */
+    public function edit(Request $request, Category $category, CategoryManager $categoryManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $category->setUpdatedAt(new \DateTimeImmutable());
+
+            $categoryManager->add($category);
+
+            $this->addFlash('success', "La catégorie {$category->getName()} a été mise à jour avec succès !");
+
+            return $this->redirectToRoute('app_category');
+        }
+        return $this->render('category/edit.html.twig', [
+            'categoryType' => $form->createView(),
+            'category' => $category,
+        ]);
+    }
 }
