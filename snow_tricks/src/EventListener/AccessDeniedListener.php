@@ -37,7 +37,7 @@ class AccessDeniedListener implements EventSubscriberInterface
 
         // ... perform some action (e.g. logging)
         $request = $event->getRequest();
-        $request->getSession()->getFlashBag()->add('error', "Vous n'avez pas les droits nécessaires pour utiliser cette fonctionnalité.");
+        $request->getSession()->getFlashBag()->add('danger', "Vous n'avez pas les droits nécessaires pour utiliser cette fonctionnalité.");
 
         // optionally set the custom response
         $response = new RedirectResponse(
