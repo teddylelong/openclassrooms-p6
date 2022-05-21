@@ -72,4 +72,19 @@ class CategoryController extends AbstractController
             'category' => $category,
         ]);
     }
+
+    /**
+     * @Route("/category/delete/{id<\d+>}", name="app_category_delete", methods={"POST"})
+     */
+    public function delete(Request $request, Category $category, CategoryManager $categoryManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+            $categoryManager->delete($category);
+            $this->addFlash('success', "La catégorie {$category->getName()} a été supprimée avec succès");
+        }
+
+        return $this->redirectToRoute('app_category');
+    }
 }
