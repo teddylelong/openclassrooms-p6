@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ category.name }}{% endblock %}
+{% block title %}{{ category.name|capitalize }}{% endblock %}
 
 {% block body %}
-    <h1>{{ category.name }}</h1>
+    <h1>{{ category.name|capitalize }}</h1>
 
     {{ form_start(categoryType) }}
         {{ form_row(categoryType.name)}}
