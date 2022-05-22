@@ -1,20 +1,80 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Dashboard! ✅</h1>
+    <h1>Dashboard</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/snow_tricks/src/Controller/AdminController.php'|file_link(0) }}">src/Controller/AdminController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/snow_tricks/templates/admin/index.html.twig'|file_link(0) }}">templates/admin/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="alert alert-primary">Bienvenue, {{ app.user.userIdentifier}} !</div>
+
+    <nav class="row row-cols-1 row-cols-md-2 g-2">
+
+        <div class="col">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h2 class="card-title h5">Gestion des figures</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Créez une nouvelle figure ou gérez les figures existantes</h3>
+                    <p class="card-text d-grid gap-2">
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_figure_new') }}">
+                            <i class="bi bi-pencil"></i> Créer une figure
+                        </a>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_figure_index') }}">
+                            <i class="bi bi-file-earmark-text"></i> Gérer les figures
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h2 class="card-title h5">Gestion des utilisateurs</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Ajoutez et gérer les utilisateurs du site-web</h3>
+                    <p class="card-text d-grid gap-2">
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_new') }}">
+                            <i class="bi bi-person-plus"></i> Créer un utilisateur
+                        </a>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_index') }}">
+                            <i class="bi bi-people"></i> Gérer les utilisateurs
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h2 class="card-title h5">Gestion de l'espace de discussion</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Modérez les commentaires déposés sur les figures du site</h3>
+                    <p class="card-text d-grid gap-2">
+                        <a class="btn btn-outline-primary text-start" href="/comment/indexbyapprovement/">
+                            <i class="bi bi-chat-left-text"></i> Commentaires en attente de modération <span class="badge bg-danger">2</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0">
+                <div class="card-body">
+                    <h2 class="card-title h5">Site web</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Retournez sur le site ou déconnectez-vous</h3>
+                    <p class="card-text d-grid gap-2">
+                        <a class="btn btn-outline-primary text-start" href="/">
+                            <i class="bi bi-house-door"></i> Retour sur le site
+                        </a>
+                        <a class="btn btn-outline-danger text-start" href="/logout/">
+                            <i class="bi bi-power"></i> Déconnexion
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Security\Voter\AdminVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +16,9 @@ class LoginController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
+            if ($this->isGranted(AdminVoter::VIEW, $this->getUser())) {
+                return $this->redirectToRoute('app_admin');
+            }
              return $this->redirectToRoute('app_user_profile', [
                  'id' => $this->getUser()->getId()
              ]);
