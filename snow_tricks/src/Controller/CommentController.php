@@ -33,7 +33,7 @@ class CommentController extends AbstractController
      */
     public function updateStatus(Comment $comment, CommentManager $commentManager, $status): Response
     {
-        $this->denyAccessUnlessGranted(CommentVoter::DELETE, $comment);
+        $this->denyAccessUnlessGranted(CommentVoter::UPDATE, $comment);
 
         // Todo : à valider
         switch ($status) {

@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class CommentVoter extends Voter
 {
     public const DELETE = 'COMMENT_DELETE';
+    public const UPDATE = 'COMMENT_UPDATE';
 
     public function __construct(Security $security)
     {
@@ -22,7 +23,7 @@ class CommentVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::DELETE])
+        return in_array($attribute, [self::DELETE, self::UPDATE])
             && $subject instanceof \App\Entity\Comment;
     }
 
@@ -40,12 +41,26 @@ class CommentVoter extends Voter
             case self::DELETE:
                 return $this->canDelete($subject, $user);
                 break;
+            case self::UPDATE:
+                return $this->canUpdate($subject, $user);
+                break;
         }
 
         return false;
     }
 
     private function canDelete(Comment $comment, User $user): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        if ($this->security->isGranted('ROLE_MODO')) {
+            return true;
+        }
+        return false;
+    }
+
+    private function canUpdate(Comment $comment, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
