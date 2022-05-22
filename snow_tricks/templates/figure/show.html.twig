@@ -48,6 +48,15 @@
     <!-- Comments -->
     <h3>Commentaires</h3>
 
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {{ form_start(commentForm) }}
+            {{ form_row(commentForm.content) }}
+            <button class="btn btn-primary" type="submit">Déposer mon commentaire</button>
+        {{ form_end(commentForm)}}
+    {% else %}
+        <p>Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</p>
+    {% endif%}
+
     {% if comments|length < 1 %}
         <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
     {% else %}

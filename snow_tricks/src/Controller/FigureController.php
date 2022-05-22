@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\FigureImages;
 use App\Entity\FigureMedias;
+use App\Form\CommentType;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
 use App\Service\CommentManager;
@@ -30,13 +32,35 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show", methods={"GET"})
+     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
      */
-    public function show(Figure $figure, CommentManager $commentManager): Response
+    public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
     {
+        $commentForm = $this->createForm(CommentType::class);
+        $commentForm->handleRequest($request);
+        $comment = new Comment();
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+            $comment->setContent($commentForm->getData()->getContent());
+            $comment->setUser($this->getUser());
+            $comment->setFigure($figure);
+
+            $commentManager->add($comment);
+
+            $this->addFlash('success', "Votre commentaire a bien été enregistré. Il sera vérifié par un membre de l'équipe d'ici deux jours ouvrés. Merci ! :)");
+
+            return $this->redirectToRoute('app_figure_show', [
+                'id' => $figure->getId(),
+                'slug' => $figure->getSlug(),
+            ]);
+        }
+
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
             'comments' => $commentManager->findByFigureAndStatus($figure),
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 
