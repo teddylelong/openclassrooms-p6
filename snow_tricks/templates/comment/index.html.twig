@@ -38,10 +38,10 @@
                                 <tbody>
                                 {% for comment in comments|filter(comment => comment.status == STATUS_PENDING) %}
                                     <tr>
-                                        <td>{{ comment.user.userIdentifier }}</td>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: comment.user.id}) }}">{{ comment.user.userIdentifier }}</a></td>
                                         <td>{{ comment.content }}</td>
                                         <td>{{ comment.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
-                                        <td><a href="#">{{ comment.figure.name }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: comment.figure.id, slug: comment.figure.slug}) }}">{{ comment.figure.name }}</a></td>
                                         <td class="text-center"><a class="link-success" href="{{ path('app_comment_update_status', {id: comment.id, status: 'accept'}) }}"><i class="bi bi-hand-thumbs-up"></i> Approuver</a></td>
                                         <td class="text-center"><a class="link-danger" href="{{ path('app_comment_update_status', {id: comment.id, status: 'refuse'}) }}"><i class="bi bi-hand-thumbs-down"></i> Désapprouver</a></td>
                                     </tr>
@@ -80,10 +80,10 @@
                                 <tbody>
                                 {% for comment in comments|filter(comment => comment.status == STATUS_ACCEPTED) %}
                                     <tr>
-                                        <td>{{ comment.user.userIdentifier }}</td>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: comment.user.id}) }}">{{ comment.user.userIdentifier }}</a></td>
                                         <td>{{ comment.content }}</td>
                                         <td>{{ comment.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
-                                        <td><a href="#">{{ comment.figure.name }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: comment.figure.id, slug: comment.figure.slug}) }}">{{ comment.figure.name }}</a></td>
                                         <td class="text-center"><a class="link-primary" href="{{ path('app_comment_update_status', {id: comment.id, status: 'pending'}) }}"><i class="bi bi-clock"></i> Remettre en file d'attente</a></td>
                                         <td class="text-center"><a class="link-danger" href="{{ path('app_comment_update_status', {id: comment.id, status: 'refuse'}) }}"><i class="bi bi-hand-thumbs-down"></i> Désapprouver</a></td>
                                     </tr>
@@ -122,10 +122,10 @@
                                 <tbody>
                                 {% for comment in comments|filter(comment => comment.status == STATUS_REJECTED) %}
                                     <tr>
-                                        <td>{{ comment.user.userIdentifier }}</td>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: comment.user.id}) }}">{{ comment.user.userIdentifier }}</a></td>
                                         <td>{{ comment.content }}</td>
                                         <td>{{ comment.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
-                                        <td><a href="#">{{ comment.figure.name }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: comment.figure.id, slug: comment.figure.slug}) }}">{{ comment.figure.name }}</a></td>
                                         <td class="text-center"><a class="link-primary" href="{{ path('app_comment_update_status', {id: comment.id, status: 'pending'}) }}"><i class="bi bi-clock"></i> Remettre en file d'attente</a></td>
                                         <td>{% include 'comment/_delete_form.html.twig' %}</td>
                                     </tr>
