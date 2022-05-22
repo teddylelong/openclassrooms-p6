@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Figure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -34,6 +35,24 @@ class CommentRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    /**
+     * @return Comment[] Returns an array of Comment objects
+     */
+    public function findByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.figure = :figure')
+            ->andWhere('c.status = :status')
+            ->setParameter('figure', $figure)
+            ->setParameter('status', $status)
+            ->orderBy('c.created_at', 'DESC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     /**
      * @throws ORMException

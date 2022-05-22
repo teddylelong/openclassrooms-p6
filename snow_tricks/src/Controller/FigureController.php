@@ -8,6 +8,7 @@ use App\Entity\FigureImages;
 use App\Entity\FigureMedias;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
+use App\Service\CommentManager;
 use App\Service\FigureManager;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,10 +32,11 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show", methods={"GET"})
      */
-    public function show(Figure $figure): Response
+    public function show(Figure $figure, CommentManager $commentManager): Response
     {
         return $this->render('figure/show.html.twig', [
-           'figure' => $figure
+            'figure' => $figure,
+            'comments' => $commentManager->findByFigureAndStatus($figure),
         ]);
     }
 
