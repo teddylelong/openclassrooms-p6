@@ -32,6 +32,16 @@ class FigureController extends AbstractController
     }
 
     /**
+     * @Route("/admin/figures/approvement/", name="app_figure_approvement")
+     */
+    public function indexApprovement(FigureManager $figureManager): Response
+    {
+        return $this->render('figure/approvement.html.twig', [
+            'figures' => $figureManager->findAllOrderByDate(),
+        ]);
+    }
+
+    /**
      * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
      */
     public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
@@ -148,6 +158,40 @@ class FigureController extends AbstractController
             'figure' => $figure,
             'editForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/admin/figure/status/{id<\d+>}/{status}", name="app_figure_update_status")
+     */
+    public function updateStatus(Figure $figure, FigureManager $figureManager, $status): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::UPDATE_STATUS, $figure);
+
+        // @Todo : à valider !
+        switch ($status) {
+            case 'accept':
+                $figure->setStatus(Figure::STATUS_ACCEPTED);
+                $label = "validée";
+                break;
+
+            case 'refuse':
+                $figure->setStatus(Figure::STATUS_REJECTED);
+                $label = "refusée";
+                break;
+
+            case 'pending':
+                $figure->setStatus(Figure::STATUS_PENDING);
+                $label = "mise en attente";
+                break;
+
+            default:
+                $this->addFlash('danger', "Le statut de la figure n'est pas valide.");
+                return $this->redirectToRoute('app_figure_approvement');
+        }
+        $figureManager->add($figure);
+        $this->addFlash('success', "La figure a bien été $label.");
+
+        return $this->redirectToRoute('app_figure_approvement');
     }
 
     /**

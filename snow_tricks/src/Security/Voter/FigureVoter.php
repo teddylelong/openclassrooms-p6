@@ -13,6 +13,7 @@ class FigureVoter extends Voter
 {
     public const EDIT = 'FIGURE_EDIT';
     public const DELETE = 'FIGURE_DELETE';
+    public const UPDATE_STATUS = 'FIGURE_UPDATE';
 
     private $security;
 
@@ -25,7 +26,7 @@ class FigureVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::UPDATE_STATUS])
             && $subject instanceof \App\Entity\Figure;
     }
 
@@ -46,6 +47,8 @@ class FigureVoter extends Voter
                 return $this->canEdit($figure, $user);
             case self::DELETE:
                 return $this->canDelete($figure, $user);
+            case self::UPDATE_STATUS:
+                return $this->canUpdate($figure, $user);
         }
 
         return false;
@@ -65,5 +68,16 @@ class FigureVoter extends Voter
             return true;
         }
         return $user === $figure->getUser();
+    }
+
+    private function canUpdate(Figure $figure, User $user): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        if ($this->security->isGranted('ROLE_MODO')) {
+            return true;
+        }
+
     }
 }

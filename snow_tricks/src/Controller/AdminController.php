@@ -19,9 +19,11 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted(AdminVoter::VIEW, $this->getUser());
 
         $countPendingComments = $adminService->countPendingComments();
+        $countPendingFigures  = $adminService->countPendingFigures();
 
         return $this->render('admin/dashboard.html.twig', [
             'countPendingComments' => $countPendingComments,
+            'countPendingFigures' => $countPendingFigures,
         ]);
     }
 }

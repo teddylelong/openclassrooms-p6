@@ -22,6 +22,9 @@
                         <a class="btn btn-outline-primary text-start" href="{{ path('app_figure_index') }}">
                             <i class="bi bi-file-earmark-text"></i> Gérer les figures
                         </a>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_figure_approvement') }}">
+                            <i class="bi bi-file-earmark-text"></i> Figures en attente de modération {% if countPendingFigures > 0 %}<span class="badge bg-danger">{{ countPendingFigures }}</span>{% endif %}
+                        </a>
                     </p>
                 </div>
             </div>
