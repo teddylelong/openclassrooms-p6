@@ -112,7 +112,7 @@ class UserController extends AbstractController
 
             // Check if user are not deleting himself
             if($user === $this->getUser()) {
-                $this->addFlash('error', "Vous ne pouvez pas vous supprimer vous-même...");
+                $this->addFlash('danger', "Vous ne pouvez pas vous supprimer vous-même...");
                 return $this->redirectToRoute('app_user_index');
             }
             $userManager->delete($user);

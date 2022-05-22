@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Figure;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -39,6 +41,14 @@ class FigureType extends AbstractType
                         'message' => 'Veuillez saisir une description',
                     ]),
                 ],
+            ])
+
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'label' => "Sélectionnez une catégorie :",
+                'choice_label' => function ($categorie) {
+                    return $categorie->getName();
+                }
             ])
 
             ->add('FigureMedias', CollectionType::class, [

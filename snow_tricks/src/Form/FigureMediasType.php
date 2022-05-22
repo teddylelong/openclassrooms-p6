@@ -18,8 +18,12 @@ class FigureMediasType extends AbstractType
             ->add('url',  TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => "Collez ici le code d'une vidéo embarquée (embed)",
+                    'placeholder' => "Collez ici le code d'une vidéo embarquée (iframe)",
                 ],
+                'constraints' => new Regex([
+                    'pattern' => "/^<iframe[^>]*>\s*<\/iframe>/",
+                    'message' => "Le code saisi n'est pas valide. Copiez/collez le code d'une vidéo embarquée, ce code doit commencer par <iframe>",
+                ])
             ])
         ;
     }

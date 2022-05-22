@@ -9,7 +9,7 @@ class FigureImagesManager
 {
     private $figureImagesRepository;
 
-    public function __construct(FigureImagesRepository$figureImagesRepository)
+    public function __construct(FigureImagesRepository $figureImagesRepository)
     {
         $this->figureImagesRepository = $figureImagesRepository;
     }

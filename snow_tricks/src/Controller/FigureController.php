@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Figure;
 use App\Entity\FigureImages;
 use App\Entity\FigureMedias;
@@ -113,6 +114,17 @@ class FigureController extends AbstractController
         return $this->render('figure/edit.html.twig', [
             'figure' => $figure,
             'editForm' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/category/{id<\d+>}-{slug}", name="app_figures_by_category")
+     */
+    public function indexByCategory(Request $request, Category $category, FigureManager $figureManager): Response
+    {
+        return $this->render('figure/index_by_category.html.twig', [
+            'category' => $category,
+            'figures' => $figureManager->findAllByCategoryOrderByDate($category->getId()),
         ]);
     }
 

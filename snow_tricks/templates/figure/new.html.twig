@@ -21,12 +21,15 @@
         {{ form_row(figureType.name, {
             label: "Nom :"
         }) }}
+
         {{ form_row(figureType.description, {
             label: "Décrivez et expliquez la figure :"
         }) }}
 
+        {{ form_row(figureType.category) }}
+
         <h3>Médias</h3>
-        <p>Sélectionnez une ou plusieurs vidéos en copiant directement l'URL ci-dessous.</p>
+        <p>Sélectionnez une ou plusieurs vidéos en copiant directement le code embarqué (embed)</p>
 
         <ol class="medias"
             data-index="{{ figureType.FigureMedias|length > 0 ? figureType.FigureMedias|last.vars.name + 1 : 0 }}"

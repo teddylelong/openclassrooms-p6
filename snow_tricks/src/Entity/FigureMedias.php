@@ -26,7 +26,7 @@ class FigureMedias
      * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^<iframe[^>]*>\s*<\/iframe>/",
-     *     message="Copiez/collez le code d'une vidéo embarquée. Ce code commence par <iframe>."
+     *     message="Le code saisi n'est pas valide. Copiez/collez le code d'une vidéo embarquée, ce code doit commencer par <iframe>"
      * )
      */
     private $url;

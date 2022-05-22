@@ -6,7 +6,16 @@
 
     <h1>{{ figure.name }}</h1>
 
-    <small>Publiée par {{ figure.user.userIdentifier }} le {{ figure.createdAt|date('d/m/Y \à H\\hi')}}</small>
+    <small>
+        Par {{ figure.user.userIdentifier|default("Anonyme")|capitalize }}, dans la catégorie
+
+        {% if figure.category is not null %}
+            <a href="{{ path('app_figures_by_category', {id: figure.category.id, slug: figure.category.slug}) }}">{{ figure.category.name|capitalize }}</a>
+        {% else %}
+            Non-classé
+        {%endif%}
+
+        le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}</small>
 
     <p>{{ figure.description }}</p>
 

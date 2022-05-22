@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des figures{% endblock %}
+{% block title %}Figures dans la catégorie {{ category.name|capitalize }}{% endblock %}
 
 {% block body %}
 
-    <h1>Liste des figures</h1>
+    <h1>Figures dans la catégorie {{ category.name|capitalize }}</h1>
 
     {% if figures is empty %}
 
         <h2>Désolé...</h2>
-        <p>Il n'y a pas encore de figure. Revenez un peu plus tard !</p>
+        <p>Il n'y a pas encore de figure dans cette catégorie. Revenez un peu plus tard !</p>
 
     {% else %}
 
