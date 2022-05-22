@@ -30,14 +30,11 @@
         <div class="col">
             <div class="card h-100 border-0">
                 <div class="card-body">
-                    <h2 class="card-title h5">Gestion des utilisateurs</h2>
-                    <h3 class="card-subtitle mb-2 text-muted h6">Ajoutez et gérer les utilisateurs du site-web</h3>
+                    <h2 class="card-title h5">Gestion de l'espace de discussion</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Modérez les commentaires déposés sur les figures du site</h3>
                     <p class="card-text d-grid gap-2">
-                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_new') }}">
-                            <i class="bi bi-person-plus"></i> Créer un utilisateur
-                        </a>
-                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_index') }}">
-                            <i class="bi bi-people"></i> Gérer les utilisateurs
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_comment') }}">
+                            <i class="bi bi-chat-left-text"></i> Commentaires en attente de modération {% if countPendingComments > 0 %}<span class="badge bg-danger">{{ countPendingComments }}{% endif %}</span>
                         </a>
                     </p>
                 </div>
@@ -47,11 +44,14 @@
         <div class="col">
             <div class="card h-100 border-0">
                 <div class="card-body">
-                    <h2 class="card-title h5">Gestion de l'espace de discussion</h2>
-                    <h3 class="card-subtitle mb-2 text-muted h6">Modérez les commentaires déposés sur les figures du site</h3>
+                    <h2 class="card-title h5">Gestion des utilisateurs</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Ajoutez et gérer les utilisateurs du site-web</h3>
                     <p class="card-text d-grid gap-2">
-                        <a class="btn btn-outline-primary text-start" href="/comment/indexbyapprovement/">
-                            <i class="bi bi-chat-left-text"></i> Commentaires en attente de modération <span class="badge bg-danger">2</span>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_new') }}">
+                            <i class="bi bi-person-plus"></i> Créer un utilisateur
+                        </a>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_user_index') }}">
+                            <i class="bi bi-people"></i> Gérer les utilisateurs
                         </a>
                     </p>
                 </div>

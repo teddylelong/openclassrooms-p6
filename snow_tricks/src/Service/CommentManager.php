@@ -20,6 +20,16 @@ class CommentManager
         $this->commentRepository->add($comment);
     }
 
+    public function findAll()
+    {
+        return $this->commentRepository->findAll();
+    }
+
+    public function findAllByStatus($status = Comment::STATUS_PENDING)
+    {
+        return $this->commentRepository->findAllByStatus($status);
+    }
+
     public function findByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED)
     {
         return $this->commentRepository->findByFigureAndStatus($figure, $status);

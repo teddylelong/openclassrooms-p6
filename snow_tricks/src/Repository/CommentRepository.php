@@ -39,6 +39,19 @@ class CommentRepository extends ServiceEntityRepository
     /**
      * @return Comment[] Returns an array of Comment objects
      */
+    public function findAllByStatus($status = Comment::STATUS_PENDING)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Comment[] Returns an array of Comment objects
+     */
     public function findByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED)
     {
         return $this->createQueryBuilder('c')
