@@ -4,7 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Comment;
-use App\Entity\Figure;
 use App\Security\Voter\CommentVoter;
 use App\Service\CommentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
