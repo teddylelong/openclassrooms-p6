@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\FigureImages;
 use App\Entity\FigureMedias;
+use App\Form\CommentType;
 use App\Form\FigureType;
 use App\Security\Voter\FigureVoter;
+use App\Service\CommentManager;
 use App\Service\FigureManager;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,12 +32,42 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show", methods={"GET"})
+     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
      */
-    public function show(Figure $figure): Response
+    public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
     {
+        $commentForm = $this->createForm(CommentType::class);
+        $commentForm->handleRequest($request);
+        $comment = new Comment();
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+            $comment->setContent($commentForm->getData()->getContent());
+            $comment->setUser($this->getUser());
+            $comment->setFigure($figure);
+
+            $message = "Votre commentaire a bien été enregistré. Il sera vérifié par un membre de l'équipe d'ici deux jours ouvrés. Merci ! :)";
+
+            if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODO')) {
+                $comment->setStatus(Comment::STATUS_ACCEPTED);
+                $message = "Votre commentaire à été publié avec succès !";
+            }
+
+            $commentManager->add($comment);
+
+            $this->addFlash('success', $message);
+
+            return $this->redirectToRoute('app_figure_show', [
+                'id' => $figure->getId(),
+                'slug' => $figure->getSlug(),
+            ]);
+        }
+
         return $this->render('figure/show.html.twig', [
-           'figure' => $figure
+            'figure' => $figure,
+            'comments' => $commentManager->findByFigureAndStatus($figure),
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 
