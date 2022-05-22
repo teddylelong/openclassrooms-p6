@@ -47,9 +47,16 @@ class FigureController extends AbstractController
             $comment->setUser($this->getUser());
             $comment->setFigure($figure);
 
+            $message = "Votre commentaire a bien été enregistré. Il sera vérifié par un membre de l'équipe d'ici deux jours ouvrés. Merci ! :)";
+
+            if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODO')) {
+                $comment->setStatus(Comment::STATUS_ACCEPTED);
+                $message = "Votre commentaire à été publié avec succès !";
+            }
+
             $commentManager->add($comment);
 
-            $this->addFlash('success', "Votre commentaire a bien été enregistré. Il sera vérifié par un membre de l'équipe d'ici deux jours ouvrés. Merci ! :)");
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_figure_show', [
                 'id' => $figure->getId(),
