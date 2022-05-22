@@ -46,6 +46,8 @@ class FigureController extends AbstractController
      */
     public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
     {
+        $this->denyAccessUnlessGranted(FigureVoter::VIEW, $figure);
+
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
         $comment = new Comment();

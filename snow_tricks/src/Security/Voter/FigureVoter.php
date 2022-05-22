@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class FigureVoter extends Voter
 {
+    public const VIEW = 'FIGURE_VIEW';
     public const EDIT = 'FIGURE_EDIT';
     public const DELETE = 'FIGURE_DELETE';
     public const UPDATE_STATUS = 'FIGURE_UPDATE';
@@ -26,7 +27,7 @@ class FigureVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE, self::UPDATE_STATUS])
+        return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::UPDATE_STATUS])
             && $subject instanceof \App\Entity\Figure;
     }
 
@@ -43,6 +44,8 @@ class FigureVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case self::VIEW:
+                return $this->canView($figure, $user);
             case self::EDIT:
                 return $this->canEdit($figure, $user);
             case self::DELETE:
@@ -52,6 +55,20 @@ class FigureVoter extends Voter
         }
 
         return false;
+    }
+
+    private function canView(Figure $figure, User $user): bool
+    {
+        if ($figure->getStatus() === Figure::STATUS_ACCEPTED) {
+            return true;
+        }
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        if ($this->security->isGranted('ROLE_MODO')) {
+            return true;
+        }
+        return $user === $figure->getUser();
     }
 
     private function canEdit(Figure $figure, User $user): bool

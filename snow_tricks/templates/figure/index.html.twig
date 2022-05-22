@@ -39,7 +39,6 @@
             <p>
                 <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">Voir</a> -
                 <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}">Éditer</a>
-                {% include('figure/_delete_form.html.twig') %}
             </p>
             <hr>
         {% endfor %}

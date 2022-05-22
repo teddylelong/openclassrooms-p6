@@ -4,7 +4,14 @@
 
 {% block body %}
 
-    <h1>{{ figure.name }}</h1>
+    <h1>
+        {{ figure.name }}
+        {% if figure.status is same as('status.pending') %}
+            <span class="fs-4 text-muted">(En attente de validation)</span>
+        {% elseif figure.status is same as('status.rejected') %}
+            <span class="fs-4 text-danger">(Rejetée)</span>
+        {% endif %}
+    </h1>
 
     <div class="small text-muted">
         Par {{ figure.user.userIdentifier|default("Anonyme")|capitalize }}, dans la catégorie
