@@ -16,7 +16,7 @@ class LoginController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            if ($this->isGranted(AdminVoter::VIEW, $this->getUser())) {
+            if ($this->isGranted(AdminVoter::VIEW)) {
                 return $this->redirectToRoute('app_admin');
             }
              return $this->redirectToRoute('app_user_profile', [

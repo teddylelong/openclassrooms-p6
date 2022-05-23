@@ -44,7 +44,7 @@ class UserController extends AbstractController
      */
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
-        $this->denyAccessUnlessGranted(['ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -75,7 +75,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
-        $this->denyAccessUnlessGranted(['ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -117,7 +117,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, User $user, UserManager $userManager): Response
     {
-        $this->denyAccessUnlessGranted(['ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
 
