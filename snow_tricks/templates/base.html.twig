@@ -17,10 +17,10 @@
 <body class="website">
 
     {# Top Header #}
-    {# include 'template-parts/website-top-header.part.twig' #}
+    {# include '_parts/website-top-header.part.twig' #}
 
     {# Header + Nav #}
-    {# include'template-parts/website-header.part.twig' #}
+    {# include'_parts/website-header.part.twig' #}
     {% include('_parts/navmenu.part.twig') %}
 
     {# Main content #}
@@ -45,7 +45,7 @@
     </div>
 
     {# Footer #}
-    {# include 'template-parts/website-footer.part.twig' #}
+    {% include '_parts/footer.part.twig' %}
 
 <script src="{{ asset('/assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
 </body>
