@@ -1,4 +1,4 @@
-{% if app.user %}
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODO') %}
 
     <nav id="site-top-header" class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
