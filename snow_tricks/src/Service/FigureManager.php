@@ -33,6 +33,11 @@ class FigureManager
         return $this->figureRepository->findByStatusOrderByDate($value);
     }
 
+    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 10)
+    {
+        return $this->figureRepository->findByStatusOrderByDateLimit($value, $max);
+    }
+
     public function findAllOrderByDate()
     {
         return $this->figureRepository->findAllOrderByDate();

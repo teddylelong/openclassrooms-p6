@@ -22,7 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/", name="app_figure_index")
+     * @Route("/", name="app_home")
+     */
+    public function homePage(FigureManager $figureManager): Response
+    {
+        return $this->render('figure/home.html.twig', [
+            'figures' => $figureManager->findByStatusOrderByDateLimit(),
+        ]);
+    }
+    /**
+     * @Route("/figures", name="app_figure_index")
      */
     public function index(FigureManager $figureManager): Response
     {
