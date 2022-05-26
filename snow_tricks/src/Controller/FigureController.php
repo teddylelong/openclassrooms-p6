@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/figure", name="app_figure_index")
+     * @Route("/", name="app_figure_index")
      */
     public function index(FigureManager $figureManager): Response
     {
