@@ -34,9 +34,9 @@ class FigureVoter extends Voter
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
-            return false;
+
+        if (!$user instanceof User) {
+            $user = new User();
         }
 
         /** @var Figure $figure */
@@ -59,7 +59,7 @@ class FigureVoter extends Voter
 
     private function canView(Figure $figure, User $user): bool
     {
-        if ($figure->getStatus() === Figure::STATUS_ACCEPTED) {
+        if ($figure->getStatus() == Figure::STATUS_ACCEPTED) {
             return true;
         }
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -68,7 +68,10 @@ class FigureVoter extends Voter
         if ($this->security->isGranted('ROLE_MODO')) {
             return true;
         }
-        return $user === $figure->getUser();
+        if ($user === $figure->getUser()) {
+            return true;
+        }
+        return false;
     }
 
     private function canEdit(Figure $figure, User $user): bool
