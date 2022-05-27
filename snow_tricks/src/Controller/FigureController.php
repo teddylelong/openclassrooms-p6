@@ -122,9 +122,16 @@ class FigureController extends AbstractController
             $user = $this->getUser();
             $figure->setUser($user);
 
+            $message = "La figure a été enregistrée avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés. :)";
+
+            if ($this->isGranted('ROLE_MODO')) {
+                $figure->setStatus(Figure::STATUS_ACCEPTED);
+                $message = "Votre figure a été publiée avec succès !";
+            }
+
             $figureManager->add($figure);
 
-            $this->addFlash('success', "Votre figure a bien été enregistrée. Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés. Merci ! :)");
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_figure_index');
         }
@@ -158,9 +165,16 @@ class FigureController extends AbstractController
             $figure->setUpdatedAt(new \DateTimeImmutable());
             $figure->setStatus(Figure::STATUS_PENDING);
 
+            $message = "La figure a été mise à jour avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés.";
+
+            if ($this->isGranted('ROLE_MODO')) {
+                $figure->setStatus(Figure::STATUS_ACCEPTED);
+                $message = "Votre figure a été mise à jour avec succès !";
+            }
+
             $figureManager->add($figure);
 
-            $this->addFlash('success', "La figure a été mise à jour avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés.");
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_figure_index');
         }
@@ -178,29 +192,16 @@ class FigureController extends AbstractController
     {
         $this->denyAccessUnlessGranted(FigureVoter::UPDATE_STATUS, $figure);
 
-        // @Todo : à valider !
-        switch ($status) {
-            case 'accept':
-                $figure->setStatus(Figure::STATUS_ACCEPTED);
-                $label = "validée";
-                break;
+        $checkedStatus = $figureManager->checkStatus($status);
 
-            case 'refuse':
-                $figure->setStatus(Figure::STATUS_REJECTED);
-                $label = "refusée";
-                break;
+        if ($checkedStatus) {
+            $figure->setStatus($checkedStatus['status']);
+            $figureManager->add($figure);
+            $this->addFlash('success', "La figure a bien été {$checkedStatus['label']}.");
 
-            case 'pending':
-                $figure->setStatus(Figure::STATUS_PENDING);
-                $label = "mise en attente";
-                break;
-
-            default:
-                $this->addFlash('danger', "Le statut de la figure n'est pas valide.");
-                return $this->redirectToRoute('app_figure_approvement');
+            return $this->redirectToRoute('app_figure_approvement');
         }
-        $figureManager->add($figure);
-        $this->addFlash('success', "La figure a bien été $label.");
+        $this->addFlash('danger', "Le status de la figure n'est pas valide. Veuillez réessayer.");
 
         return $this->redirectToRoute('app_figure_approvement');
     }
