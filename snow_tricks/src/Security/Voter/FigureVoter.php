@@ -79,6 +79,9 @@ class FigureVoter extends Voter
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
+        if ($this->security->isGranted('ROLE_MODO')) {
+            return true;
+        }
         return $user === $figure->getUser();
     }
 
