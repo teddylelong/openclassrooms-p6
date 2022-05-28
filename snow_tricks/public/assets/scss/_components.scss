@@ -35,7 +35,7 @@ body {
   background-color: #1c1f23;
 
   a:hover {
-    color: $secondary;
+    color: lighten($primary, 20);
   }
 }
 

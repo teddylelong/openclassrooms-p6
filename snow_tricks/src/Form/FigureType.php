@@ -35,6 +35,7 @@ class FigureType extends AbstractType
             ->add('description', TextareaType::class, [
                 'attr' => [
                     'placeholder' => "Décrivez la figure et donnez des indications sur la manière de pouvoir la réaliser",
+                    'rows' => 10,
                 ],
                 'constraints' => [
                     new NotBlank([

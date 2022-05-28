@@ -4,9 +4,12 @@ $enable-negative-margins: true;
 $primary:       #3C97D1;
 $secondary:     #FDC456;
 $dark:          #2D2D2D;
+$text-color:    #19415A;
 
-$headings-color: #2D2D2D;
+$body-color:     darken($text-color, 10);
+$headings-color: darken($text-color, 10);
+
 
 /* Fonts */
-$headings-font-family:  'Poppins', sans-serif;
-$font-family-base:      'Open Sans', sans-serif;
+$headings-font-family:  'Archivo Black', sans-serif;
+$font-family-base:      'Mulish', sans-serif;

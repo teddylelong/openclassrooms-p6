@@ -40,7 +40,7 @@ class FigureManager
      *
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 10)
+    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 12)
     {
         return $this->figureRepository->findByStatusOrderByDateLimit($value, $max);
     }

@@ -25,7 +25,7 @@
 
     {% else %}
 
-        <div class="row row-cols-1 row-cols-md-5 row-cols-sm-3 g-4 mt-0">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-0">
 
         {% for figure in figures %}
 
@@ -35,7 +35,9 @@
                 <div class="card h-100">
 
                     {% if firstImage %}
-                        <img class="card-img-top" src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+                        <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">
+                            <img class="card-img-top" src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+                        </a>
                     {% endif %}
 
                     <div class="card-body">
@@ -44,20 +46,17 @@
                                 {{ figure.name }}
                             </a>
                             {% if is_granted('FIGURE_EDIT', figure) %}
-                                <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}" class="btn btn-outline-primary" title="Modifier cette figure">
+                                <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}" class="btn btn-outline-primary btn-sm" title="Modifier cette figure">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                             {% endif %}
                             {% if is_granted('FIGURE_DELETE', figure) %}
                                 <form class="d-inline" method="post" action="{{ path('app_figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette figure ? Cette action est irréversible.');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
-                                    <button class="btn btn-outline-danger" title="Supprimer cette figure"><i class="bi bi-trash3"></i></button>
+                                    <button class="btn btn-outline-danger btn-sm" title="Supprimer cette figure"><i class="bi bi-trash3"></i></button>
                                 </form>
                             {% endif %}
                         </h5>
-                        <p class="card-text">
-                            {{ figure.description|striptags|slice(0, 40) }}
-                        </p>
                     </div>
 
                     <div class="card-footer">
