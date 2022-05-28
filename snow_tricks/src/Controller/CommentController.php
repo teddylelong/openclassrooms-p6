@@ -35,29 +35,18 @@ class CommentController extends AbstractController
     {
         $this->denyAccessUnlessGranted(CommentVoter::UPDATE, $comment);
 
-        // Todo : à valider
-        switch ($status) {
-            case 'accept':
-                $comment->setStatus(Comment::STATUS_ACCEPTED);
-                $label = "validé";
-                break;
+        $checkedComment = $commentManager->checkStatus($status);
 
-            case 'refuse':
-                $comment->setStatus(Comment::STATUS_REJECTED);
-                $label = "refusé";
-                break;
+        if ($checkedComment) {
+            $comment->setStatus($checkedComment['status']);
+            $commentManager->add($comment);
 
-            case 'pending':
-                $comment->setStatus(Comment::STATUS_PENDING);
-                $label = "mis en attente";
-                break;
+            $this->addFlash('success', "Le commentaire a bien été {$checkedComment['label']}.");
 
-            default:
-                $this->addFlash('danger', "Le statut du commentaire n'est pas valide.");
-                return $this->redirectToRoute('app_comment');
+            return $this->redirectToRoute('app_comment');
         }
-        $commentManager->add($comment);
-        $this->addFlash('success', "Le commentaire a bien été $label.");
+
+        $this->addFlash('danger', "Le status du commentaire n'est pas valide. Veuillez réessayer.");
 
         return $this->redirectToRoute('app_comment');
     }

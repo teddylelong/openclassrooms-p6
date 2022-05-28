@@ -39,4 +39,33 @@ class CommentManager
     {
         $this->commentRepository->remove($comment);
     }
+
+    /**
+     * Check a Comment status and return right Const
+     */
+    public function checkStatus(string $status): ?array
+    {
+        switch ($status) {
+            case 'accept':
+                return [
+                    'status' => Comment::STATUS_ACCEPTED,
+                    'label' => "validé"
+                ];
+
+            case 'refuse':
+                return [
+                    'status' => Comment::STATUS_REJECTED,
+                    'label' => "refusé"
+                ];
+
+            case 'pending':
+                return [
+                    'status' => Comment::STATUS_PENDING,
+                    'label' => "mis en file d'attente"
+                ];
+
+            default:
+                return null;
+        }
+    }
 }
