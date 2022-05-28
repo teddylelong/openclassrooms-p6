@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% set STATUS_PENDING = constant('App\\Entity\\Figure::STATUS_PENDING') %}
+{% set STATUS_ACCEPTED = constant('App\\Entity\\Figure::STATUS_ACCEPTED') %}
+{% set STATUS_REJECTED = constant('App\\Entity\\Figure::STATUS_REJECTED') %}
+
+{% set pendingCount = (figures|filter(figure => figure.status == STATUS_PENDING ))|length %}
+{% set acceptedCount = (figures|filter(figure => figure.status == STATUS_ACCEPTED ))|length %}
+{% set rejectedCount = (figures|filter(figure => figure.status == STATUS_REJECTED ))|length %}
+
+{% block title %}Modération des figures{% endblock %}
+
+{% block body %}
+
+    <h1>Modération des figures</h1>
+
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+
+        <!-- Accordion #1 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    <i class="bi bi-clock"></i>&nbsp;Figures en attente de modération {% if pendingCount >= 1 %} <span class="badge bg-primary ms-2">{{ pendingCount }}</span> {% endif %}
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body px-0">
+                    {% if pendingCount >= 1 %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <th>Utilisateur</th>
+                                    <th>Figure</th>
+                                    <th>Date d'ajout</th>
+                                    <th></th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                {% for figure in figures|filter(figure => figure.status == STATUS_PENDING) %}
+                                    <tr>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: figure.user.id}) }}">{{ figure.user.userIdentifier }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: figure.id, slug: figure.slug}) }}">{{ figure.name }}</a></td>
+                                        <td>{{ figure.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
+                                        <td class="text-center"><a class="link-success" href="{{ path('app_figure_update_status', {id: figure.id, status: 'accept'}) }}"><i class="bi bi-hand-thumbs-up"></i> Approuver</a></td>
+                                        <td class="text-center"><a class="link-danger" href="{{ path('app_figure_update_status', {id: figure.id, status: 'refuse'}) }}"><i class="bi bi-hand-thumbs-down"></i> Désapprouver</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="alert-primary p-3 rounded">Il n'y a aucune figure à modérer pour l'instant.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion #2 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed text-success" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                    <i class="bi bi-clock"></i>&nbsp;Figures approuvées {% if acceptedCount >= 1 %} <span class="badge bg-success ms-2">{{ acceptedCount }}</span> {% endif %}
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body px-0">
+                    {% if acceptedCount >= 1 %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <th>Utilisateur</th>
+                                <th>Figure</th>
+                                <th>Date d'ajout</th>
+                                <th></th>
+                                <th></th>
+                                </thead>
+                                <tbody>
+                                {% for figure in figures|filter(figure => figure.status == STATUS_ACCEPTED) %}
+                                    <tr>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: figure.user.id}) }}">{{ figure.user.userIdentifier }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: figure.id, slug: figure.slug}) }}">{{ figure.name }}</a></td>
+                                        <td>{{ figure.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
+                                        <td class="text-center"><a class="link-primary" href="{{ path('app_figure_update_status', {id: figure.id, status: 'pending'}) }}"><i class="bi bi-clock"></i> Remettre en file d'attente</a></td>
+                                        <td class="text-center"><a class="link-danger" href="{{ path('app_figure_update_status', {id: figure.id, status: 'refuse'}) }}"><i class="bi bi-hand-thumbs-down"></i> Désapprouver</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="alert-success p-3 rounded">Il n'y a aucune figure approuvée pour l'instant.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion #3 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <button class="accordion-button collapsed text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                    <i class="bi bi-clock"></i>&nbsp;Figures non-approuvées {% if rejectedCount >= 1 %} <span class="badge bg-danger ms-2">{{ rejectedCount }}</span> {% endif %}
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-body px-0">
+                    {% if rejectedCount >= 1 %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <th>Utilisateur</th>
+                                <th>Commentaire</th>
+                                <th>Date d'ajout</th>
+                                <th>Figure</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                </thead>
+                                <tbody>
+                                {% for figure in figures|filter(figure => figure.status == STATUS_REJECTED) %}
+                                    <tr>
+                                        <td><a target="_blank" href="{{ path('app_user_profile', {id: figure.user.id}) }}">{{ figure.user.userIdentifier }}</a></td>
+                                        <td><a target="_blank" href="{{ path('app_figure_show', {id: figure.id, slug: figure.slug}) }}">{{ figure.name }}</a></td>
+                                        <td>{{ figure.createdAt|date('d\/m\/Y \à H\\hi') }}</td>
+                                        <td class="text-center"><a class="link-primary" href="{{ path('app_figure_update_status', {id: figure.id, status: 'pending'}) }}"><i class="bi bi-clock"></i> Remettre en file d'attente</a></td>
+                                        <td>{% include 'figure/_delete_form.html.twig' %}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="alert-danger p-3 rounded">Il n'y a aucune figure non-approuvée pour l'instant.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-grid gap-2 mt-4">
+        <a class="btn btn-outline-primary" href="{{ path('app_admin') }}">Retour</a>
+    </div>
+
+{% endblock %}

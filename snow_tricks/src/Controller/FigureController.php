@@ -22,7 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/figure", name="app_figure_index")
+     * @Route("/", name="app_home")
+     */
+    public function homePage(FigureManager $figureManager): Response
+    {
+        return $this->render('figure/home.html.twig', [
+            'figures' => $figureManager->findByStatusOrderByDateLimit(),
+        ]);
+    }
+    /**
+     * @Route("/figures", name="app_figure_index")
      */
     public function index(FigureManager $figureManager): Response
     {
@@ -32,10 +41,22 @@ class FigureController extends AbstractController
     }
 
     /**
+     * @Route("/admin/figures/approvement/", name="app_figure_approvement")
+     */
+    public function indexApprovement(FigureManager $figureManager): Response
+    {
+        return $this->render('figure/approvement.html.twig', [
+            'figures' => $figureManager->findAllOrderByDate(),
+        ]);
+    }
+
+    /**
      * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
      */
     public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
     {
+        $this->denyAccessUnlessGranted(FigureVoter::VIEW, $figure);
+
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
         $comment = new Comment();
@@ -101,9 +122,16 @@ class FigureController extends AbstractController
             $user = $this->getUser();
             $figure->setUser($user);
 
+            $message = "La figure a été enregistrée avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés. :)";
+
+            if ($this->isGranted('ROLE_MODO')) {
+                $figure->setStatus(Figure::STATUS_ACCEPTED);
+                $message = "Votre figure a été publiée avec succès !";
+            }
+
             $figureManager->add($figure);
 
-            $this->addFlash('success', "Votre figure a bien été enregistrée. Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés. Merci ! :)");
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_figure_index');
         }
@@ -137,9 +165,16 @@ class FigureController extends AbstractController
             $figure->setUpdatedAt(new \DateTimeImmutable());
             $figure->setStatus(Figure::STATUS_PENDING);
 
+            $message = "La figure a été mise à jour avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés.";
+
+            if ($this->isGranted('ROLE_MODO')) {
+                $figure->setStatus(Figure::STATUS_ACCEPTED);
+                $message = "Votre figure a été mise à jour avec succès !";
+            }
+
             $figureManager->add($figure);
 
-            $this->addFlash('success', "La figure a été mise à jour avec succès ! Elle sera relue et vérifiée par un administrateur d'ici deux jours ouvrés.");
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_figure_index');
         }
@@ -148,6 +183,27 @@ class FigureController extends AbstractController
             'figure' => $figure,
             'editForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/admin/figure/status/{id<\d+>}/{status}", name="app_figure_update_status")
+     */
+    public function updateStatus(Figure $figure, FigureManager $figureManager, $status): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::UPDATE_STATUS, $figure);
+
+        $checkedStatus = $figureManager->checkStatus($status);
+
+        if ($checkedStatus) {
+            $figure->setStatus($checkedStatus['status']);
+            $figureManager->add($figure);
+            $this->addFlash('success', "La figure a bien été {$checkedStatus['label']}.");
+
+            return $this->redirectToRoute('app_figure_approvement');
+        }
+        $this->addFlash('danger', "Le status de la figure n'est pas valide. Veuillez réessayer.");
+
+        return $this->redirectToRoute('app_figure_approvement');
     }
 
     /**

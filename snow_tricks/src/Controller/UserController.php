@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Security\Voter\AdminVoter;
 use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,8 @@ class UserController extends AbstractController
      */
     public function index(UserManager $userManager): Response
     {
+        $this->denyAccessUnlessGranted(AdminVoter::VIEW, $this->getUser());
+
         return $this->render('user/index.html.twig', [
             'users' => $userManager->findAll()
         ]);
@@ -29,6 +32,8 @@ class UserController extends AbstractController
      */
     public function showProfile(User $user): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('user/show-profile.html.twig', [
             'user' => $user
         ]);
@@ -39,6 +44,8 @@ class UserController extends AbstractController
      */
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -68,6 +75,8 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -108,6 +117,8 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, User $user, UserManager $userManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
 
             // Check if user are not deleting himself

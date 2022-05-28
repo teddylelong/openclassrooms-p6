@@ -1,0 +1,55 @@
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODO') %}
+
+    <nav id="site-top-header" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuBar" aria-controls="adminMenuBar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="adminMenuBar">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 small">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_admin') }}"><i class="bi bi-speedometer"></i> Dashboard</a>
+                    </li>
+
+                    <div class="vr text-light d-none d-lg-inline-block"></div>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_figure_new') }}"><i class="bi bi-pencil"></i> Nouvelle figure</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_figure_index') }}"><i class="bi bi-file-earmark-text"></i> Gérer les figures</a>
+                    </li>
+
+                    <div class="vr text-light d-none d-lg-inline-block"></div>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_comment') }}"><i class="bi bi-chat-left-text"></i> Commentaires</a>
+                    </li>
+
+                    <div class="vr text-light d-none d-lg-inline-block"></div>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_user_new') }}"><i class="bi bi-person-plus"></i> Créer un utilisateur</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_user_index') }}"><i class="bi bi-people"></i> Gérer les utilisateurs</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <span class="navbar-brand mt-2 text-light fs-6 position-absolute top-0 end-0">
+                <span class="small">Bonjour, {{ app.user.userIdentifier }} !</span>
+                <a class="small link-danger" href="{{ path('app_logout') }}">
+                    <i class="bi bi-power"></i> Déconnexion
+                </a>
+            </span>
+
+        </div>
+    </nav>
+
+{% endif %}

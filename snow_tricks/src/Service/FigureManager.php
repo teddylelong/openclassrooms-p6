@@ -26,6 +26,8 @@ class FigureManager
     }
 
     /**
+     * find all figures, by status and ordered by dates
+     *
      * @return Figure[] Returns an array of Figure objects
      */
     public function findByStatusOrderByDate($value = Figure::STATUS_ACCEPTED)
@@ -33,6 +35,31 @@ class FigureManager
         return $this->figureRepository->findByStatusOrderByDate($value);
     }
 
+    /**
+     * Find all figures, by status, ordered by dates and limit
+     *
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 12)
+    {
+        return $this->figureRepository->findByStatusOrderByDateLimit($value, $max);
+    }
+
+    /**
+     * Find all figures ordered by dates
+     *
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findAllOrderByDate()
+    {
+        return $this->figureRepository->findAllOrderByDate();
+    }
+
+    /**
+     * Find all figures, by category, ordered by dates
+     *
+     * @return Figure[] Returns an array of Figure objects
+     */
     public function findAllByCategoryOrderByDate($categoryId)
     {
         return $this->figureRepository->findAllByCategoryOrderByDate($categoryId);
@@ -59,5 +86,34 @@ class FigureManager
     public function delete(Figure $figure): void
     {
         $this->figureRepository->remove($figure);
+    }
+
+    /**
+     * Check a Figure status and return right Const
+     */
+    public function checkStatus(string $status): ?array
+    {
+        switch ($status) {
+            case 'accept':
+                return [
+                    'status' => Figure::STATUS_ACCEPTED,
+                    'label' => "validée"
+                ];
+
+            case 'refuse':
+                return [
+                    'status' => Figure::STATUS_REJECTED,
+                    'label' => "refusée"
+                ];
+
+            case 'pending':
+                return [
+                    'status' => Figure::STATUS_PENDING,
+                    'label' => "mise en file d'attente"
+                ];
+
+            default:
+                return null;
+        }
     }
 }
