@@ -20,6 +20,7 @@ const addFormToCollection = (e) => {
 const addTagFormDeleteLink = (item) => {
     const removeFormButton = document.createElement('button');
     removeFormButton.innerText = 'X';
+    removeFormButton.className = 'btn btn-outline-danger mb-3';
 
     item.append(removeFormButton);
 

@@ -55,7 +55,7 @@ class FigureType extends AbstractType
             ->add('FigureMedias', CollectionType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => "Collez ici le code d'une vidéo embarquée"
+                    'placeholder' => "Collez ici le code d'une vidéo embarquée",
                 ],
                 'entry_type' => FigureMediasType::class,
                 'entry_options' => ['label' => false],

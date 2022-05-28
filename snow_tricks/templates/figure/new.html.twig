@@ -5,14 +5,26 @@
 {% block body %}
 
     <style>
-        ol li {
+        .medias li {
             display: flex;
+        }
+        .medias {
+            margin-left: -28px;
+        }
+        li > div {
+            max-width: 600px;
+            width: 100%;
         }
     </style>
 
     <h1>Ajouter une nouvelle figure</h1>
 
-    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+
+    <div class="alert alert-primary">
+        Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours.
+        Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !
+    </div>
+
 
     {{ form_start(figureType) }}
 
@@ -40,7 +52,7 @@
             {% endfor %}
         </ol>
 
-        <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+        <button type="button" class="add_item_link mb-3 btn btn-outline-primary" data-collection-holder-class="medias">Ajouter un média</button>
 
         <h3>Images</h3>
         <p>Sélectionnez les images d'illustration pour cette figure</p>
@@ -48,7 +60,7 @@
         {{ form_row(figureType.images) }}
 
         <div style="margin-top: 20px">
-            <button type="submit">Soumettre ma figure</button>
+            <button class="btn btn-primary btn-lg" type="submit">Valider ma figure</button>
         </div>
     {{ form_end(figureType) }}
 
