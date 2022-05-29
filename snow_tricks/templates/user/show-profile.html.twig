@@ -16,8 +16,7 @@
                 Role : {{ user.roles[0] }}
             </p>
             <div>
-                <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Éditer</a>
-                <a class="btn btn-outline-primary" href="{{ path('app_user_index') }}">Retour</a>
+                <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
             </div>
     {% else %}
         <div>

@@ -12099,39 +12099,87 @@ body {
 }
 
 /* Components */
-#articles-container .col .card-title {
-  transition: color ease-in-out 0.2s;
-}
-#articles-container .col .card {
-  transition: border ease-in-out 0.2s;
-}
-
-#articles-container .col:hover .card-title {
-  color: #3C97D1;
-  transition: color ease-in-out 0.2s;
-}
-#articles-container .col:hover .card {
-  border: 1px solid #3C97D1;
-  transition: border ease-in-out 0.2s;
+/* Figures */
+#featured-img {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-height: 400px;
+  height: 400px;
+  width: auto;
+  flex-direction: column;
 }
 
-.iframe-responsive {
-  overflow: hidden;
-  position: relative;
-  height: 0;
+#featured-img > h1, #featured-img > .h1 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.iframe-responsive iframe {
-  left: 0;
-  top: 0;
-  height: 100%;
+.comment-form {
+  width: 75%;
+}
+.comment-form .btn {
+  width: 25%;
+  justify-content: center;
+  align-items: center;
+}
+.comment-form .comment-textarea {
+  width: 75%;
+}
+.comment-form .comment-textarea textarea {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+@media (max-width: 767.98px) {
+  .comment-form {
+    width: 100%;
+  }
+  .comment-form .btn {
+    width: 100%;
+    border-radius: 0.25em !important;
+  }
+  .comment-form .comment-textarea {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .comment-form .comment-textarea textarea {
+    border-radius: 0.25em !important;
+  }
+}
+.del-media {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.media-field {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.medias {
+  margin-left: -28px;
+}
+.medias li {
+  display: flex;
+}
+.medias li > div {
+  max-width: 800px;
   width: 100%;
-  position: absolute;
 }
 
-#google-maps,
-.iframe-responsive iframe {
-  height: 488px;
+/* Comments */
+.comments-container {
+  margin: 0 auto;
+  width: 75%;
+}
+
+@media (max-width: 767.98px) {
+  .comments-container {
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */
