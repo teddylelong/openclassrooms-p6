@@ -8,15 +8,17 @@
     {% endfor %}
     <h1>Mot de passe oublié ?</h1>
 
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Saisissez l'adresse email de votre compte et nous vous enverrons
-                un lien pour réinitialiser votre mot de passe.
-            </small>
-        </div>
+    <p>
+        Pas de panique ! Nous allons vous aider à le réinitialiser. Saisissez l'adresse email de votre compte et nous vous enverrons
+        un lien pour réinitialiser votre mot de passe.
+    </p>
 
-        <button class="btn btn-primary">Réinitialiser mon mot de passe</button>
+    {{ form_start(requestForm) }}
+        {{ form_row(requestForm.email, {
+            label: "Quelle est l'adresse email liée à votre compte ?",
+            attr: {placeholder: "Saisissez votre adresse email..."}
+        }) }}
+
+        <button class="btn btn-primary btn-lg">Réinitialiser mon mot de passe</button>
     {{ form_end(requestForm) }}
 {% endblock %}

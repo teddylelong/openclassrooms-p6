@@ -5,6 +5,15 @@
 {% block body %}
     <h1>Votre nouveau mot de passe</h1>
 
+    <p>
+        Parfait ! Nous avons pu réinitialiser votre mot de passe. Vous devez désormais en saisir un nouveau.
+        Vous pourrez ensuite vous connecter à votre compte en utilisant ce nouveau mot de passe !
+    </p>
+
+    <div class="alert alert-primary">
+        Pour rappel, votre mot de passe doit contenir au moins 8 caractères
+    </div>
+
     {{ form_start(resetForm) }}
         {{ form_row(resetForm.plainPassword) }}
         <button class="btn btn-primary">Modifier mon mot de passe</button>
