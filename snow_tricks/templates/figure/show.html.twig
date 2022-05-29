@@ -2,81 +2,184 @@
 
 {% block title %}{{ figure.name }}{% endblock %}
 
+{% block full_width %}
+    {% set featuredImage = figure.FigureImages|first %}
+
+    <style>
+        #featured-img {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('uploads/images/' ~ featuredImage.filename) }}');
+        }
+    </style>
+
+    <div id="featured-img" class="d-flex">
+        <div class="figure-buttons text-end m-2">
+            {% if is_granted('FIGURE_EDIT', figure) %}
+                <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}" class="btn btn-primary ms-1" title="Modifier cette figure">
+                    <i class="bi bi-pencil"></i>
+                </a>
+            {% endif %}
+            {% if is_granted('FIGURE_DELETE', figure) %}
+                <form class="d-inline" method="post" action="{{ path('app_figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette figure ? Cette action est irréversible.');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+                    <button class="btn btn-danger ms-1" title="Supprimer cette figure"><i class="bi bi-trash3"></i></button>
+                </form>
+            {% endif %}
+        </div>
+        <!-- Title -->
+        <h1 class="text-light text-center fw-bold">
+            {{ figure.name }}
+            {% if figure.status is same as('status.pending') %}
+                <span class="fs-4 text-muted">(En attente de validation)</span>
+            {% elseif figure.status is same as('status.rejected') %}
+                <span class="fs-4 text-danger">(Rejetée)</span>
+            {% endif %}
+        </h1>
+    </div>
+{% endblock full_width %}
+
 {% block body %}
 
-    <h1>
-        {{ figure.name }}
-        {% if figure.status is same as('status.pending') %}
-            <span class="fs-4 text-muted">(En attente de validation)</span>
-        {% elseif figure.status is same as('status.rejected') %}
-            <span class="fs-4 text-danger">(Rejetée)</span>
-        {% endif %}
-    </h1>
+    <!-- Medias & Gallery (Desktop) -->
+    <div class="row g-2 d-none d-lg-flex">
+        <!-- Gallery -->
+        <div class="col-12 col-lg-6">
+            {% if figure.FigureImages|length < 1 %}
+                <p>Aucune image n'a été ajoutée pour l'instant.</p>
+            {% else %}
+                <div class="h-100 row row-cols-2 g-2">
+                    {% for image in figure.FigureImages %}
+                        <div class="col" style="align-self: center">
+                            <img class="img-fluid" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-    <div class="small text-muted">
-        Par {{ figure.user.userIdentifier|default("Anonyme")|capitalize }}, dans la catégorie
+        <!-- Medias -->
+        <div class="col-12 col-lg-6">
+            {% if figure.FigureMedias|length < 1 %}
+                <p>Aucun média n'a été ajouté pour l'instant.</p>
+            {% else %}
+                <div class="row row-cols-2 g-2">
+                    {% for media in figure.FigureMedias %}
+                        <div class="col">
+                            <div class="ratio ratio-16x9">
+                                {{ media.url|raw }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
+    <!-- Medias & Gallery (Mobile) -->
+    <div class="accordion accordion-flush d-block d-lg-none" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Voir les médias
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <!-- Gallery -->
+                    <div class="col-12">
+                        {% if figure.FigureImages|length < 1 %}
+                            <p>Aucune image n'a été ajoutée pour l'instant.</p>
+                        {% else %}
+                            {% for image in figure.FigureImages %}
+                                <div class="row mb-2">
+                                    <img class="img-fluid" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Medias -->
+                    <div class="col-12">
+                        {% if figure.FigureMedias|length < 1 %}
+                            <p>Aucun média n'a été ajouté pour l'instant.</p>
+                        {% else %}
+                            <div class="row">
+                                {% for media in figure.FigureMedias %}
+                                    <div class="col mb-2">
+                                        <div class="ratio ratio-16x9">
+                                            {{ media.url|raw }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main text -->
+    <div class="my-4">
+        {{ figure.description|nl2br }}
+    </div>
+
+    <!-- Infos -->
+    <div class="small text-muted text-center">
+        {% if figure.user is not null %}
+            Publié par
+            <span class="badge bg-primary">
+                <a class="text-light" href="{{ path('app_user_profile', {id: figure.user.id}) }}">
+                    <i class="bi bi-person-fill"></i> {{ figure.user.userIdentifier|capitalize }}
+                </a>
+            </span>
+        {% else %}
+            Anonyme
+        {% endif %}, dans la catégorie
         {% if figure.category is not null %}
-            <a href="{{ path('app_figures_by_category', {id: figure.category.id, slug: figure.category.slug}) }}">{{ figure.category.name|capitalize }}</a>
+            <span class="badge bg-primary">
+                <a class="text-light" href="{{ path('app_figures_by_category', {id: figure.category.id, slug: figure.category.slug}) }}">
+                    <i class="bi bi-tag-fill"></i> {{ figure.category.name|capitalize }}
+                </a>
+            </span>
         {% else %}
             Non-classé
         {%endif%}
 
-        le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}</div>
-
-    <p>{{ figure.description }}</p>
-
-    <!-- Medias -->
-    <h3>Médias</h3>
-
-    {% if figure.FigureMedias|length < 1 %}
-        <p>Aucun média n'a été ajouté pour l'instant.</p>
-    {% else %}
-        {% for media in figure.FigureMedias %}
-            <div class="responsive-iframe">
-                {{ media.url|raw }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Gallery -->
-    <h3>Galerie</h3>
-
-    {% if figure.FigureImages|length < 1 %}
-        <p>Aucune image n'a été ajoutée pour l'instant.</p>
-    {% else %}
-        <div class="gallery">
-            {% for image in figure.FigureImages %}
-                <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
-            {% endfor %}
-        </div>
-    {% endif %}
+        le {{ figure.createdAt|date("d/m/Y \à H\\hi")}}
+    </div>
 
     <!-- Comments -->
-    <h3>Commentaires</h3>
+    <div class="mt-3">
+        <hr>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {{ form_start(commentForm) }}
+                <div class="comment-form input-group m-auto d-block d-md-flex">
+                    {{ form_row(commentForm.content) }}
+                    <button class="btn btn-primary d-block d-md-flex" type="submit">Déposer mon commentaire</button>
+                </div>
+            {{ form_end(commentForm)}}
+        {% else %}
+            <p>Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</p>
+        {% endif%}
 
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        {{ form_start(commentForm) }}
-            {{ form_row(commentForm.content) }}
-            <button class="btn btn-primary" type="submit">Déposer mon commentaire</button>
-        {{ form_end(commentForm)}}
-    {% else %}
-        <p>Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</p>
-    {% endif%}
+        <hr>
 
-    {% if comments|length < 1 %}
-        <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
-    {% else %}
-        {% for comment in comments %}
-            <div class="small text-muted">Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}</div>
-            <p>{{ comment.content }}</p>
-
-            {% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %}
-                <div>{% include 'comment/_delete_form.html.twig' %}</div>
+        <div class="comments-container">
+            {% if comments|length < 1 %}
+                <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
+            {% else %}
+                {% for comment in comments %}
+                    <div class="border border-primary border-4 border-end-0 border-top-0 border-bottom-0 px-2 py-3 bg-light">
+                        <p class="comment m-0">
+                            {{ comment.content|nl2br }}
+                        </p>
+                    </div>
+                    <div class="small text-muted text-end mb-1">
+                        Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
+                    </div>
+                {% endfor %}
             {% endif %}
-        {% endfor %}
-    {% endif %}
-
-    <div><a href="{{ path('app_figure_index') }}">Retour</a></div>
+        </div>
+    </div>
 
 {% endblock %}

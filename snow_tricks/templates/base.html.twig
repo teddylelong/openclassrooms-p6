@@ -27,8 +27,8 @@
     <div id="site-background" class="container-fluid p-0">
         <main id="main-content" class="container shadow p-0">
 
-            {% block catchphrase %}
-            {% endblock catchphrase %}
+            {% block full_width %}
+            {% endblock full_width %}
 
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
@@ -40,7 +40,7 @@
                     {% endfor %}
                 {% endfor %}
 
-            <div class="row px-4 py-3">
+            <div class="row px-4 py-3 d-block">
                 {% block body %}{% endblock body %}
             </div>
 

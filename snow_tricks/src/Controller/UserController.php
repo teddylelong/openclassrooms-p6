@@ -34,8 +34,11 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $figures = $user->getFigures();
+
         return $this->render('user/show-profile.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'figures' => $figures
         ]);
     }
 

@@ -70,7 +70,7 @@ body {
 /* Intro (homepage) */
 
 #intro {
-  background-image: linear-gradient(46deg, darken($primary, 10) 0%, $primary 100%);
+  background-image: linear-gradient(45deg, darken($primary, 10) 0%, $primary 100%);
   color: #fff;
   min-height: calc(100vh - 130px);
   justify-content: center;
@@ -85,43 +85,105 @@ body {
 
 /* Components */
 
-#articles-container .col {
-  .card-title {
-    transition: color ease-in-out 0.2s;
-  }
+  /* Figures */
+#featured-img {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-height: 400px;
+  height: 400px;
+  width: auto;
+  flex-direction: column;
+}
+#featured-img > h1 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 
-  .card {
-    transition: border ease-in-out 0.2s;
+.comment-form {
+  width: 75%;
+
+  .btn {
+    width: 25%;
+    justify-content: center;
+    align-items: center;
+  }
+  .comment-textarea {
+    width: 75%;
+
+    textarea {
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
   }
 }
 
-#articles-container .col:hover {
-  .card-title {
-    color: $primary;
-    transition: color ease-in-out 0.2s;
+@include media-breakpoint-between(xs, md) {
+  .comment-form {
+    width: 100%;
+
+    .btn {
+      width: 100%;
+      border-radius: 0.25em !important;
+    }
+    .comment-textarea {
+      width: 100%;
+      margin-bottom: 12px;
+
+      textarea {
+        border-radius: 0.25em !important;
+      }
+    }
+  }
+}
+
+.gallery-edit-image {
+    position: relative;
+    text-align: center;
+
+  a {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+.del-media {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.media-field {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.medias {
+  margin-left: -28px;
+
+  li {
+    display: flex;
   }
 
-  .card {
-    border: 1px solid $primary;
-    transition: border ease-in-out 0.2s;
+  li > div {
+    max-width: 800px;
+    width: 100%;
   }
 }
 
-.iframe-responsive {
-  overflow: hidden;
-  position: relative;
-  height: 0;
+/* Comments */
+
+.comments-container {
+  margin: 0 auto;
+  width: 75%;
 }
 
-.iframe-responsive iframe {
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
-
-#google-maps,
-.iframe-responsive iframe {
-  height: 488px;
+@include media-breakpoint-between(xs, md) {
+  .comments-container {
+    width: 100%;
+  }
 }

@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('app_comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.');">
+<form class="d-inline" method="post" action="{{ path('app_comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-    <button class="btn text-danger">Supprimer</button>
+    <button class="d-inline btn btn-sm text-danger">Supprimer</button>
 </form>

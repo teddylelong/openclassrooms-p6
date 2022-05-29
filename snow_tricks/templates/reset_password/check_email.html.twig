@@ -3,9 +3,21 @@
 {% block title %}Réinitialisation de votre mot de passe{% endblock %}
 
 {% block body %}
+
+    <h1>Réinitialisation de votre mot de passe</h1>
     <p>
         Si un compte lié à cette adresse email existe, un email contenant un lien de réinitialisation à été envoyé. Consultez votre boite de reception.
-        Ce lien expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
     </p>
-    <p>Si vous n'avez pas reçu d'email, consultez vos SPAM ou <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+
+    <div class="alert alert-danger">
+        Attention, ce lien expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }} !
+    </div>
+
+    <h2 class="h4">Vous n'avez pas reçu l'email ?</h2>
+
+    <p>Si vous n'avez toujours pas reçu d'email, consultez vos SPAM. Il arrive de temps en temps que des emails importants s'y retrouvent.</p>
+    <p>Vous avez également la possibilité de renvoyer une nouvelle demande de réinitialisation en cliquant sur le bouton ci-dessous :</p>
+    <p>
+        <a class="btn btn-primary" href="{{ path('app_forgot_password_request') }}">Renvoyer une demande de réinitialisation</a>
+    </p>
 {% endblock %}

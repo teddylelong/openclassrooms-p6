@@ -18,6 +18,7 @@ class FigureMediasType extends AbstractType
             ->add('url',  TextType::class, [
                 'label' => false,
                 'attr' => [
+                    'class' => 'media-field',
                     'placeholder' => "Collez ici le code d'une vidéo embarquée (iframe)",
                 ],
                 'constraints' => new Regex([
