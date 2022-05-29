@@ -6,14 +6,31 @@
 
     <h1>Liste des utilisateurs</h1>
 
-    {% for user in users %}
-        <div>
-            {{user.username}} ({{ user.roles[0] }}) -
-            Inscrit le {{ user.createdat|date('d/m/Y à H\\hi') }} -
-            <a href="{{ path('app_user_profile', {'id': user.id}) }}">Voir le profil</a> -
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}">Éditer</a>
-            {% include('user/_delete_form.html.twig') %}
-        </div>
-    {% endfor %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col">Inscription</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{user.username|capitalize}}</td>
+                    <td>{{ user.roles[0]|replace({'ROLE_ADMIN': "Administrateur", 'ROLE_MODO': "Modérateur", 'ROLE_USER': "Utilisateur"}) }}</td>
+                    <td>Le {{ user.createdat|date('d/m/Y à H\\hi') }}</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-primary" target="_blank" href="{{ path('app_user_profile', {'id': user.id}) }}">Profil</a>
+                        <a class="btn btn-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                        {% include('user/_delete_form.html.twig') %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

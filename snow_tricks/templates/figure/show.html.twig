@@ -174,7 +174,7 @@
                             {{ comment.content|nl2br }}
                         </p>
                     </div>
-                    <div class="small text-muted text-end lh-1 mb-1">
+                    <div class="small text-muted text-end mb-1">
                         Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
                     </div>
                 {% endfor %}

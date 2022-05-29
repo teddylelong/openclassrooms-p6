@@ -13,7 +13,7 @@
         <h3 class="mt-5">Informations privées</h3>
             <p>
                 Adresse email : {{ user.email }} <br/>
-                Role : {{ user.roles[0] }}
+                Role : {{ user.roles[0]|replace({'ROLE_ADMIN': "Administrateur", 'ROLE_MODO': "Modérateur", 'ROLE_USER': "Utilisateur"}) }}
             </p>
             <div>
                 <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
