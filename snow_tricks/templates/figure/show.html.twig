@@ -39,28 +39,36 @@
 
 {% block body %}
 
-    <div class="row">
-        <!-- Medias -->
-        <div class="col-12 col-lg-6 p-0">
-            {% if figure.FigureMedias|length < 1 %}
-                <p>Aucun média n'a été ajouté pour l'instant.</p>
-            {% else %}
-                {% for media in figure.FigureMedias %}
-                    <div class="ratio ratio-16x9">
-                        {{ media.url|raw }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-
+    <div class="row g-2">
         <!-- Gallery -->
-        <div class="col-12 col-lg-6 p-0">
+        <div class="col-12 col-lg-6">
             {% if figure.FigureImages|length < 1 %}
                 <p>Aucune image n'a été ajoutée pour l'instant.</p>
             {% else %}
-                {% for image in figure.FigureImages %}
-                    <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
-                {% endfor %}
+                <div class="h-100 row row-cols-2 g-2">
+                    {% for image in figure.FigureImages %}
+                        <div class="col" style="align-self: center">
+                            <img class="img-fluid" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Medias -->
+        <div class="col-12 col-lg-6">
+            {% if figure.FigureMedias|length < 1 %}
+                <p>Aucun média n'a été ajouté pour l'instant.</p>
+            {% else %}
+                <div class="row row-cols-2 g-2">
+                    {% for media in figure.FigureMedias %}
+                        <div class="col">
+                            <div class="ratio ratio-16x9">
+                                {{ media.url|raw }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
     </div>
@@ -121,7 +129,7 @@
                             {{ comment.content|nl2br }}
                         </p>
                     </div>
-                    <div class="small text-muted text-end lh-1">
+                    <div class="small text-muted text-end lh-1 mb-1">
                         Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
                     </div>
                 {% endfor %}
