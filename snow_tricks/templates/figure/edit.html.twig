@@ -2,12 +2,34 @@
 
 {% block title %}Modifier {{ figure.name }}{% endblock %}
 
+{% block full_width %}
+    {% set featuredImage = figure.FigureImages|first %}
+
+    <style>
+        #featured-img {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('uploads/images/' ~ featuredImage.filename) }}');
+        }
+    </style>
+
+    <div id="featured-img" class="d-flex">
+        <!-- Title -->
+        <h1 class="text-light text-center fw-bold">
+            {{ figure.name }}
+            {% if figure.status is same as('status.pending') %}
+                <span class="fs-4 text-muted">(En attente de validation)</span>
+            {% elseif figure.status is same as('status.rejected') %}
+                <span class="fs-4 text-danger">(Rejetée)</span>
+            {% endif %}
+        </h1>
+    </div>
+{% endblock full_width %}
+
 {% block body %}
 
     <h1>Modifier {{ figure.name }}</h1>
 
     <div class="alert alert-primary">
-        Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours.
+        Après modification, votre figure sera à nouveau relue et vérifiée par un administrateur sous deux jours.
         Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !
     </div>
 
@@ -52,9 +74,9 @@
         {% else %}
             <div class="gallery">
                 {% for image in figure.FigureImages %}
-                    <div>
-                        <img height="200" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
-                        <a href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+                    <div class="gallery-edit-image m-1 d-inline">
+                        <img height="150" src="{{ asset('uploads/images/' ~ image.filename) }}" alt="{{ figure.name }}">
+                        <a class="btn btn-danger" href="{{ path('app_figure_image_delete', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
                     </div>
                 {% endfor %}
             </div>

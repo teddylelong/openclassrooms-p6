@@ -12149,6 +12149,17 @@ body {
     border-radius: 0.25em !important;
   }
 }
+.gallery-edit-image {
+  position: relative;
+  text-align: center;
+}
+.gallery-edit-image a {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .del-media {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;

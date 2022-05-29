@@ -2,7 +2,7 @@
 
 {% block title %}{{ figure.name }}{% endblock %}
 
-{% block catchphrase %}
+{% block full_width %}
     {% set featuredImage = figure.FigureImages|first %}
 
     <style>
@@ -35,7 +35,7 @@
             {% endif %}
         </h1>
     </div>
-{% endblock %}
+{% endblock full_width %}
 
 {% block body %}
 
