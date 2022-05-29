@@ -6,7 +6,10 @@
 
     <h1>Modifier {{ figure.name }}</h1>
 
-    <p>Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours. Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !</p>
+    <div class="alert alert-primary">
+        Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours.
+        Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !
+    </div>
 
     {{ form_start(editForm) }}
 
@@ -34,7 +37,7 @@
             {% endfor %}
         </ol>
 
-        <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un média</button>
+        <button type="button" class="add_item_link mb-3 btn btn-outline-primary" data-collection-holder-class="medias">Ajouter un média</button>
 
         <h3>Galerie</h3>
 
@@ -57,7 +60,9 @@
             </div>
         {% endif %}
 
-        <button type="submit">Soumettre ma figure</button>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Mettre à jour ma figure</button>
+        </div>
     {{ form_end(editForm) }}
 
     {% block javascript %}

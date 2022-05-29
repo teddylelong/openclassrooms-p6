@@ -4,15 +4,12 @@
 
 {% block body %}
 
-
     <h1>Ajouter une nouvelle figure</h1>
-
 
     <div class="alert alert-primary">
         Après validation, votre figure sera relue et vérifiée par un administrateur sous deux jours.
         Si elle respecte les conditions d'utilisation, votre figure sera alors validée et publiée sur l'annuaire SnowTricks !
     </div>
-
 
     {{ form_start(figureType) }}
 
@@ -47,7 +44,7 @@
 
         {{ form_row(figureType.images) }}
 
-        <div style="margin-top: 20px">
+        <div class="mt-3">
             <button class="btn btn-primary btn-lg" type="submit">Valider ma figure</button>
         </div>
     {{ form_end(figureType) }}
