@@ -159,26 +159,39 @@
                 </div>
             {{ form_end(commentForm)}}
         {% else %}
-            <p>Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</p>
+            <h3 class="h5 text-center">Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</h3>
         {% endif%}
 
         <hr>
 
         <div class="comments-container">
-            {% if comments|length < 1 %}
-                <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
-            {% else %}
-                {% for comment in comments %}
-                    <div class="border border-primary border-4 border-end-0 border-top-0 border-bottom-0 px-2 py-3 bg-light">
-                        <p class="comment m-0">
-                            {{ comment.content|nl2br }}
-                        </p>
-                    </div>
-                    <div class="small text-muted text-end mb-1">
-                        Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
-                    </div>
-                {% endfor %}
-            {% endif %}
+
+                {% if comments|length < 1 %}
+                <div class="row">
+                    <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
+                </div>
+                {% else %}
+                    {% for comment in comments %}
+                        <div class="row g-0">
+                            <div class="col-2 col-xl-1 text-end">
+                                <img class="rounded-circle shadow me-3" width="55" src="{{ comment.user.avatar|default(asset('assets/images/avatar/default.jpg')) }}">
+                            </div>
+                            <div class="col-10 col-xl-11">
+                                <div class="border border-primary border-4 border-end-0 border-top-0 border-bottom-0 px-2 py-3 bg-light">
+                                    <p class="comment m-0">
+                                        {{ comment.content|nl2br }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small text-muted text-end mb-1">
+                                Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
         </div>
     </div>
 
