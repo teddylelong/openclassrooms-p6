@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% set defaultAvatar = asset('assets/images/avatar/default.jpg') %}
-
 {% block title %}Profil de {{ user.username|capitalize }}{% endblock %}
 
 {% block body %}
@@ -9,8 +7,13 @@
     <h1>Profil de {{ user.username|capitalize }}</h1>
 
     <div class="row g-2">
+
+        {% if user.avatar is not null %}
+            {% set avatar = asset('uploads/avatars/') ~ user.avatar %}
+        {% endif %}
+
         <div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
-            <img class="rounded-circle shadow" width="200" src="{{ user.avatar|default(defaultAvatar) }}">
+            <img class="rounded-circle shadow" width="200" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}">
         </div>
         <div class="col-12 col-md-9">
             <p>Bienvenue sur le profil de {{ user.username|capitalize }} !</p>

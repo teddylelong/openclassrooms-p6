@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Security\Voter\AdminVoter;
+use App\Service\FileUploader;
 use App\Service\UserManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +47,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/new", name="app_user_new")
      */
-    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -61,6 +63,11 @@ class UserController extends AbstractController
                 )
             );
             $user->setIsVerified(true);
+
+            $avatar = $form->get('avatar')->getData();
+            /** @var UploadedFile $avatar */
+            $fileName = $fileUploader->upload($avatar);
+            $user->setAvatar($fileName);
 
             $userManager->add($user);
 
