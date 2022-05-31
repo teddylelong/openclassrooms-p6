@@ -43,6 +43,12 @@
             </div>
 
             <span class="navbar-brand mt-2 text-light fs-6 position-absolute top-0 end-0">
+                {% if app.user.avatar is not null %}
+                    {% set avatar = asset('uploads/avatars/') ~ app.user.avatar %}
+                {% endif %}
+
+                <img class="rounded-circle shadow me-1" width="24" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}">
+
                 <span class="small">Bonjour, {{ app.user.userIdentifier }} !</span>
                 <a class="small link-danger" href="{{ path('app_logout') }}">
                     <i class="bi bi-power"></i> Déconnexion

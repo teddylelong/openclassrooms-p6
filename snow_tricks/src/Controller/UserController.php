@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserAvatarType;
 use App\Form\UserType;
 use App\Security\Voter\AdminVoter;
+use App\Security\Voter\UserVoter;
 use App\Service\FileUploader;
 use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -43,6 +44,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted(UserVoter::UPDATE_AVATAR, $user);
+
             $avatar = $form->get('avatar')->getData();
 
             /** @var UploadedFile $avatar */
