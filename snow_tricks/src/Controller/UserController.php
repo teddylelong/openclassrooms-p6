@@ -65,9 +65,12 @@ class UserController extends AbstractController
             $user->setIsVerified(true);
 
             $avatar = $form->get('avatar')->getData();
-            /** @var UploadedFile $avatar */
-            $fileName = $fileUploader->upload($avatar);
-            $user->setAvatar($fileName);
+
+            if (null !== $avatar) {
+                /** @var UploadedFile $avatar */
+                $fileName = $fileUploader->upload($avatar, '/avatars');
+                $user->setAvatar($fileName);
+            }
 
             $userManager->add($user);
 
@@ -83,7 +86,7 @@ class UserController extends AbstractController
     /**
      * @Route("user/edit/{id}", name="app_user_edit")
      */
-    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -106,6 +109,14 @@ class UserController extends AbstractController
                 );
             }
             $user->setUpdatedAt(new DateTimeImmutable());
+
+            $avatar = $form->get('avatar')->getData();
+
+            if (null !== $avatar) {
+                /** @var UploadedFile $avatar */
+                $fileName = $fileUploader->upload($avatar, '/avatars');
+                $user->setAvatar($fileName);
+            }
 
             $userManager->add($user);
 
