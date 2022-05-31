@@ -172,9 +172,14 @@
                 </div>
                 {% else %}
                     {% for comment in comments %}
+
+                        {% if comment.user.avatar is not null %}
+                            {% set avatar = asset('uploads/avatars/') ~ comment.user.avatar %}
+                        {% endif %}
+
                         <div class="row g-0">
                             <div class="col-2 col-xl-1 text-end">
-                                <img class="rounded-circle shadow me-3" width="55" src="{{ comment.user.avatar|default(asset('assets/images/avatar/default.jpg')) }}">
+                                <img class="rounded-circle shadow me-3" width="55" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}">
                             </div>
                             <div class="col-10 col-xl-11">
                                 <div class="border border-primary border-4 border-end-0 border-top-0 border-bottom-0 px-2 py-3 bg-light">
