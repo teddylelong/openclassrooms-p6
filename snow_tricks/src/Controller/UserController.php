@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserAvatarType;
 use App\Form\UserType;
 use App\Security\Voter\AdminVoter;
 use App\Service\FileUploader;
@@ -30,17 +31,34 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile/{id<\d+>}", name="app_user_profile", methods={"GET"})
+     * @Route("/user/profile/{id<\d+>}", name="app_user_profile")
      */
-    public function showProfile(User $user): Response
+    public function showProfile(Request $request, User $user, UserManager $userManager, UserAvatarType $avatarType, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $figures = $user->getFigures();
 
+        $form = $this->createForm(UserAvatarType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $avatar = $form->get('avatar')->getData();
+
+            /** @var UploadedFile $avatar */
+            $fileName = $fileUploader->upload($avatar, '/avatars');
+            $user->setAvatar($fileName);
+
+            $userManager->add($user);
+
+            $this->addFlash('success', "Votre avatar a été mis à jour avec succès ! :)");
+            $this->redirectToRoute('app_user_profile', ['id' => $user->getId()]);
+        }
+
         return $this->render('user/show-profile.html.twig', [
             'user' => $user,
-            'figures' => $figures
+            'figures' => $figures,
+            'avatarType' => $form->createView()
         ]);
     }
 

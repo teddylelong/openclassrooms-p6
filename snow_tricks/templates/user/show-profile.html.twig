@@ -12,9 +12,10 @@
             {% set avatar = asset('uploads/avatars/') ~ user.avatar %}
         {% endif %}
 
-        <div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
-            <img class="rounded-circle shadow" width="200" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}">
+        <div class="col-12 col-md-3 d-flex align-items-start justify-content-center">
+            <img class="rounded-circle shadow" width="200" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}"><br/>
         </div>
+
         <div class="col-12 col-md-9">
             <p>Bienvenue sur le profil de {{ user.username|capitalize }} !</p>
             <p class="small text-muted">Inscrit depuis le {{ user.createdAt|date('d/m/Y à H\\hi') }}</p>
@@ -26,14 +27,27 @@
                         Role : {{ user.roles[0]|replace({'ROLE_ADMIN': "Administrateur", 'ROLE_MODO': "Modérateur", 'ROLE_USER': "Utilisateur"}) }}
                     </p>
                     <div>
-                        <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false" aria-controls="collapse">Modifier l'avatar</a>
+                        <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier le profil</a>
                     </div>
-            {% else %}
+            {% elseif user == app.user %}
                 <div>
-                    <a class="btn btn-outline-primary" href="{{ path('app_home') }}">Retour à la page d'accueil</a>
+                    <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false" aria-controls="collapse">Modifier l'avatar</a>
                 </div>
             {% endif %}
+
+            <div class="collapse mt-2" id="collapse">
+                {{ form_start(avatarType)}}
+                    {{ form_row(avatarType.avatar) }}
+
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-primary">Mettre à jour l'avatar</button>
+                    </div>
+                {{ form_end(avatarType) }}
+            </div>
         </div>
+
+
     </div>
 
     <h3 class="mt-5">Figures postées par {{ user.username|capitalize }}</h3>
