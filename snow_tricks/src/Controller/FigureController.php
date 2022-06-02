@@ -15,21 +15,59 @@ use App\Service\FigureManager;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/", name="app_home")
+     * @Route("/{page<\d+>?1}", name="app_home")
      */
-    public function homePage(FigureManager $figureManager): Response
+    public function homePage(FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+        $figuresCount = $figureManager->countAllByStatus();
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
+
         return $this->render('figure/home.html.twig', [
-            'figures' => $figureManager->findByStatusOrderByDateLimit(),
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+            'pageTotal' => $pageTotal,
         ]);
     }
+
+    /**
+     * @Route("/loadmore/{page<\d+>?1}", name="app_loadmore")
+     */
+    public function loadMore(FigureManager $figureManager, int $page = 1): JsonResponse
+    {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+
+        // @TODO : use DTO ?
+        $figures = $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt);
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        foreach ($figures as $figure) {
+            $data[] = $serializer->serialize($figure, 'json');
+        }
+
+        return new JsonResponse([
+            'figures' => $data,
+        ]);
+    }
+
     /**
      * @Route("/figures", name="app_figure_index")
      */

@@ -27,6 +27,34 @@
 
         {% include '_parts/figure_grid.part.twig' %}
 
+        {% if pageTotal > app.request.get('page') %}
+            <div class="pagination justify-content-center">
+                <a id="load-more" class="btn btn-primary btn-lg mt-4" href="{{ path('app_loadmore', {'page': app.request.get('page') + 1}) }}">Voir plus</a>
+            </div>
+        {% endif %}
+
     {% endif %}
+
+    <script>
+        function onClickBtn(event) {
+            event.preventDefault();
+
+            // On envoie une requête Ajax vers le href du lien avec la méthode GET
+            fetch(this.getAttribute("href"), {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json"
+                }
+            }).then(
+                // On récupère la réponse en JSON
+                response => response.json()
+            )
+        }
+
+        let btn = document.querySelector('#load-more');
+
+        btn.addEventListener('click', onClickBtn);
+    </script>
 
 {% endblock %}

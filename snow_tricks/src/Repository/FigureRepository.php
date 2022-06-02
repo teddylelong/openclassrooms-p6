@@ -35,6 +35,17 @@ class FigureRepository extends ServiceEntityRepository
         }
     }
 
+    public function countAllByStatus($status = Figure::STATUS_ACCEPTED)
+    {
+        return $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->andWhere('f.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
     /**
      * @return Figure[] Returns an array of Figure objects
      */
@@ -50,13 +61,14 @@ class FigureRepository extends ServiceEntityRepository
     /**
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 10)
+    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 12, int $offset = 0)
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.status = :val')
             ->setParameter('val', $value)
             ->orderBy('f.created_at', 'DESC')
             ->setMaxResults($max)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult()
         ;

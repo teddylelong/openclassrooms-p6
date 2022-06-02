@@ -25,6 +25,11 @@ class FigureManager
         $this->figureRepository->add($figure);
     }
 
+    public function countAllByStatus($status = Figure::STATUS_ACCEPTED)
+    {
+        return $this->figureRepository->countAllByStatus($status);
+    }
+
     /**
      * find all figures, by status and ordered by dates
      *
@@ -40,9 +45,9 @@ class FigureManager
      *
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 12)
+    public function findByStatusOrderByDateLimit($value = Figure::STATUS_ACCEPTED, int $max = 12, int $offset = 0)
     {
-        return $this->figureRepository->findByStatusOrderByDateLimit($value, $max);
+        return $this->figureRepository->findByStatusOrderByDateLimit($value, $max, $offset);
     }
 
     /**
