@@ -15,14 +15,9 @@ use App\Service\FigureManager;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class FigureController extends AbstractController
 {
@@ -46,35 +41,31 @@ class FigureController extends AbstractController
     /**
      * @Route("/loadmore/{page<\d+>?1}", name="app_loadmore")
      */
-    public function loadMore(FigureManager $figureManager, int $page = 1): JsonResponse
+    public function loadMore(FigureManager $figureManager, int $page = 1): Response
     {
         $figurePerPage = 12;
         $beginAt = ($page - 1) * $figurePerPage;
 
-        // @TODO : use DTO ?
-        $figures = $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt);
+        $content = $this->render('_parts/figure_grid.part.twig', [
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt)
+        ])->getContent();
 
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        foreach ($figures as $figure) {
-            $data[] = $serializer->serialize($figure, 'json');
-        }
-
-        return new JsonResponse([
-            'figures' => $data,
-        ]);
+        return new Response($content, 200, array('Content-Type' => 'text/html'));
     }
 
     /**
-     * @Route("/figures", name="app_figure_index")
+     * @Route("/figures/{page<\d+>?1}", name="app_figure_index")
      */
-    public function index(FigureManager $figureManager): Response
+    public function index(FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+        $figuresCount = $figureManager->countAllByStatus();
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
         return $this->render('figure/index.html.twig', [
-            'figures' => $figureManager->findByStatusOrderByDate(),
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+            'pageTotal' => $pageTotal,
         ]);
     }
 
@@ -245,14 +236,34 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id<\d+>}-{slug}", name="app_figures_by_category")
+     * @Route("/category/{id<\d+>}-{slug}/{page<\d+>}", name="app_figures_by_category")
      */
-    public function indexByCategory(Request $request, Category $category, FigureManager $figureManager): Response
+    public function indexByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $figuresCount = $figureManager->countAllByStatusAndCategory($category);
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
         return $this->render('figure/index_by_category.html.twig', [
             'category' => $category,
-            'figures' => $figureManager->findAllByCategoryOrderByDate($category->getId()),
+            'pageTotal' => $pageTotal,
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, 1),
         ]);
+    }
+
+    /**
+     * @Route("/loadmore-bycategory/{id<\d+>}-{slug}/{page<\d+>?1}", name="app_loadmore_by_category")
+     */
+    public function loadMoreByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
+    {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+
+        $content = $this->render('_parts/figure_grid.part.twig', [
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+        ])->getContent();
+
+        return new Response($content, 200, array('Content-Type' => 'text/html'));
     }
 
     /**

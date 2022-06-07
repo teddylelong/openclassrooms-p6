@@ -24,37 +24,20 @@
         <p>Il n'y a pas encore de figure. Revenez un peu plus tard !</p>
 
     {% else %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-0" id="figures-grid">
+            {% include '_parts/figure_grid.part.twig' %}
+        </div>
 
-        {% include '_parts/figure_grid.part.twig' %}
-
-        {% if pageTotal > app.request.get('page') %}
-            <div class="pagination justify-content-center">
-                <a id="load-more" class="btn btn-primary btn-lg mt-4" href="{{ path('app_loadmore', {'page': app.request.get('page') + 1}) }}">Voir plus</a>
+        {% if pageTotal != 1 %}
+            <div class="justify-content-center text-center">
+                <a id="load-more" class="btn btn-primary btn-lg mt-4" href="/loadmore/2">
+                    <i class="bi bi-arrow-clockwise"></i> Voir plus
+                </a>
             </div>
         {% endif %}
 
     {% endif %}
 
-    <script>
-        function onClickBtn(event) {
-            event.preventDefault();
-
-            // On envoie une requête Ajax vers le href du lien avec la méthode GET
-            fetch(this.getAttribute("href"), {
-                method: "GET",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Content-Type": "application/json"
-                }
-            }).then(
-                // On récupère la réponse en JSON
-                response => response.json()
-            )
-        }
-
-        let btn = document.querySelector('#load-more');
-
-        btn.addEventListener('click', onClickBtn);
-    </script>
+    <script id="load-more-script" data-page-total="{{ pageTotal }}" data-page-href="loadmore" src="{{ asset('assets/js/load-more.js') }}"></script>
 
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Entity\Figure;
 use App\Repository\FigureRepository;
 
@@ -28,6 +29,11 @@ class FigureManager
     public function countAllByStatus($status = Figure::STATUS_ACCEPTED)
     {
         return $this->figureRepository->countAllByStatus($status);
+    }
+
+    public function countAllByStatusAndCategory(Category $category, $status = Figure::STATUS_ACCEPTED)
+    {
+        return $this->figureRepository->countAllByStatusAndCategory($category, $status);
     }
 
     /**
@@ -68,6 +74,16 @@ class FigureManager
     public function findAllByCategoryOrderByDate($categoryId)
     {
         return $this->figureRepository->findAllByCategoryOrderByDate($categoryId);
+    }
+
+    /**
+     * Find all figures, by status and category, ordered by dates and limit
+     *
+     * @return Figure[] Returns an array of Figure objects
+     */
+    public function findAllByStatusAndCategoryOrderByDateLimit(Category $category, $status = Figure::STATUS_ACCEPTED, int $max = 12, int $offset = 0)
+    {
+        return $this->figureRepository->findAllByStatusAndCategoryOrderByDateLimit($category, $status, $max, $offset);
     }
 
     /**

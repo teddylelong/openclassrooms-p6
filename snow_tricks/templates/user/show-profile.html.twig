@@ -54,7 +54,9 @@
 
     {% if figures|length > 0 %}
 
-        {% include '_parts/figure_grid.part.twig' %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-0" id="figures-grid">
+            {% include '_parts/figure_grid.part.twig' %}
+        </div>
 
     {% else %}
         <p class="text-muted">{{ user.username|capitalize }} n'a rien publié pour l'instant...</p>

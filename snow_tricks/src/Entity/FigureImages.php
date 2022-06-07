@@ -56,18 +56,6 @@ class FigureImages
         return $this;
     }
 
-    public function getAlt(): ?string
-    {
-        return $this->alt;
-    }
-
-    public function setAlt(string $alt): self
-    {
-        $this->alt = $alt;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;

@@ -1,59 +1,55 @@
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-0">
+{% for figure in figures %}
 
-    {% for figure in figures %}
+    {% set firstImage = figure.FigureImages|first %}
 
-        {% set firstImage = figure.FigureImages|first %}
+    <div class="col">
+        <div class="card h-100">
 
-        <div class="col">
-            <div class="card h-100">
+            {% if firstImage %}
+                <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">
+                    <img class="card-img-top" src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+                </a>
+            {% endif %}
 
-                {% if firstImage %}
+            <div class="card-body">
+                <h5 class="card-title">
                     <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">
-                        <img class="card-img-top" src="{{ asset('/uploads/images/'~firstImage.filename) }}">
+                        {{ figure.name }}
                     </a>
-                {% endif %}
-
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="{{ path('app_figure_show', {'id': figure.id, 'slug': figure.slug}) }}">
-                            {{ figure.name }}
+                    {% if is_granted('FIGURE_EDIT', figure) %}
+                        <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}" class="btn btn-outline-primary btn-sm" title="Modifier cette figure">
+                            <i class="bi bi-pencil"></i>
                         </a>
-                        {% if is_granted('FIGURE_EDIT', figure) %}
-                            <a href="{{ path('app_figure_edit', {'id': figure.id, 'slug': figure.slug}) }}" class="btn btn-outline-primary btn-sm" title="Modifier cette figure">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                        {% endif %}
-                        {% if is_granted('FIGURE_DELETE', figure) %}
-                            <form class="d-inline" method="post" action="{{ path('app_figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette figure ? Cette action est irréversible.');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
-                                <button class="btn btn-outline-danger btn-sm" title="Supprimer cette figure"><i class="bi bi-trash3"></i></button>
-                            </form>
-                        {% endif %}
-                    </h5>
-                </div>
+                    {% endif %}
+                    {% if is_granted('FIGURE_DELETE', figure) %}
+                        <form class="d-inline" method="post" action="{{ path('app_figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette figure ? Cette action est irréversible.');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+                            <button class="btn btn-outline-danger btn-sm" title="Supprimer cette figure"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    {% endif %}
+                </h5>
+            </div>
 
-                <div class="card-footer">
-                    <small class="text-muted">
-                        <i class="bi bi-person-fill"></i> Par
-                        {% if figure.user is not null %}
-                            <a href="{{ path('app_user_profile', {id: figure.user.id}) }}">
-                                {{ figure.user.userIdentifier|capitalize }}
-                            </a>
-                        {% else %}
-                            Anonyme
-                        {% endif %}
-                        <i class="bi bi-tag-fill"></i>
-                        {% if figure.category is not null %}
-                            <a href="{{ path('app_figures_by_category', {id: figure.category.id, slug: figure.category.slug}) }}">
-                                {{ figure.category.name|capitalize }}
-                            </a>
-                        {% else %}
-                            Non-classé
-                        {%endif%}
-                    </small>
-                </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="bi bi-person-fill"></i> Par
+                    {% if figure.user is not null %}
+                        <a href="{{ path('app_user_profile', {id: figure.user.id}) }}">
+                            {{ figure.user.userIdentifier|capitalize }}
+                        </a>
+                    {% else %}
+                        Anonyme
+                    {% endif %}
+                    <i class="bi bi-tag-fill"></i>
+                    {% if figure.category is not null %}
+                        <a href="{{ path('app_figures_by_category', {id: figure.category.id, slug: figure.category.slug}) }}">
+                            {{ figure.category.name|capitalize }}
+                        </a>
+                    {% else %}
+                        Non-classé
+                    {%endif%}
+                </small>
             </div>
         </div>
-    {% endfor %}
-
-</div>
+    </div>
+{% endfor %}
