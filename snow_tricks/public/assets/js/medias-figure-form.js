@@ -37,7 +37,7 @@ document
         btn.addEventListener("click", addFormToCollection)
     });
 
-var matches = !!location.href.match('/figure/edit/');
+let matches = !!location.href.match('/figure/edit/');
 
 if (matches) {
     document

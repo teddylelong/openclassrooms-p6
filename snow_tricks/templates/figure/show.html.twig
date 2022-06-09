@@ -183,6 +183,6 @@
         {% endif %}
     </div>
 
-    <script id="load-more-script" data-page-total="{{ commentsTotal }}" data-page-href="comment/loadmore/{{ figure.id }}" src="{{ asset('assets/js/load-more-comment.js') }}"></script>
+    <script id="load-more-script" data-container="comments-container" data-page-total="{{ commentsTotal }}" data-page-href="comment/loadmore/{{ figure.id }}" src="{{ asset('assets/js/load-more.js') }}"></script>
 
 {% endblock %}
