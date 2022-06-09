@@ -29,7 +29,7 @@ class FigureController extends AbstractController
         $figurePerPage = 12;
         $beginAt = ($page - 1) * $figurePerPage;
         $figuresCount = $figureManager->countAllByStatus();
-        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+        $pageTotal = (int) ceil($figuresCount / $figurePerPage);
 
         return $this->render('figure/home.html.twig', [
             'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
@@ -60,7 +60,7 @@ class FigureController extends AbstractController
         $figurePerPage = 12;
         $beginAt = ($page - 1) * $figurePerPage;
         $figuresCount = $figureManager->countAllByStatus();
-        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+        $pageTotal = (int) ceil($figuresCount / $figurePerPage);
 
         return $this->render('figure/index.html.twig', [
             'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
