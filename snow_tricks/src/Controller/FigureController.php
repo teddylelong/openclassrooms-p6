@@ -31,7 +31,6 @@ class FigureController extends AbstractController
         $figuresCount = $figureManager->countAllByStatus();
         $pageTotal = intval(ceil($figuresCount / $figurePerPage));
 
-
         return $this->render('figure/home.html.twig', [
             'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
             'pageTotal' => $pageTotal,
@@ -80,11 +79,16 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
+     * @Route("/figure/show/{id<\d+>}-{slug}/{page<\d+>}", name="app_figure_show")
      */
-    public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
+    public function show(Request $request, Figure $figure, CommentManager $commentManager, $page = 1): Response
     {
         $this->denyAccessUnlessGranted(FigureVoter::VIEW, $figure);
+
+        $commentsCount = $commentManager->countAllByFigureAndStatus($figure);
+        $commentsPerPage = 10;
+        $beginAt = ($page - 1) * $commentsPerPage;
+        $commentsTotal = intval(ceil($commentsCount / $commentsPerPage));
 
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
@@ -116,7 +120,8 @@ class FigureController extends AbstractController
 
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
-            'comments' => $commentManager->findByFigureAndStatus($figure),
+            'comments' => $commentManager->findAllByFigureAndStatusLimit($figure, Comment::STATUS_ACCEPTED, $commentsPerPage, $beginAt),
+            'commentsTotal' => $commentsTotal,
             'commentForm' => $commentForm->createView(),
         ]);
     }

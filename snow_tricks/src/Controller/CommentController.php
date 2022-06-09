@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Comment;
+use App\Entity\Figure;
 use App\Security\Voter\AdminVoter;
 use App\Security\Voter\CommentVoter;
 use App\Service\CommentManager;
@@ -26,6 +27,21 @@ class CommentController extends AbstractController
         return $this->render('comment/index.html.twig', [
             'comments' => $comments,
         ]);
+    }
+
+    /**
+     * @Route("/comment/loadmore/{id<\d+>}/{page<\d+>}")
+     */
+    public function loadMore(Figure $figure, CommentManager $commentManager, $page = 1): Response
+    {
+        $commentsPerPage = 10;
+        $beginAt = ($page - 1) * $commentsPerPage;
+
+        $content = $this->render('_parts/comments.part.twig', [
+            'comments' => $commentManager->findByFigureAndStatusOrderByDateLimit($figure, Comment::STATUS_ACCEPTED, $commentsPerPage, $beginAt)
+        ])->getContent();
+
+        return new Response($content, 200, array('Content-Type' => 'text/html'));
     }
 
     /**

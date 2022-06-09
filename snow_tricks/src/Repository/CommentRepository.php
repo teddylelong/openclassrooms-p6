@@ -36,6 +36,30 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
+    public function countAllByStatus($status = Comment::STATUS_ACCEPTED): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->andWhere('c.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function countAllByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->andWhere('c.figure = :figure')
+            ->andWhere('c.status = :status')
+            ->setParameter('figure', $figure)
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
     /**
      * @return Comment[] Returns an array of Comment objects
      */
@@ -60,10 +84,42 @@ class CommentRepository extends ServiceEntityRepository
             ->setParameter('figure', $figure)
             ->setParameter('status', $status)
             ->orderBy('c.created_at', 'DESC')
-            // ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findAllByFigureAndStatusLimit(Figure $figure, $status = Comment::STATUS_ACCEPTED, int $max = 10, int $offset = 0)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.figure = :figure')
+            ->andWhere('c.status = :status')
+            ->setParameter('figure', $figure)
+            ->setParameter('status', $status)
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults($max)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Comment[] Returns an array of Comment objects
+     */
+    public function findByFigureAndStatusOrderByDateLimit(Figure $figure, $status = Comment::STATUS_ACCEPTED, int $max = 10, int $offset = 0)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.figure = :figure')
+            ->andWhere('c.status = :status')
+            ->setParameter('figure', $figure)
+            ->setParameter('status', $status)
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults($max)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 
