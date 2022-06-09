@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,11 +65,19 @@ class UserType extends AbstractType
                 ]
             ])
 
+            ->add('avatar', FileType::class, [
+                'label' => "Sélectionnez un avatar (facultatif) :",
+                'multiple' => false,
+                'required' => false,
+                'mapped' => false,
+            ])
+
+
             // the event that will handle the conditional field
             ->addEventListener(
                 FormEvents::PRE_SET_DATA,
                 array($this, 'onPreSetData')
-            );;
+            )
         ;
 
         // Data transformer

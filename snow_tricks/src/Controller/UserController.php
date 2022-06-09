@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserAvatarType;
 use App\Form\UserType;
 use App\Security\Voter\AdminVoter;
+use App\Security\Voter\UserVoter;
+use App\Service\FileUploader;
 use App\Service\UserManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,24 +32,43 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile/{id<\d+>}", name="app_user_profile", methods={"GET"})
+     * @Route("/user/profile/{id<\d+>}", name="app_user_profile")
      */
-    public function showProfile(User $user): Response
+    public function showProfile(Request $request, User $user, UserManager $userManager, UserAvatarType $avatarType, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $figures = $user->getFigures();
 
+        $form = $this->createForm(UserAvatarType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted(UserVoter::UPDATE_AVATAR, $user);
+
+            $avatar = $form->get('avatar')->getData();
+
+            /** @var UploadedFile $avatar */
+            $fileName = $fileUploader->upload($avatar, '/avatars');
+            $user->setAvatar($fileName);
+
+            $userManager->add($user);
+
+            $this->addFlash('success', "Votre avatar a été mis à jour avec succès ! :)");
+            $this->redirectToRoute('app_user_profile', ['id' => $user->getId()]);
+        }
+
         return $this->render('user/show-profile.html.twig', [
             'user' => $user,
-            'figures' => $figures
+            'figures' => $figures,
+            'avatarType' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/user/new", name="app_user_new")
      */
-    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -62,6 +85,14 @@ class UserController extends AbstractController
             );
             $user->setIsVerified(true);
 
+            $avatar = $form->get('avatar')->getData();
+
+            if (null !== $avatar) {
+                /** @var UploadedFile $avatar */
+                $fileName = $fileUploader->upload($avatar, '/avatars');
+                $user->setAvatar($fileName);
+            }
+
             $userManager->add($user);
 
             $this->addFlash('success', "Le nouvel utilisateur a été créé avec succès !");
@@ -76,7 +107,7 @@ class UserController extends AbstractController
     /**
      * @Route("user/edit/{id}", name="app_user_edit")
      */
-    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -99,6 +130,14 @@ class UserController extends AbstractController
                 );
             }
             $user->setUpdatedAt(new DateTimeImmutable());
+
+            $avatar = $form->get('avatar')->getData();
+
+            if (null !== $avatar) {
+                /** @var UploadedFile $avatar */
+                $fileName = $fileUploader->upload($avatar, '/avatars');
+                $user->setAvatar($fileName);
+            }
 
             $userManager->add($user);
 

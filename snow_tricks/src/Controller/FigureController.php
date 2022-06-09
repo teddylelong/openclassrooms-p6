@@ -22,21 +22,49 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/", name="app_home")
+     * @Route("/{page<\d+>?1}", name="app_home")
      */
-    public function homePage(FigureManager $figureManager): Response
+    public function homePage(FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+        $figuresCount = $figureManager->countAllByStatus();
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
         return $this->render('figure/home.html.twig', [
-            'figures' => $figureManager->findByStatusOrderByDateLimit(),
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+            'pageTotal' => $pageTotal,
         ]);
     }
+
     /**
-     * @Route("/figures", name="app_figure_index")
+     * @Route("/loadmore/{page<\d+>?1}", name="app_loadmore")
      */
-    public function index(FigureManager $figureManager): Response
+    public function loadMore(FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+
+        $content = $this->render('_parts/figure_grid.part.twig', [
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt)
+        ])->getContent();
+
+        return new Response($content, 200, array('Content-Type' => 'text/html'));
+    }
+
+    /**
+     * @Route("/figures/{page<\d+>?1}", name="app_figure_index")
+     */
+    public function index(FigureManager $figureManager, int $page = 1): Response
+    {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+        $figuresCount = $figureManager->countAllByStatus();
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
         return $this->render('figure/index.html.twig', [
-            'figures' => $figureManager->findByStatusOrderByDate(),
+            'figures' => $figureManager->findByStatusOrderByDateLimit(Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+            'pageTotal' => $pageTotal,
         ]);
     }
 
@@ -51,11 +79,16 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/show/{id<\d+>}-{slug}", name="app_figure_show")
+     * @Route("/figure/show/{id<\d+>}-{slug}/{page<\d+>}", name="app_figure_show")
      */
-    public function show(Request $request, Figure $figure, CommentManager $commentManager): Response
+    public function show(Request $request, Figure $figure, CommentManager $commentManager, $page = 1): Response
     {
         $this->denyAccessUnlessGranted(FigureVoter::VIEW, $figure);
+
+        $commentsCount = $commentManager->countAllByFigureAndStatus($figure);
+        $commentsPerPage = 10;
+        $beginAt = ($page - 1) * $commentsPerPage;
+        $commentsTotal = intval(ceil($commentsCount / $commentsPerPage));
 
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
@@ -87,7 +120,8 @@ class FigureController extends AbstractController
 
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
-            'comments' => $commentManager->findByFigureAndStatus($figure),
+            'comments' => $commentManager->findAllByFigureAndStatusLimit($figure, Comment::STATUS_ACCEPTED, $commentsPerPage, $beginAt),
+            'commentsTotal' => $commentsTotal,
             'commentForm' => $commentForm->createView(),
         ]);
     }
@@ -207,14 +241,34 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id<\d+>}-{slug}", name="app_figures_by_category")
+     * @Route("/category/{id<\d+>}-{slug}/{page<\d+>}", name="app_figures_by_category")
      */
-    public function indexByCategory(Request $request, Category $category, FigureManager $figureManager): Response
+    public function indexByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
     {
+        $figurePerPage = 12;
+        $figuresCount = $figureManager->countAllByStatusAndCategory($category);
+        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+
         return $this->render('figure/index_by_category.html.twig', [
             'category' => $category,
-            'figures' => $figureManager->findAllByCategoryOrderByDate($category->getId()),
+            'pageTotal' => $pageTotal,
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, 1),
         ]);
+    }
+
+    /**
+     * @Route("/loadmore-bycategory/{id<\d+>}-{slug}/{page<\d+>?1}", name="app_loadmore_by_category")
+     */
+    public function loadMoreByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
+    {
+        $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
+
+        $content = $this->render('_parts/figure_grid.part.twig', [
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+        ])->getContent();
+
+        return new Response($content, 200, array('Content-Type' => 'text/html'));
     }
 
     /**

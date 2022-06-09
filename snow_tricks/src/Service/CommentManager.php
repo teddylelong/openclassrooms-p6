@@ -15,6 +15,16 @@ class CommentManager
         $this->commentRepository = $commentRepository;
     }
 
+    public function countAllByStatus($status = Comment::STATUS_ACCEPTED): int
+    {
+        return $this->commentRepository->countAllByStatus($status);
+    }
+
+    public function countAllByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED): int
+    {
+        return $this->commentRepository->countAllByFigureAndStatus($figure, $status);
+    }
+
     public function add(Comment $comment)
     {
         $this->commentRepository->add($comment);
@@ -33,6 +43,16 @@ class CommentManager
     public function findByFigureAndStatus(Figure $figure, $status = Comment::STATUS_ACCEPTED)
     {
         return $this->commentRepository->findByFigureAndStatus($figure, $status);
+    }
+
+    public function findAllByFigureAndStatusLimit(Figure $figure, $status = Comment::STATUS_ACCEPTED, int $max = 10, int $offset = 0)
+    {
+        return $this->commentRepository->findAllByFigureAndStatusLimit($figure, $status, $max, $offset);
+    }
+
+    public function findByFigureAndStatusOrderByDateLimit(Figure $figure, $status = Comment::STATUS_ACCEPTED, int $max = 10, int $offset = 0)
+    {
+        return $this->commentRepository->findByFigureAndStatusOrderByDateLimit($figure, $status, $max, $offset);
     }
 
     public function delete(Comment $comment)

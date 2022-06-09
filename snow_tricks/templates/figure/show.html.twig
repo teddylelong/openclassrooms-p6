@@ -159,27 +159,30 @@
                 </div>
             {{ form_end(commentForm)}}
         {% else %}
-            <p>Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</p>
+            <h3 class="h5 text-center">Vous devez <a href="{{ path('app_login') }}">être connecté</a> pour déposer un commentaire.</h3>
         {% endif%}
 
         <hr>
 
-        <div class="comments-container">
-            {% if comments|length < 1 %}
-                <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
+        <div class="comments-container" id="comments-container">
+            {% if comments is empty %}
+                <div class="row">
+                    <p>Aucun commentaire n'a été déposé pour l'instant. Soyez le premier !</p>
+                </div>
             {% else %}
-                {% for comment in comments %}
-                    <div class="border border-primary border-4 border-end-0 border-top-0 border-bottom-0 px-2 py-3 bg-light">
-                        <p class="comment m-0">
-                            {{ comment.content|nl2br }}
-                        </p>
-                    </div>
-                    <div class="small text-muted text-end mb-1">
-                        Par {{ comment.user.userIdentifier|default('Anonyme') }} le {{ comment.createdAt|date("d/m/y \à H\\hi") }}{% if is_granted(constant('App\\Security\\Voter\\CommentVoter::DELETE'), comment) %} - {% include 'comment/_delete_form.html.twig' %}{% endif %}
-                    </div>
-                {% endfor %}
+                {% include '_parts/comments.part.twig' %}
             {% endif %}
         </div>
+
+        {% if commentsTotal != 1 %}
+            <div class="justify-content-center text-center">
+                <a id="load-more" class="btn btn-primary mt-4" href="/comment/loadmore/{{ figure.id }}/2">
+                    <i class="bi bi-arrow-clockwise"></i> Voir plus de commentaires
+                </a>
+            </div>
+        {% endif %}
     </div>
+
+    <script id="load-more-script" data-container="comments-container" data-page-total="{{ commentsTotal }}" data-page-href="comment/loadmore/{{ figure.id }}" src="{{ asset('assets/js/load-more.js') }}"></script>
 
 {% endblock %}

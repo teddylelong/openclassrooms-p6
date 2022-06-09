@@ -25,7 +25,7 @@ class FigureImagesController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])) {
             $fileName = $image->getFilename();
-            unlink($this->getParameter('images_directory').'/'.$fileName);
+            unlink($this->getParameter('images_directory').'/images/'.$fileName);
 
             $figureImagesManager->delete($image);
 

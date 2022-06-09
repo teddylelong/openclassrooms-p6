@@ -6,29 +6,57 @@
 
     <h1>Profil de {{ user.username|capitalize }}</h1>
 
-    <p>Bienvenue sur le profil de {{ user.username|capitalize }} !</p>
-    <p class="small text-muted">Inscrit depuis le {{ user.createdAt|date('d/m/Y à H\\hi') }}</p>
+    <div class="row g-2">
 
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODO') %}
-        <h3 class="mt-5">Informations privées</h3>
-            <p>
-                Adresse email : {{ user.email }} <br/>
-                Role : {{ user.roles[0]|replace({'ROLE_ADMIN': "Administrateur", 'ROLE_MODO': "Modérateur", 'ROLE_USER': "Utilisateur"}) }}
-            </p>
-            <div>
-                <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
-            </div>
-    {% else %}
-        <div>
-            <a class="btn btn-outline-primary" href="{{ path('app_home') }}">Retour à la page d'accueil</a>
+        {% if user.avatar is not null %}
+            {% set avatar = asset('uploads/avatars/') ~ user.avatar %}
+        {% endif %}
+
+        <div class="col-12 col-md-3 d-flex align-items-start justify-content-center">
+            <img class="rounded-circle shadow" width="200" src="{{ avatar|default(asset('assets/images/avatar/default.jpg')) }}"><br/>
         </div>
-    {% endif %}
+
+        <div class="col-12 col-md-9">
+            <p>Bienvenue sur le profil de {{ user.username|capitalize }} !</p>
+            <p class="small text-muted">Inscrit depuis le {{ user.createdAt|date('d/m/Y à H\\hi') }}</p>
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODO') %}
+                <h3 class="mt-5">Informations privées</h3>
+                    <p>
+                        Adresse email : {{ user.email }} <br/>
+                        Role : {{ user.roles[0]|replace({'ROLE_ADMIN': "Administrateur", 'ROLE_MODO': "Modérateur", 'ROLE_USER': "Utilisateur"}) }}
+                    </p>
+                    <div>
+                        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false" aria-controls="collapse">Modifier l'avatar</a>
+                        <a class="btn btn-outline-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier le profil</a>
+                    </div>
+            {% elseif user == app.user %}
+                <div>
+                    <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false" aria-controls="collapse">Modifier l'avatar</a>
+                </div>
+            {% endif %}
+
+            <div class="collapse mt-2" id="collapse">
+                {{ form_start(avatarType)}}
+                    {{ form_row(avatarType.avatar) }}
+
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-primary">Mettre à jour l'avatar</button>
+                    </div>
+                {{ form_end(avatarType) }}
+            </div>
+        </div>
+
+
+    </div>
 
     <h3 class="mt-5">Figures postées par {{ user.username|capitalize }}</h3>
 
     {% if figures|length > 0 %}
 
-        {% include '_parts/figure_grid.part.twig' %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-0" id="figures-grid">
+            {% include '_parts/figure_grid.part.twig' %}
+        </div>
 
     {% else %}
         <p class="text-muted">{{ user.username|capitalize }} n'a rien publié pour l'instant...</p>
