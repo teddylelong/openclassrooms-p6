@@ -241,9 +241,9 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id<\d+>}-{slug}/{page<\d+>}", name="app_figures_by_category")
+     * @Route("/category/{id<\d+>}-{slug}/{page<\d+>?1}", name="app_figures_by_category")
      */
-    public function indexByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
+    public function indexByCategory(Category $category, FigureManager $figureManager): Response
     {
         $figurePerPage = 12;
         $figuresCount = $figureManager->countAllByStatusAndCategory($category);
