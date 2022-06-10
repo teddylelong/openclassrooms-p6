@@ -11,14 +11,14 @@ let index = url.searchParams.get('page') + 1;
 btn.addEventListener('click', onClickBtn);
 
 function onClickBtn(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    fetch(this.getAttribute("href"), {
-        method: "GET",
-        headers: {
-            "X-Requested-With": "XMLHttpRequest",
-            "Content-Type": "text/html",
-        }
+  fetch(this.getAttribute("href"), {
+      method: "GET",
+      headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Content-Type": "text/html",
+      }
     }).then(function (response) {
         return response.text();
     }).then(function (data) {
@@ -30,13 +30,13 @@ function onClickBtn(event) {
 
 function appendData(data) {
 
-    var container = document.getElementById(containerId);
+  let container = document.getElementById(containerId);
 
-    index++;
-    btn.href = '/' + href + '/' + (index + 1);
-    container.innerHTML += data;
+  index++;
+  btn.href = '/' + href + '/' + (index + 1);
+  container.innerHTML += data;
 
-    if (index >= pageTotal) {
-        btn.remove();
-    }
+  if (index >= pageTotal) {
+    btn.remove();
+  }
 }
