@@ -16,7 +16,7 @@ class FigureImagesController extends AbstractController
     /**
      * @Route("/figure/images/delete/{id<\d+>}", name="app_figure_image_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, FigureImages $image, FigureImagesManager $figureImagesManager): JsonResponse
+    public function delete(Request $request, FigureImages $image, FigureImagesManager $imagesManager): JsonResponse
     {
         $figure = $image->getFigure();
         $this->denyAccessUnlessGranted(FigureVoter::DELETE, $figure);
@@ -27,11 +27,10 @@ class FigureImagesController extends AbstractController
             $fileName = $image->getFilename();
             unlink($this->getParameter('images_directory').'/images/'.$fileName);
 
-            $figureImagesManager->delete($image);
+            $imagesManager->delete($image);
 
             return new JsonResponse(['success' => 1]);
-        } else {
-            return new JsonResponse(['error' => 'Token Invalide'], 400);
         }
+        return new JsonResponse(['error' => 'Token Invalide'], 400);
     }
 }
