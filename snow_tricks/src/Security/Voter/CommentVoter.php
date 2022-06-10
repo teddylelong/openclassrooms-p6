@@ -39,17 +39,17 @@ class CommentVoter extends Voter
        // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::DELETE:
-                return $this->canDelete($subject, $user);
+                return $this->canDelete();
                 break;
             case self::UPDATE:
-                return $this->canUpdate($subject, $user);
+                return $this->canUpdate();
                 break;
         }
 
         return false;
     }
 
-    private function canDelete(Comment $comment, User $user): bool
+    private function canDelete(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
@@ -60,7 +60,7 @@ class CommentVoter extends Voter
         return false;
     }
 
-    private function canUpdate(Comment $comment, User $user): bool
+    private function canUpdate(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

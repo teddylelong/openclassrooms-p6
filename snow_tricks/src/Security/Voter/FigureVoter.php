@@ -93,7 +93,7 @@ class FigureVoter extends Voter
         return $user === $figure->getUser();
     }
 
-    private function canUpdate(Figure $figure, User $user): bool
+    private function canUpdate(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
