@@ -1,5 +1,7 @@
 const addFormToCollection = (e) => {
-    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+    const collectionHolder = document.querySelector(
+        '.' + e.currentTarget.dataset.collectionHolderClass
+    );
 
     const item = document.createElement('li');
 
@@ -40,9 +42,8 @@ document
 let matches = !!location.href.match('/figure/edit/');
 
 if (matches) {
-    document
-        .querySelectorAll('ol.medias li')
-        .forEach((li) => {
-            addTagFormDeleteLink(li)
-        })
+    document.querySelectorAll('ol.medias li')
+    .forEach((li) => {
+        addTagFormDeleteLink(li)
+    })
 }

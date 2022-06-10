@@ -1,6 +1,8 @@
 window.onload = () => {
     let links = document.querySelectorAll("[data-delete]")
 
+    let link;
+
     for(link of links){
         link.addEventListener("click", function(e){
             e.preventDefault()
@@ -12,7 +14,7 @@ window.onload = () => {
                         "X-Requested-With": "XMLHttpRequest",
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({"_token": this.dataset.token})
+                    body: JSON.stringify({_token: this.dataset.token})
                 }).then(
                     // On récupère la réponse en JSON
                     response => response.json()
