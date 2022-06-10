@@ -14,11 +14,11 @@ function onClickBtn(event) {
   event.preventDefault();
 
   fetch(this.getAttribute("href"), {
-      method: "GET",
-      headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "Content-Type": "text/html",
-      }
+    method: "GET",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      "Content-Type": "text/html",
+    }
     }).then(function (response) {
         return response.text();
     }).then(function (data) {
