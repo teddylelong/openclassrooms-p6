@@ -15,12 +15,12 @@ class CategoryEntityListener
         $this->slugger = $slugger;
     }
 
-    public function prePersist(Category $category, LifecycleEventArgs $event)
+    public function prePersist(Category $category)
     {
         $category->computeSlug($this->slugger);
     }
 
-    public function preUpdate(Category $category, LifecycleEventArgs $event)
+    public function preUpdate(Category $category)
     {
         $category->computeSlug($this->slugger);
     }

@@ -88,7 +88,7 @@ class FigureController extends AbstractController
         $commentsCount = $commentManager->countAllByFigureAndStatus($figure);
         $commentsPerPage = 10;
         $beginAt = ($page - 1) * $commentsPerPage;
-        $commentsTotal = intval(ceil($commentsCount / $commentsPerPage));
+        $commentsTotal = (int) ceil($commentsCount / $commentsPerPage);
 
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
@@ -243,16 +243,17 @@ class FigureController extends AbstractController
     /**
      * @Route("/category/{id<\d+>}-{slug}/{page<\d+>?1}", name="app_figures_by_category")
      */
-    public function indexByCategory(Category $category, FigureManager $figureManager): Response
+    public function indexByCategory(Category $category, FigureManager $figureManager, $page = 1): Response
     {
         $figurePerPage = 12;
+        $beginAt = ($page - 1) * $figurePerPage;
         $figuresCount = $figureManager->countAllByStatusAndCategory($category);
-        $pageTotal = intval(ceil($figuresCount / $figurePerPage));
+        $pageTotal = (int) ceil($figuresCount / $figurePerPage);
 
         return $this->render('figure/index_by_category.html.twig', [
             'category' => $category,
             'pageTotal' => $pageTotal,
-            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, 1),
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
         ]);
     }
 

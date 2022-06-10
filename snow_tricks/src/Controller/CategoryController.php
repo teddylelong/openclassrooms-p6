@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Service\CategoryManager;
+use App\Service\FigureManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/category", name="app_category")
+     * @Route("/admin/category", name="app_category")
      */
     public function index(CategoryManager $categoryManager): Response
     {
@@ -25,7 +26,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/new", name="app_category_new")
+     * @Route("/admin/category/new", name="app_category_new")
      */
     public function new(Request $request, CategoryManager $categoryManager): Response
     {
@@ -49,7 +50,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/edit/{id<\d+>}", name="app_category_edit")
+     * @Route("/admin/category/edit/{id<\d+>}", name="app_category_edit")
      */
     public function edit(Request $request, Category $category, CategoryManager $categoryManager): Response
     {
@@ -74,13 +75,24 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/delete/{id<\d+>}", name="app_category_delete", methods={"POST"})
+     * @Route("/admin/category/delete/{id<\d+>}", name="app_category_delete", methods={"POST"})
      */
-    public function delete(Request $request, Category $category, CategoryManager $categoryManager): Response
+    public function delete(Request $request, Category $category, CategoryManager $categoryManager, FigureManager $figureManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+
+            // Set all figures in this category to null category (unclassified)
+            $figures = $figureManager->findAllByCategoryOrderByDate($category);
+
+            if ($figures) {
+                foreach ($figures as $figure ) {
+                    $figure->setCategory(null);
+                    $figureManager->add($figure);
+                }
+            }
+
             $categoryManager->delete($category);
             $this->addFlash('success', "La catégorie {$category->getName()} a été supprimée avec succès");
         }

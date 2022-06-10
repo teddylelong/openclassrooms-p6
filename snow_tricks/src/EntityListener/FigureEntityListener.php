@@ -15,12 +15,12 @@ class FigureEntityListener
         $this->slugger = $slugger;
     }
 
-    public function prePersist(Figure $figure, LifecycleEventArgs $event)
+    public function prePersist(Figure $figure)
     {
         $figure->computeSlug($this->slugger);
     }
 
-    public function preUpdate(Figure $figure, LifecycleEventArgs $event)
+    public function preUpdate(Figure $figure)
     {
         $figure->computeSlug($this->slugger);
     }
