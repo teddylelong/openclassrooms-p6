@@ -28,16 +28,6 @@ body {
   color: #fff;
 }
 
-/* Site Top-Header */
-
-#site-top-header {
-  background-color: #1c1f23;
-
-  a:hover {
-    color: lighten($primary, 20);
-  }
-}
-
 /* Site Header */
 
 #website-header {
@@ -126,8 +116,8 @@ body {
 }
 
 .gallery-edit-image {
-    position: relative;
-    text-align: center;
+  position: relative;
+  text-align: center;
 
   a {
     position: absolute;
@@ -154,13 +144,13 @@ body {
 }
 
 .del-media {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .media-field {
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .medias {
@@ -186,5 +176,15 @@ body {
 @include media-breakpoint-between(xs, md) {
   .comments-container {
     width: 100%;
+  }
+}
+
+/* Site Top-Header */
+
+#site-top-header {
+  background-color: #1c1f23;
+
+  a:hover {
+    color: lighten($primary, 20);
   }
 }

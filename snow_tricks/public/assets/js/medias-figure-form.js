@@ -3,7 +3,7 @@ const addFormToCollection = (e) => {
         '.' + e.currentTarget.dataset.collectionHolderClass
     );
 
-    const item = document.createElement('li');
+    const item = document.createElement("li");
 
     item.innerHTML = collectionHolder
         .dataset
@@ -20,13 +20,13 @@ const addFormToCollection = (e) => {
 };
 
 const addTagFormDeleteLink = (item) => {
-  const removeFormButton = document.createElement('button');
-  removeFormButton.innerText = 'X';
-  removeFormButton.className = 'btn btn-outline-danger mb-3 del-media';
+  const removeFormButton = document.createElement("button");
+  removeFormButton.innerText = "X";
+  removeFormButton.className = "btn btn-outline-danger mb-3 del-media";
 
   item.append(removeFormButton);
 
-  removeFormButton.addEventListener('click', (e) => {
+  removeFormButton.addEventListener("click", (e) => {
     e.preventDefault();
     item.remove();
   });
@@ -36,7 +36,7 @@ document.querySelectorAll('.add_item_link').forEach(btn => {
   btn.addEventListener("click", addFormToCollection);
 });
 
-let matches = !!location.href.match('/figure/edit/');
+let matches = !!location.href.match("/figure/edit/");
 
 if (matches) {
   document.querySelectorAll('ol.medias li').forEach((li) => {
