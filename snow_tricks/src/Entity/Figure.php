@@ -107,6 +107,7 @@ class Figure
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $comments;
 

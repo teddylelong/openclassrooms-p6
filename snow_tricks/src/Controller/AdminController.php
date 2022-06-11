@@ -14,7 +14,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/dashboard", name="app_admin")
      */
-    public function dashboard(CommentManager $commentManager, AdminService $adminService): Response
+    public function dashboard(AdminService $adminService): Response
     {
         $this->denyAccessUnlessGranted(AdminVoter::VIEW, $this->getUser());
 

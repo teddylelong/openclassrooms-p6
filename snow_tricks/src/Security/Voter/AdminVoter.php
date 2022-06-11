@@ -35,14 +35,13 @@ class AdminVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($user);
-                break;
+                return $this->canView();
         }
 
         return false;
     }
 
-    private function canView(User $user): bool
+    private function canView(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

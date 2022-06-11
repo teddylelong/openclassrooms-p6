@@ -7,11 +7,11 @@ use App\Repository\FigureImagesRepository;
 
 class FigureImagesManager
 {
-    private $figureImagesRepository;
+    private $imagesRepository;
 
-    public function __construct(FigureImagesRepository $figureImagesRepository)
+    public function __construct(FigureImagesRepository $imagesRepository)
     {
-        $this->figureImagesRepository = $figureImagesRepository;
+        $this->imagesRepository = $imagesRepository;
     }
 
     /**
@@ -22,7 +22,7 @@ class FigureImagesManager
      */
     public function add(FigureImages $figureImages): void
     {
-        $this->figureImagesRepository->add($figureImages);
+        $this->imagesRepository->add($figureImages);
     }
 
     /**
@@ -35,7 +35,7 @@ class FigureImagesManager
      */
     public function delete(FigureImages $figureImages): void
     {
-        $this->figureImagesRepository->remove($figureImages);
+        $this->imagesRepository->remove($figureImages);
     }
 
 }

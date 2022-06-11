@@ -33,6 +33,23 @@
         <div class="col">
             <div class="card h-100 border-0">
                 <div class="card-body">
+                    <h2 class="card-title h5">Gestion des catégories</h2>
+                    <h3 class="card-subtitle mb-2 text-muted h6">Créez de nouvelles catégories ou gérez celles existantes</h3>
+                    <p class="card-text d-grid gap-2">
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_category_new') }}">
+                            <i class="bi bi-pencil"></i> Créer une catégorie
+                        </a>
+                        <a class="btn btn-outline-primary text-start" href="{{ path('app_category') }}">
+                            <i class="bi bi-file-earmark-text"></i> Gérer les catégories
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0">
+                <div class="card-body">
                     <h2 class="card-title h5">Gestion de l'espace de discussion</h2>
                     <h3 class="card-subtitle mb-2 text-muted h6">Modérez les commentaires déposés sur les figures du site</h3>
                     <p class="card-text d-grid gap-2">

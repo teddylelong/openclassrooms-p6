@@ -34,7 +34,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile/{id<\d+>}", name="app_user_profile")
      */
-    public function showProfile(Request $request, User $user, UserManager $userManager, UserAvatarType $avatarType, FileUploader $fileUploader): Response
+    public function showProfile(Request $request, User $user, UserManager $userManager, FileUploader $fileUploader): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
