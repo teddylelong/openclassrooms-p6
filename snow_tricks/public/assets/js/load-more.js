@@ -18,7 +18,7 @@ function onClickBtn(event) {
     headers: {
       "X-Requested-With": "XMLHttpRequest",
       "Content-Type": "text/html",
-    }
+    },
   }).then(function (response) {
       return response.text();
   }).then(function (data) {
@@ -29,7 +29,6 @@ function onClickBtn(event) {
 }
 
 function appendData(data) {
-
   let container = document.getElementById(containerId);
 
   index++;

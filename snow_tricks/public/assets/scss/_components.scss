@@ -76,6 +76,18 @@ body {
   flex-direction: column;
 }
 
+.gallery-edit-image {
+  position: relative;
+  text-align: center;
+
+  a {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .comment-form {
   width: 75%;
 
@@ -112,18 +124,6 @@ body {
         border-radius: 0.25em !important;
       }
     }
-  }
-}
-
-.gallery-edit-image {
-  position: relative;
-  text-align: center;
-
-  a {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 }
 
