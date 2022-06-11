@@ -51,7 +51,7 @@ class FigureVoter extends Voter
             case self::DELETE:
                 return $this->canDelete($figure, $user);
             case self::UPDATE_STATUS:
-                return $this->canUpdate($figure, $user);
+                return $this->canUpdate();
         }
 
         return false;
@@ -76,21 +76,24 @@ class FigureVoter extends Voter
 
     private function canEdit(Figure $figure, User $user): bool
     {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($user === $figure->getUser()) {
             return true;
         }
-        if ($this->security->isGranted('ROLE_MODO')) {
+        if ($figure->getStatus() == Figure::STATUS_ACCEPTED) {
             return true;
         }
-        return $user === $figure->getUser();
+        if ($this->security->isGranted('ROLE_USER')) {
+            return true;
+        }
+        return false;
     }
 
     private function canDelete(Figure $figure, User $user): bool
     {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($this->security->isGranted('ROLE_USER')) {
             return true;
         }
-        return $user === $figure->getUser();
+        return false;
     }
 
     private function canUpdate(): bool
