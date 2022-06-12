@@ -88,7 +88,7 @@ class FigureVoter extends Voter
         return false;
     }
 
-    private function canDelete(Figure $figure, User $user): bool
+    private function canDelete(): bool
     {
         if ($this->security->isGranted('ROLE_USER')) {
             return true;
