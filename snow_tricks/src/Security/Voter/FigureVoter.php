@@ -74,14 +74,8 @@ class FigureVoter extends Voter
         return false;
     }
 
-    private function canEdit(Figure $figure, User $user): bool
+    private function canEdit(): bool
     {
-        if ($user === $figure->getUser()) {
-            return true;
-        }
-        if ($figure->getStatus() == Figure::STATUS_ACCEPTED) {
-            return true;
-        }
         if ($this->security->isGranted('ROLE_USER')) {
             return true;
         }
@@ -104,6 +98,6 @@ class FigureVoter extends Voter
         if ($this->security->isGranted('ROLE_MODO')) {
             return true;
         }
-
+        return false;
     }
 }
