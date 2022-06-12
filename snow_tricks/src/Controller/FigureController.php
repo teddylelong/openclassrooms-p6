@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     const FIGURES_PER_PAGE = 12;
+
     /**
      * @Route("/", name="app_home")
      */
@@ -82,8 +83,7 @@ class FigureController extends AbstractController
         $this->denyAccessUnlessGranted(FigureVoter::VIEW, $figure);
 
         $commentsCount = $commentManager->countAllByFigureAndStatus($figure);
-        $commentsPerPage = 10;
-        $commentsTotal = (int) ceil($commentsCount / $commentsPerPage);
+        $commentsTotal = (int) ceil($commentsCount / CommentController::COMMENTS_PER_PAGE);
 
         $commentForm = $this->createForm(CommentType::class);
         $commentForm->handleRequest($request);
@@ -115,7 +115,7 @@ class FigureController extends AbstractController
 
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
-            'comments' => $commentManager->findAllByFigureAndStatusLimit($figure, Comment::STATUS_ACCEPTED, $commentsPerPage),
+            'comments' => $commentManager->findAllByFigureAndStatusLimit($figure, Comment::STATUS_ACCEPTED, CommentController::COMMENTS_PER_PAGE),
             'commentsTotal' => $commentsTotal,
             'commentForm' => $commentForm->createView(),
         ]);
@@ -240,14 +240,13 @@ class FigureController extends AbstractController
      */
     public function indexByCategory(Category $category, FigureManager $figureManager): Response
     {
-        $figurePerPage = 12;
         $figuresCount = $figureManager->countAllByStatusAndCategory($category);
-        $pageTotal = (int) ceil($figuresCount / $figurePerPage);
+        $pageTotal = (int) ceil($figuresCount / self::FIGURES_PER_PAGE);
 
         return $this->render('figure/index_by_category.html.twig', [
             'category' => $category,
             'pageTotal' => $pageTotal,
-            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage),
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, self::FIGURES_PER_PAGE),
         ]);
     }
 
@@ -256,11 +255,10 @@ class FigureController extends AbstractController
      */
     public function loadMoreByCategory(Category $category, FigureManager $figureManager, int $page = 1): Response
     {
-        $figurePerPage = 12;
-        $beginAt = ($page - 1) * $figurePerPage;
+        $beginAt = ($page - 1) * self::FIGURES_PER_PAGE;
 
         $content = $this->render('_parts/figure_grid.part.twig', [
-            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, $figurePerPage, $beginAt),
+            'figures' => $figureManager->findAllByStatusAndCategoryOrderByDateLimit($category, Figure::STATUS_ACCEPTED, self::FIGURES_PER_PAGE, $beginAt),
         ])->getContent();
 
         return new Response($content, 200, array('Content-Type' => 'text/html'));

@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
+    const COMMENTS_PER_PAGE = 10;
+
     /**
      * @Route("/admin/comments", name="app_comment")
      */
@@ -34,11 +36,10 @@ class CommentController extends AbstractController
      */
     public function loadMore(Figure $figure, CommentManager $commentManager, $page = 1): Response
     {
-        $commentsPerPage = 10;
-        $beginAt = ($page - 1) * $commentsPerPage;
+        $beginAt = ($page - 1) * self::COMMENTS_PER_PAGE;
 
         $content = $this->render('_parts/comments.part.twig', [
-            'comments' => $commentManager->findByFigureAndStatusOrderByDateLimit($figure, Comment::STATUS_ACCEPTED, $commentsPerPage, $beginAt)
+            'comments' => $commentManager->findByFigureAndStatusOrderByDateLimit($figure, Comment::STATUS_ACCEPTED, self::COMMENTS_PER_PAGE, $beginAt)
         ])->getContent();
 
         return new Response($content, 200, array('Content-Type' => 'text/html'));
