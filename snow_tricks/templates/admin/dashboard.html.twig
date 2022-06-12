@@ -23,7 +23,7 @@
                             <i class="bi bi-file-earmark-text"></i> Gérer les figures
                         </a>
                         <a class="btn btn-outline-primary text-start" href="{{ path('app_figure_approvement') }}">
-                            <i class="bi bi-file-earmark-text"></i> Figures en attente de modération {% if countPendingFigures > 0 %}<span class="badge bg-danger">{{ countPendingFigures }}</span>{% endif %}
+                            <i class="bi bi-clock"></i> Figures en attente de modération {% if countPendingFigures > 0 %}<span class="badge bg-danger">{{ countPendingFigures }}</span>{% endif %}
                         </a>
                     </p>
                 </div>
@@ -37,10 +37,10 @@
                     <h3 class="card-subtitle mb-2 text-muted h6">Créez de nouvelles catégories ou gérez celles existantes</h3>
                     <p class="card-text d-grid gap-2">
                         <a class="btn btn-outline-primary text-start" href="{{ path('app_category_new') }}">
-                            <i class="bi bi-pencil"></i> Créer une catégorie
+                            <i class="bi bi-tag"></i> Créer une catégorie
                         </a>
                         <a class="btn btn-outline-primary text-start" href="{{ path('app_category') }}">
-                            <i class="bi bi-file-earmark-text"></i> Gérer les catégories
+                            <i class="bi bi-tags"></i> Gérer les catégories
                         </a>
                     </p>
                 </div>
@@ -54,7 +54,7 @@
                     <h3 class="card-subtitle mb-2 text-muted h6">Modérez les commentaires déposés sur les figures du site</h3>
                     <p class="card-text d-grid gap-2">
                         <a class="btn btn-outline-primary text-start" href="{{ path('app_comment') }}">
-                            <i class="bi bi-chat-left-text"></i> Commentaires en attente de modération {% if countPendingComments > 0 %}<span class="badge bg-danger">{{ countPendingComments }}{% endif %}</span>
+                            <i class="bi bi-clock"></i> Commentaires en attente de modération {% if countPendingComments > 0 %}<span class="badge bg-danger">{{ countPendingComments }}{% endif %}</span>
                         </a>
                     </p>
                 </div>
