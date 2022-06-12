@@ -18,6 +18,20 @@ class UserAvatarType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'mapped' => false,
+                'attr' => [
+                    'accept' => 'image/jpeg, image/png, image/gif'
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez sélectionner une image valide',
+                    ]),
+                ]
             ])
         ;
     }

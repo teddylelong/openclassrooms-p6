@@ -72,6 +72,9 @@ class FigureType extends AbstractType
                 'multiple' => true,
                 'required' => true,
                 'mapped' => false,
+                'attr' => [
+                    'accept' => 'image/jpeg, image/png, image/gif'
+                ],
                 'constraints' => [
                     new All([
                         'constraints' => [
