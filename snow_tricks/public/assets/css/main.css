@@ -8,7 +8,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
-@import url("https://fonts.googleapis.com/css2?family=Hind&family=Mulish:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Hind&family=Maven+Pro:wght@700&family=Mulish:wght@400;700&display=swap");
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -12147,8 +12147,14 @@ body {
   justify-content: center;
   display: flex;
 }
-#intro .intro-text h1, #intro .intro-text .h1 {
+#intro .intro-text #intro-h1 {
   color: #fff;
+  font-size: 4.5em;
+  font-family: "Maven Pro", sans-serif;
+}
+#intro .intro-img {
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));
 }
 
 .del-media {
