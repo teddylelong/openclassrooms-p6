@@ -74,4 +74,18 @@ Le projet est à présent installé !
 - Vous devriez pouvoir le tester en vous rendant sur http://localhost:8000. 
 - Accédez à PHPMyAdmin via http://localhost:8080 
 - Consultez les emails envoyés et reçus avec l'aide
-de MailDev via https://localhost:8081.
+de MailDev via http://localhost:8081.
+
+## Comptes utilisateurs
+
+Afin de pouvoir tester le site-web et ses fonctionnalités, sont mis à disposition trois comptes utilisateurs
+qui disposent chacun d'un rôle différent. Utilisez-les comme bon vous semble.
+
+Rendez-vous sur la [page de connexion du projet](◊http://localhost:8000/login) et saisissez l'un des
+identifiants ci-dessous :
+
+| Nom d'utilisateur | Mot de passe | Rôle       |
+|-------------------|--------------|------------|
+| Admin             | 12345678     | ROLE_ADMIN |
+| Modo              | 12345678     | ROLE_MODO  |
+| User              | 12345678     | ROLE_USER  |
