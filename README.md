@@ -58,7 +58,7 @@ docker-compose up
 
 Une fois l'initialisation terminée, rendez-vous sur http://localhost:8080.
 
-Utilisez le nom d'utilisateur `Root` puis laissez vide le champ du mot de passe afin de
+Utilisez le nom d'utilisateur `root` puis laissez vide le champ du mot de passe afin de
 vous connecter.
 
 Créez ensuite une nouvelle base de données avec comme nom `snowtricks` et comme interclassement
