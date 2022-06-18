@@ -29,7 +29,7 @@ class ConfirmUserEmailRequest
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 
