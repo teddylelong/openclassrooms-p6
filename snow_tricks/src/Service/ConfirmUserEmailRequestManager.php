@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\ConfirmUserEmailRequest;
+use App\Entity\User;
 use App\Repository\ConfirmUserEmailRequestRepository;
 
 class ConfirmUserEmailRequestManager
@@ -12,6 +13,30 @@ class ConfirmUserEmailRequestManager
     public function __construct(ConfirmUserEmailRequestRepository $confirmUserEmailRequestRepository)
     {
         $this->repository = $confirmUserEmailRequestRepository;
+    }
+
+    /**
+     * @param $id
+     * @return ConfirmUserEmailRequest|null
+     */
+    public function find($id): ?ConfirmUserEmailRequest
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * @param string $uuid
+     * @return ConfirmUserEmailRequest|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByUuid(string $uuid): ?ConfirmUserEmailRequest
+    {
+        return $this->repository->findOneByUuid($uuid);
+    }
+
+    public function findOneByUser(User $user): ?ConfirmUserEmailRequest
+    {
+        return $this->repository->findOneByUser($user);
     }
 
     /**

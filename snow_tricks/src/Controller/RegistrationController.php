@@ -17,11 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-
-    public function __construct()
-    {
-    }
-
     /**
      * @Route("/register", name="app_register")
      */
@@ -52,6 +47,7 @@ class RegistrationController extends AbstractController
                 ->htmlTemplate('registration/confirmation_email.html.twig')
                 ->context([
                     'uuid' => $confirmEmailRequest->getUuid(),
+                    'user_id' => $user->getId()
                 ])
             ;
 
@@ -69,5 +65,74 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/activate/resend", name="app_verify_resend_email")
+     */
+    public function resendEmail(Request $request, UserManager $userManager, ConfirmUserEmailRequestManager $confirmEmailManager, MailerInterface $mailer)
+    {
+        if ($request->isMethod('POST')) {
+
+            $email = $request->getSession()->get('non_verified_email');
+            $user = $userManager->findOneBy(['email' => $email]);
+            if (!$user) {
+                throw $this->createNotFoundException("Cette adresse email n'est liée à aucun utilisateur");
+            }
+
+            $confirmEmailRequest = $confirmEmailManager->findOneByUser($user);
+
+            if (!$confirmEmailRequest) {
+                $confirmEmailRequest = (new ConfirmUserEmailRequest())->setUser($user);
+                $confirmEmailManager->add($confirmEmailRequest);
+            }
+
+            $email = (new TemplatedEmail())
+                ->from('noreply@snowtricks.com')
+                ->to($user->getEmail())
+                ->subject("Bienvenue sur SnowTricks !")
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context([
+                    'uuid' => $confirmEmailRequest->getUuid(),
+                    'user_id' => $user->getId()
+                ])
+            ;
+
+            $mailer->send($email);
+
+            $this->addFlash('success', 'Un email contenant un nouveau lien de validation vous a été envoyé.');
+
+            return $this->redirectToRoute('app_login');
+
+        }
+        return $this->render('registration/resend_verify_email.html.twig');
+    }
+
+    /**
+     * @Route("/activate/{id?null}-{uuid?null}", name="app_activate_account", methods={"GET"})
+     */
+    public function activate(Request $request, UserManager $userManager, ConfirmUserEmailRequestManager $confirmEmailManager): Response
+    {
+        $uuid = $request->get('uuid');
+        $userId = $request->get('id');
+
+        // Check if this request exists in DB
+        $user = $userManager->find($userId);
+        $confirmEmailRequest = $confirmEmailManager->findOneByUuid($uuid);
+
+        if (!$user || !$confirmEmailRequest) {
+            $this->addFlash('danger', "Votre compte n'a pas pu être activé car la requête est invalide. Veuillez réessayer.");
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Request is valid !
+        $confirmEmailManager->delete($confirmEmailRequest);
+
+        $user->setIsVerified(true);
+        $userManager->add($user);
+
+        $this->addFlash('success', "Votre adresse email à été vérifiée avec succès. Connectez-vous afin de profiter de l'ensemble des fonctionnalités du site ! :)");
+
+        return $this->redirectToRoute('app_login');
     }
 }

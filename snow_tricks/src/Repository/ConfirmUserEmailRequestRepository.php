@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\ConfirmUserEmailRequest;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -33,6 +35,36 @@ class ConfirmUserEmailRequestRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    /**
+     * @param string $uuid
+     * @return ConfirmUserEmailRequest|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByUuid(string $uuid): ?ConfirmUserEmailRequest
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.uuid = :uuid')
+            ->setParameter('uuid', $uuid, 'uuid')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @param User $user
+     * @return ConfirmUserEmailRequest|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByUser(User $user): ?ConfirmUserEmailRequest
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     /**

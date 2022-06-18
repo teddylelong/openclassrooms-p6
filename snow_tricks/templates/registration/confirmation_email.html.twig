@@ -3,11 +3,10 @@
 <p>Merci d'avoir rejoint notre communauté ! Pour profiter pleinement du site, veuillez valider votre compte en cliquant sur le lien ci-dessous :</p>
 
 <p>
-    <a href="{{ uuid }}">Confirmer mon compte</a>
+    <a href="{{ url('app_activate_account', {'uuid': uuid, 'id': user_id}) }}">Confirmer mon compte</a>
 </p>
 
 <p>Vous pourrez ensuite poster votre première figure ou échanger avec les autres membres via les espaces de discussion !</p>
-
 
 <p>À très vite !</p>
 
