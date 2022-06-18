@@ -29,11 +29,6 @@ class ConfirmUserEmailRequest
     private $created_at;
 
     /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    private $confirmed_at;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $user;
@@ -86,25 +81,6 @@ class ConfirmUserEmailRequest
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTimeImmutable|null
-     */
-    public function getConfirmedAt(): ?\DateTimeImmutable
-    {
-        return $this->confirmed_at;
-    }
-
-    /**
-     * @param \DateTimeImmutable $confirmed_at
-     * @return $this
-     */
-    public function setConfirmedAt(\DateTimeImmutable $confirmed_at): self
-    {
-        $this->confirmed_at = $confirmed_at;
 
         return $this;
     }
