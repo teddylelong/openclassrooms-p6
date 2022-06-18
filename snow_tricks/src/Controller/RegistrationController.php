@@ -2,33 +2,25 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfirmUserEmailRequest;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
+use App\Service\ConfirmUserEmailRequestManager;
 use App\Service\UserManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
-
-    public function __construct(EmailVerifier $emailVerifier)
-    {
-        $this->emailVerifier = $emailVerifier;
-    }
-
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, MailerInterface $mailer, ConfirmUserEmailRequestManager $confirmEmailManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -44,15 +36,28 @@ class RegistrationController extends AbstractController
             );
             $userManager->add($user);
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('noreply@localhost.test', 'SnowTricks'))
-                    ->to($user->getEmail())
-                    ->subject('Bienvenue chez SnowTricks !')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            // Create a confirm email user account request, store it and send it by email :
+            $confirmEmailRequest = (new ConfirmUserEmailRequest())->setUser($user);
+            $confirmEmailManager->add($confirmEmailRequest);
+
+            $email = (new TemplatedEmail())
+                ->from('noreply@snowtricks.com')
+                ->to($user->getEmail())
+                ->subject("Bienvenue sur SnowTricks !")
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context([
+                    'uuid' => $confirmEmailRequest->getUuid(),
+                    'user_id' => $user->getId()
+                ])
+            ;
+
+            $mailer->send($email);
+
+            $this->addFlash(
+                'success',
+                "Merci pour votre inscription ! Un email contenant un lien de validation vient de vous être envoyé. 
+                Pour pouvoir vous connecter et profiter du site, veuillez valider votre compte en cliquant sur ce lien."
             );
-            $this->addFlash('success', "Merci pour votre inscription ! Un email contenant un lien de validation vient de vous être envoyé. Pour pouvoir vous connecter et profiter du site, veuillez valider votre compte.");
 
             return $this->redirectToRoute('app_login');
         }
@@ -63,40 +68,9 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/verify/email", name="app_verify_email")
+     * @Route("/activate/resend", name="app_verify_resend_email")
      */
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserManager $userManager): Response
-    {
-        $request_id = $request->get('id');
-
-        if (null === $request_id) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        $user = $userManager->find($request_id);
-
-        if (null === $user) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        $this->addFlash('success', 'Votre adresse email à été vérifiée avec succès. Merci ! :)');
-
-        return $this->redirectToRoute('app_login');
-    }
-
-    /**
-     * @Route("/verify/resend", name="app_verify_resend_email")
-     */
-    public function resendVerifyEmail(Request $request, UserManager $userManager)
+    public function resendEmail(Request $request, UserManager $userManager, ConfirmUserEmailRequestManager $confirmEmailManager, MailerInterface $mailer)
     {
         if ($request->isMethod('POST')) {
 
@@ -106,19 +80,59 @@ class RegistrationController extends AbstractController
                 throw $this->createNotFoundException("Cette adresse email n'est liée à aucun utilisateur");
             }
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('noreply@localhost.test', 'SnowTricks'))
-                    ->to($user->getEmail())
-                    ->subject('Bienvenue chez SnowTricks !')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            $confirmEmailRequest = $confirmEmailManager->findOneByUser($user);
+
+            if (!$confirmEmailRequest) {
+                $confirmEmailRequest = (new ConfirmUserEmailRequest())->setUser($user);
+                $confirmEmailManager->add($confirmEmailRequest);
+            }
+
+            $email = (new TemplatedEmail())
+                ->from('noreply@snowtricks.com')
+                ->to($user->getEmail())
+                ->subject("Bienvenue sur SnowTricks !")
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context([
+                    'uuid' => $confirmEmailRequest->getUuid(),
+                    'user_id' => $user->getId()
+                ])
+            ;
+
+            $mailer->send($email);
 
             $this->addFlash('success', 'Un email contenant un nouveau lien de validation vous a été envoyé.');
 
             return $this->redirectToRoute('app_login');
+
         }
         return $this->render('registration/resend_verify_email.html.twig');
+    }
+
+    /**
+     * @Route("/activate/{id?null}-{uuid?null}", name="app_activate_account", methods={"GET"})
+     */
+    public function activate(Request $request, UserManager $userManager, ConfirmUserEmailRequestManager $confirmEmailManager): Response
+    {
+        $uuid = $request->get('uuid');
+        $userId = $request->get('id');
+
+        // Check if this request exists in DB
+        $user = $userManager->find($userId);
+        $confirmEmailRequest = $confirmEmailManager->findOneByUuid($uuid);
+
+        if (!$user || !$confirmEmailRequest) {
+            $this->addFlash('danger', "Votre compte n'a pas pu être activé car la requête est invalide. Veuillez réessayer.");
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Request is valid !
+        $confirmEmailManager->delete($confirmEmailRequest);
+
+        $user->setIsVerified(true);
+        $userManager->add($user);
+
+        $this->addFlash('success', "Votre adresse email à été vérifiée avec succès. Connectez-vous afin de profiter de l'ensemble des fonctionnalités du site ! :)");
+
+        return $this->redirectToRoute('app_login');
     }
 }

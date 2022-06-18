@@ -5,7 +5,6 @@ namespace App\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
@@ -53,8 +52,10 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $user = $token->getUser();
 
         if (array_intersect(['ROLE_ADMIN', 'ROLE_MODO'], $user->getRoles())) {
+            // Redirect user to dashboard after login
             return new RedirectResponse($this->urlGenerator->generate('app_admin'));
         }
+        // Else, redirect user to his profile
         return new RedirectResponse($this->urlGenerator->generate('app_user_profile', [
             'id' => $user->getId()
         ]));

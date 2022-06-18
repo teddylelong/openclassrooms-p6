@@ -1,15 +1,13 @@
 <h1>Bienvenue chez SnowTricks !</h1>
 
-<p>
-    Merci d'avoir rejoint notre communauté ! Pour profiter pleinement du site, veuillez valider votre compte en cliquant sur le lien ci-dessous :<br><br>
-    <a href="{{ signedUrl }}">Confirmer mon compte</a>.
-    Ce lien expire dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
+<p>Merci d'avoir rejoint notre communauté ! Pour profiter pleinement du site, veuillez valider votre compte en cliquant sur le lien ci-dessous :</p>
 
 <p>
-    À bientôt !
+    <a href="{{ url('app_activate_account', {'uuid': uuid, 'id': user_id}) }}">Confirmer mon compte</a>
 </p>
 
-<p>
-    L'équipe SnowTricks
-</p>
+<p>Vous pourrez ensuite poster votre première figure ou échanger avec les autres membres via les espaces de discussion !</p>
+
+<p>À très vite !</p>
+
+<p>L'équipe SnowTricks</p>
