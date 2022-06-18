@@ -61,6 +61,11 @@ class Category
      */
     private $slug;
 
+    /* @TODO: annotations sur méthodes */
+    /* @TODO: créer catégory par défaut + assignation automatique lorsque supprimée */
+    /* @TODO: gestion des espaces dans name (assert) */
+    /* @TODO: créer des fixtures */
+
     public function __construct()
     {
         $this->figure = new ArrayCollection();
@@ -68,23 +73,37 @@ class Category
         $this->setUpdatedAt(new \DateTimeImmutable());
     }
 
-    public function computeSlug(SluggerInterface $slugger)
+    /**
+     * @param SluggerInterface $slugger
+     * @return void
+     */
+    public function computeSlug(SluggerInterface $slugger): void
     {
         if (!$this->getSlug() || '-' === $this->getSlug()) {
             $this->setSlug($slugger->slug($this->getName())->lower());
         }
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -92,11 +111,18 @@ class Category
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $created_at
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
@@ -104,11 +130,18 @@ class Category
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updated_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $updated_at
+     * @return $this
+     */
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
@@ -124,6 +157,10 @@ class Category
         return $this->figure;
     }
 
+    /**
+     * @param Figure $figure
+     * @return $this
+     */
     public function addFigure(Figure $figure): self
     {
         if (!$this->figure->contains($figure)) {
@@ -134,6 +171,10 @@ class Category
         return $this;
     }
 
+    /**
+     * @param Figure $figure
+     * @return $this
+     */
     public function removeFigure(Figure $figure): self
     {
         if ($this->figure->removeElement($figure)) {
@@ -146,11 +187,18 @@ class Category
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     * @return $this
+     */
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;

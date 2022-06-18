@@ -38,16 +38,26 @@ class FigureImages
         $this->setCreatedAt(new \DateTimeImmutable());
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFilename(): ?string
     {
         return $this->filename;
     }
 
+    /**
+     * @param string $filename
+     * @return $this
+     */
     public function setFilename(string $filename): self
     {
         $this->filename = $filename;
@@ -55,11 +65,18 @@ class FigureImages
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $created_at
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
@@ -67,11 +84,18 @@ class FigureImages
         return $this;
     }
 
+    /**
+     * @return Figure|null
+     */
     public function getFigure(): ?Figure
     {
         return $this->figure;
     }
 
+    /**
+     * @param Figure|null $figure
+     * @return $this
+     */
     public function setFigure(?Figure $figure): self
     {
         $this->figure = $figure;

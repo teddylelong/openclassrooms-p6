@@ -53,16 +53,26 @@ class FigureMedias
         $this->setCreatedAt(new \DateTimeImmutable());
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUrl(): ?string
     {
         return $this->url;
     }
 
+    /**
+     * @param string $url
+     * @return $this
+     */
     public function setUrl(string $url): self
     {
         $this->url = $url;
@@ -70,11 +80,18 @@ class FigureMedias
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     * @return $this
+     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -82,11 +99,18 @@ class FigureMedias
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $created_at
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
@@ -94,11 +118,18 @@ class FigureMedias
         return $this;
     }
 
+    /**
+     * @return Figure|null
+     */
     public function getFigure(): ?Figure
     {
         return $this->figure;
     }
 
+    /**
+     * @param Figure|null $figure
+     * @return $this
+     */
     public function setFigure(?Figure $figure): self
     {
         $this->figure = $figure;

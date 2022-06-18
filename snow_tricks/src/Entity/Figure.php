@@ -121,23 +121,37 @@ class Figure
         $this->comments = new ArrayCollection();
     }
 
-    public function computeSlug(SluggerInterface $slugger)
+    /**
+     * @param SluggerInterface $slugger
+     * @return void
+     */
+    public function computeSlug(SluggerInterface $slugger): void
     {
         if (!$this->getSlug() || '-' === $this->getSlug()) {
             $this->setSlug($slugger->slug($this->getName())->lower());
         }
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -145,11 +159,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * @param string $description
+     * @return $this
+     */
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -157,11 +178,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $created_at
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
@@ -169,11 +197,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updated_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $updated_at
+     * @return $this
+     */
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
@@ -181,11 +216,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getStatus(): ?string
     {
         return $this->status;
     }
 
+    /**
+     * @param string $status
+     * @return $this
+     */
     public function setStatus(string $status): self
     {
         $this->status = $status;
@@ -193,11 +235,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
+    /**
+     * @param User|null $user_id
+     * @return $this
+     */
     public function setUser(?User $user_id): self
     {
         $this->user = $user_id;
@@ -205,11 +254,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     * @return $this
+     */
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
@@ -225,6 +281,10 @@ class Figure
         return $this->figureMedias;
     }
 
+    /**
+     * @param FigureMedias $figureMedia
+     * @return $this
+     */
     public function addFigureMedia(FigureMedias $figureMedia): self
     {
         if (!$this->figureMedias->contains($figureMedia)) {
@@ -235,6 +295,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param FigureMedias $figureMedia
+     * @return $this
+     */
     public function removeFigureMedia(FigureMedias $figureMedia): self
     {
         if ($this->figureMedias->removeElement($figureMedia)) {
@@ -255,6 +319,10 @@ class Figure
         return $this->figureImages;
     }
 
+    /**
+     * @param FigureImages $figureImage
+     * @return $this
+     */
     public function addFigureImage(FigureImages $figureImage): self
     {
         if (!$this->figureImages->contains($figureImage)) {
@@ -265,6 +333,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param FigureImages $figureImage
+     * @return $this
+     */
     public function removeFigureImage(FigureImages $figureImage): self
     {
         if ($this->figureImages->removeElement($figureImage)) {
@@ -277,11 +349,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return Category|null
+     */
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
+    /**
+     * @param Category|null $category
+     * @return $this
+     */
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
@@ -297,6 +376,10 @@ class Figure
         return $this->comments;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
@@ -307,6 +390,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
