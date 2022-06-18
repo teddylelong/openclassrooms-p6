@@ -10,9 +10,9 @@ class ConfirmUserEmailRequestManager
 {
     private $repository;
 
-    public function __construct(ConfirmUserEmailRequestRepository $confirmUserEmailRequestRepository)
+    public function __construct(ConfirmUserEmailRequestRepository $confirmEmailRepository)
     {
-        $this->repository = $confirmUserEmailRequestRepository;
+        $this->repository = $confirmEmailRepository;
     }
 
     /**
@@ -45,9 +45,9 @@ class ConfirmUserEmailRequestManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function add(ConfirmUserEmailRequest $confirmUserEmailRequest): void
+    public function add(ConfirmUserEmailRequest $confirmEmail): void
     {
-        $this->repository->add($confirmUserEmailRequest);
+        $this->repository->add($confirmEmail);
     }
 
     /**
@@ -56,8 +56,8 @@ class ConfirmUserEmailRequestManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(ConfirmUserEmailRequest $confirmUserEmailRequest): void
+    public function delete(ConfirmUserEmailRequest $confirmEmail): void
     {
-        $this->repository->remove($confirmUserEmailRequest);
+        $this->repository->remove($confirmEmail);
     }
 }
