@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfirmUserEmailRequest;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Service\ConfirmUserEmailRequestManager;
 use App\Service\UserManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,7 +25,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserManager $userManager, MailerInterface $mailer, ConfirmUserEmailRequestManager $confirmEmailManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -39,17 +41,27 @@ class RegistrationController extends AbstractController
             );
             $userManager->add($user);
 
-            // generate a signed url and email it to the user
-            /*
-             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('noreply@localhost.test', 'SnowTricks'))
-                    ->to($user->getEmail())
-                    ->subject('Bienvenue chez SnowTricks !')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            // Create a confirm email user account request, store it and send it by email :
+            $confirmEmailRequest = (new ConfirmUserEmailRequest())->setUser($user);
+            $confirmEmailManager->add($confirmEmailRequest);
+
+            $email = (new TemplatedEmail())
+                ->from('noreply@snowtricks.com')
+                ->to($user->getEmail())
+                ->subject("Bienvenue sur SnowTricks !")
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context([
+                    'uuid' => $confirmEmailRequest->getUuid(),
+                ])
+            ;
+
+            $mailer->send($email);
+
+            $this->addFlash(
+                'success',
+                "Merci pour votre inscription ! Un email contenant un lien de validation vient de vous être envoyé. 
+                Pour pouvoir vous connecter et profiter du site, veuillez valider votre compte en cliquant sur ce lien."
             );
-            */
-            $this->addFlash('success', "Merci pour votre inscription ! Un email contenant un lien de validation vient de vous être envoyé. Pour pouvoir vous connecter et profiter du site, veuillez valider votre compte.");
 
             return $this->redirectToRoute('app_login');
         }

@@ -53,8 +53,10 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $user = $token->getUser();
 
         if (array_intersect(['ROLE_ADMIN', 'ROLE_MODO'], $user->getRoles())) {
+            // Redirect user to dashboard after login
             return new RedirectResponse($this->urlGenerator->generate('app_admin'));
         }
+        // Else, redirect user to his profile
         return new RedirectResponse($this->urlGenerator->generate('app_user_profile', [
             'id' => $user->getId()
         ]));
