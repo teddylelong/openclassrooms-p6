@@ -85,6 +85,16 @@ class ResetUserPasswordRequestController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        // Check expiration datetime
+        $now = new \DateTimeImmutable('now');
+        $expireDate = $passwordRequest->getExpiresAt();
+
+        if ($now > $expireDate) {
+            $passwordManager->delete($passwordRequest);
+            $this->addFlash('danger', "Cette requête a expirée. Veuillez en créer une nouvelle.");
+            return $this->redirectToRoute('app_login');
+        }
+
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
