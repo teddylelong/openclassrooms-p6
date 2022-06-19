@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
- *  * @UniqueEntity(fields={"name"}, message="Ce nom de catégorie est déjà utilisé")
+ * @UniqueEntity(fields={"name"}, message="Ce nom de catégorie est déjà utilisé")
  */
 class Category
 {
@@ -61,7 +61,6 @@ class Category
      */
     private $slug;
 
-    /* @TODO: gestion des espaces dans name (assert) */
     /* @TODO: créer des fixtures */
 
     public function __construct()
