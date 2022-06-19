@@ -61,6 +61,11 @@ class Category
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $is_default;
+
     /* @TODO: créer des fixtures */
 
     public function __construct()
@@ -199,6 +204,18 @@ class Category
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getIsDefault(): ?bool
+    {
+        return $this->is_default;
+    }
+
+    public function setIsDefault(bool $is_default): self
+    {
+        $this->is_default = $is_default;
 
         return $this;
     }
