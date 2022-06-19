@@ -28,6 +28,8 @@ class UserFixtures extends Fixture
 
         $admin->setPassword($this->passwordHasher->hashPassword($admin,'admin'));
 
+        $this->addReference('admin', $admin);
+
         $manager->persist($admin);
 
         $modo = (new User())
@@ -39,6 +41,8 @@ class UserFixtures extends Fixture
 
         $modo->setPassword($this->passwordHasher->hashPassword($modo, 'modo'));
 
+        $this->addReference('modo', $modo);
+
         $manager->persist($modo);
 
         $user = (new User())
@@ -47,6 +51,8 @@ class UserFixtures extends Fixture
             ->setIsVerified(1)
         ;
         $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
+
+        $this->addReference('user', $user);
 
         $manager->persist($user);
 
