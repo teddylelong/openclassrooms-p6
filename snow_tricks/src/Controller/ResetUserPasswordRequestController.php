@@ -34,6 +34,12 @@ class ResetUserPasswordRequestController extends AbstractController
                 return $this->redirectToRoute('app_forgot_password_request');
             }
 
+            $oldPasswordRequest = $passwordManager->findOneByUser($user);
+
+            if ($oldPasswordRequest) {
+                $passwordManager->delete($oldPasswordRequest);
+            }
+
             $passwordRequest = (new ResetUserPasswordRequest())->setUser($user);
             $passwordManager->add($passwordRequest);
 

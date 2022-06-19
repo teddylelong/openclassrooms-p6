@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\ResetUserPasswordRequest;
+use App\Entity\User;
 use App\Repository\ResetUserPasswordRequestRepository;
 
 class ResetUserPasswordRequestManager
@@ -22,6 +23,11 @@ class ResetUserPasswordRequestManager
     public function findOneByUuid(string $uuid): ?ResetUserPasswordRequest
     {
         return $this->repository->findOneByUuid($uuid);
+    }
+
+    public function findOneByUser(User $user): ?ResetUserPasswordRequest
+    {
+        return $this->repository->findOneByUser($user);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ResetUserPasswordRequest;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -33,6 +34,21 @@ class ResetUserPasswordRequestRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->andWhere('r.uuid = :uuid')
             ->setParameter('uuid', $uuid, 'uuid')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @param User $user
+     * @return ResetUserPasswordRequest|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByUser(User $user): ?ResetUserPasswordRequest
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.user = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult()
             ;
