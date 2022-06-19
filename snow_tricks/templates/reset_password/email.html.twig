@@ -1,9 +1,15 @@
-<h1>Mot de passe oublié ?</h1>
+<h1>Réintialisation de votre mot de passe</h1>
 
-<p>Pas de panique ! Voici un lien pour le réinitialiser :</p>
+<p>Vous avez demandé la réintialisation du mot de passe de votre compte SnowTricks.</p>
 
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+<p>Voici un lien pour le réinitialiser :</p>
 
-<p>Attention, ce lien expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+<a href="{{ url('app_reset_password', {'uuid': uuid}) }}">{{ url('app_reset_password', {'uuid': uuid}) }}</a>
 
-<p>Bonne journée !</p>
+<p>
+    <b>Attention</b> : ce lien expire dans une heure.
+</p>
+
+<p>À très vite !</p>
+
+<p>L'équipe SnowTricks</p>

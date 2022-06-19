@@ -50,6 +50,14 @@ class UserManager
     }
 
     /**
+     * Find a user by given email. Null on failure, User on success
+     */
+    public function findOneByMail(string $value): ?User
+    {
+        return $this->userRepository->findOneByMail($value);
+    }
+
+    /**
      * Delete a User in database
      */
     public function delete(User $user)
