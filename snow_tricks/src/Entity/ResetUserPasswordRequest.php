@@ -112,11 +112,18 @@ class ResetUserPasswordRequest
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getExpiresAt(): ?\DateTimeImmutable
     {
         return $this->expires_at;
     }
 
+    /**
+     * @param \DateTimeImmutable $expires_at
+     * @return $this
+     */
     public function setExpiresAt(\DateTimeImmutable $expires_at): self
     {
         $this->expires_at = $expires_at;

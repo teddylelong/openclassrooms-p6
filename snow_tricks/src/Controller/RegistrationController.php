@@ -87,6 +87,16 @@ class RegistrationController extends AbstractController
                 $confirmEmailManager->add($confirmEmailRequest);
             }
 
+            // Check expiration datetime
+            $now = new \DateTimeImmutable('now');
+            $expireDate = $confirmEmailRequest->getExpiresAt();
+
+            if ($now > $expireDate) {
+                $confirmEmailManager->delete($confirmEmailRequest);
+                $confirmEmailRequest = (new ConfirmUserEmailRequest())->setUser($user);
+                $confirmEmailManager->add($confirmEmailRequest);
+            }
+
             $email = (new TemplatedEmail())
                 ->from('noreply@snowtricks.com')
                 ->to($user->getEmail())
@@ -100,7 +110,10 @@ class RegistrationController extends AbstractController
 
             $mailer->send($email);
 
-            $this->addFlash('success', 'Un email contenant un nouveau lien de validation vous a été envoyé.');
+            $this->addFlash(
+                'success',
+                "Un email contenant un nouveau lien de validation vous a été envoyé."
+            );
 
             return $this->redirectToRoute('app_login');
 
@@ -121,7 +134,23 @@ class RegistrationController extends AbstractController
         $confirmEmailRequest = $confirmEmailManager->findOneByUuid($uuid);
 
         if (!$user || !$confirmEmailRequest) {
-            $this->addFlash('danger', "Votre compte n'a pas pu être activé car la requête est invalide. Veuillez réessayer.");
+            $this->addFlash(
+                'danger',
+                "Votre compte n'a pas pu être activé car la requête est invalide. Veuillez en demander une nouvelle en vous connectant à votre compte."
+            );
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Check expiration datetime
+        $now = new \DateTimeImmutable('now');
+        $expireDate = $confirmEmailRequest->getExpiresAt();
+
+        if ($now > $expireDate) {
+            $confirmEmailManager->delete($confirmEmailRequest);
+            $this->addFlash(
+                'danger',
+                "Cette requête a expirée. Veuillez en demander une nouvelle en vous connectant à votre compte."
+            );
             return $this->redirectToRoute('app_login');
         }
 
@@ -131,7 +160,10 @@ class RegistrationController extends AbstractController
         $user->setIsVerified(true);
         $userManager->add($user);
 
-        $this->addFlash('success', "Votre adresse email à été vérifiée avec succès. Connectez-vous afin de profiter de l'ensemble des fonctionnalités du site ! :)");
+        $this->addFlash(
+            'success',
+            "Votre adresse email à été vérifiée avec succès. Connectez-vous afin de profiter de l'ensemble des fonctionnalités du site ! :)"
+        );
 
         return $this->redirectToRoute('app_login');
     }
