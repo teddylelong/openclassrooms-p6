@@ -18,11 +18,19 @@ class FigureVoter extends Voter
 
     private $security;
 
+    /**
+     * @param Security $security
+     */
     public function __construct(Security $security)
     {
         $this->security = $security;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @return bool
+     */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
@@ -31,6 +39,12 @@ class FigureVoter extends Voter
             && $subject instanceof \App\Entity\Figure;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -57,6 +71,11 @@ class FigureVoter extends Voter
         return false;
     }
 
+    /**
+     * @param Figure $figure
+     * @param User $user
+     * @return bool
+     */
     private function canView(Figure $figure, User $user): bool
     {
         if ($figure->getStatus() == Figure::STATUS_ACCEPTED) {
@@ -74,6 +93,9 @@ class FigureVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canEdit(): bool
     {
         if ($this->security->isGranted('ROLE_USER')) {
@@ -82,6 +104,9 @@ class FigureVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canDelete(): bool
     {
         if ($this->security->isGranted('ROLE_USER')) {
@@ -90,6 +115,9 @@ class FigureVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canUpdate(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {

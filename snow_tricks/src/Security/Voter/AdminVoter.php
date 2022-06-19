@@ -12,11 +12,19 @@ class AdminVoter extends Voter
 {
     public const VIEW = 'ADMIN_VIEW';
 
+    /**
+     * @param Security $security
+     */
     public function __construct(Security $security)
     {
         $this->security = $security;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @return bool
+     */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
@@ -24,6 +32,12 @@ class AdminVoter extends Voter
         return in_array($attribute, [self::VIEW]);
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -41,6 +55,9 @@ class AdminVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canView(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {

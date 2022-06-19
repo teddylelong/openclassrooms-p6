@@ -9,6 +9,9 @@ class FigureImagesManager
 {
     private $imagesRepository;
 
+    /**
+     * @param FigureImagesRepository $imagesRepository
+     */
     public function __construct(FigureImagesRepository $imagesRepository)
     {
         $this->imagesRepository = $imagesRepository;

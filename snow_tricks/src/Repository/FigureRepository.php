@@ -19,6 +19,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FigureRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Figure::class);
@@ -36,6 +39,12 @@ class FigureRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $status
+     * @return float|int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countAllByStatus($status = Figure::STATUS_ACCEPTED)
     {
         return $this->createQueryBuilder('f')
@@ -47,6 +56,13 @@ class FigureRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @param Category $category
+     * @param $status
+     * @return float|int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countAllByStatusAndCategory(Category $category, $status = Figure::STATUS_ACCEPTED)
     {
         return $this->createQueryBuilder('f')
@@ -73,6 +89,9 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $status
+     * @param int $max
+     * @param int $offset
      * @return Figure[] Returns an array of Figure objects
      */
     public function findByStatusOrderByDateLimit($status = Figure::STATUS_ACCEPTED, int $max = 12, int $offset = 0)
@@ -89,6 +108,7 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $status
      * @return Figure[] Returns an array of Figure objects
      */
     public function findByStatusOrderByDate($status = Figure::STATUS_ACCEPTED)
@@ -103,9 +123,10 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param Category $category
      * @return Figure[] Returns an array of Figure objects
      */
-    public function findAllByCategoryOrderByDate($category)
+    public function findAllByCategoryOrderByDate(Category $category)
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.category = :cat')
@@ -117,6 +138,10 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param Category $category
+     * @param $status
+     * @param int $max
+     * @param int $offset
      * @return Figure[] Returns an array of Figure objects
      */
     public function findAllByStatusAndCategoryOrderByDateLimit(Category $category, $status = Figure::STATUS_ACCEPTED, int $max = 12, int $offset = 0)
@@ -135,8 +160,9 @@ class FigureRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Figure $entity
+     * @param bool $flush
+     * @return void
      */
     public function remove(Figure $entity, bool $flush = true): void
     {
@@ -145,33 +171,4 @@ class FigureRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
-
-    // /**
-    //  * @return Figure[] Returns an array of Figure objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Figure
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

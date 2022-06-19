@@ -10,16 +10,27 @@ class CategoryEntityListener
 {
     private $slugger;
 
+    /**
+     * @param SluggerInterface $slugger
+     */
     public function __construct(SluggerInterface $slugger)
     {
         $this->slugger = $slugger;
     }
 
+    /**
+     * @param Category $category
+     * @return void
+     */
     public function prePersist(Category $category)
     {
         $category->computeSlug($this->slugger);
     }
 
+    /**
+     * @param Category $category
+     * @return void
+     */
     public function preUpdate(Category $category)
     {
         $category->computeSlug($this->slugger);

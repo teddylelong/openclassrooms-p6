@@ -10,6 +10,9 @@ class FigureManager
 {
     private $figureRepository;
 
+    /**
+     * @param FigureRepository $figureRepository
+     */
     public function __construct(FigureRepository $figureRepository)
     {
         $this->figureRepository = $figureRepository;
@@ -26,11 +29,24 @@ class FigureManager
         $this->figureRepository->add($figure);
     }
 
+    /**
+     * @param $status
+     * @return float|int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countAllByStatus($status = Figure::STATUS_ACCEPTED)
     {
         return $this->figureRepository->countAllByStatus($status);
     }
 
+    /**
+     * @param Category $category
+     * @param $status
+     * @return float|int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countAllByStatusAndCategory(Category $category, $status = Figure::STATUS_ACCEPTED)
     {
         return $this->figureRepository->countAllByStatusAndCategory($category, $status);

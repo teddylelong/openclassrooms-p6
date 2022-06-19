@@ -10,6 +10,9 @@ class ConfirmUserEmailRequestManager
 {
     private $repository;
 
+    /**
+     * @param ConfirmUserEmailRequestRepository $confirmEmailRepository
+     */
     public function __construct(ConfirmUserEmailRequestRepository $confirmEmailRepository)
     {
         $this->repository = $confirmEmailRepository;

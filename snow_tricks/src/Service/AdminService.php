@@ -9,12 +9,19 @@ class AdminService
     private $commentManager;
     private $figureManager;
 
+    /**
+     * @param CommentManager $commentManager
+     * @param FigureManager $figureManager
+     */
     public function __construct(CommentManager $commentManager, FigureManager $figureManager)
     {
         $this->commentManager = $commentManager;
         $this->figureManager = $figureManager;
     }
 
+    /**
+     * @return int
+     */
     public function countPendingComments(): int
     {
         $pendingCommentsCount = $this->commentManager->findAllByStatus();
@@ -27,6 +34,9 @@ class AdminService
         return $count;
     }
 
+    /**
+     * @return int
+     */
     public function countPendingFigures(): int
     {
         $pendingFiguresCount = $this->figureManager->findByStatusOrderByDate(Figure::STATUS_PENDING);

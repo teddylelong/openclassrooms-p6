@@ -21,14 +21,18 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param User $entity
+     * @param bool $flush
+     * @return void
      */
     public function add(User $entity, bool $flush = true): void
     {
@@ -39,8 +43,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param User $entity
+     * @param bool $flush
+     * @return void
      */
     public function remove(User $entity, bool $flush = true): void
     {
@@ -51,7 +56,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Used to upgrade (rehash) the user's password automatically over time.
+     * @param PasswordAuthenticatedUserInterface $user
+     * @param string $newHashedPassword
+     * @return void
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
@@ -65,7 +72,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find a user by given email. Null on failure, User on success
+     * @param string $value
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByMail(string $value): ?User
     {
@@ -76,33 +85,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult()
             ;
     }
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

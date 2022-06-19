@@ -9,6 +9,9 @@ class CategoryManager
 {
     private $repository;
 
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
     public function __construct(CategoryRepository $categoryRepository)
     {
         $this->repository = $categoryRepository;

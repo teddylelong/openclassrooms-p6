@@ -14,11 +14,19 @@ class UserVoter extends Voter
 
     private $security;
 
+    /**
+     * @param Security $security
+     */
     public function __construct(Security $security)
     {
         $this->security = $security;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @return bool
+     */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
@@ -27,6 +35,12 @@ class UserVoter extends Voter
             && $subject instanceof \App\Entity\User;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -44,6 +58,10 @@ class UserVoter extends Voter
         return false;
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     private function canUpdateAvatar(User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {

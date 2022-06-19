@@ -10,6 +10,9 @@ class ResetUserPasswordRequestManager
 {
     private $repository;
 
+    /**
+     * @param ResetUserPasswordRequestRepository $repository
+     */
     public function __construct(ResetUserPasswordRequestRepository $repository)
     {
         $this->repository = $repository;
@@ -25,6 +28,11 @@ class ResetUserPasswordRequestManager
         return $this->repository->findOneByUuid($uuid);
     }
 
+    /**
+     * @param User $user
+     * @return ResetUserPasswordRequest|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findOneByUser(User $user): ?ResetUserPasswordRequest
     {
         return $this->repository->findOneByUser($user);

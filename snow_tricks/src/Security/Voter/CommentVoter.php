@@ -14,11 +14,19 @@ class CommentVoter extends Voter
     public const DELETE = 'COMMENT_DELETE';
     public const UPDATE = 'COMMENT_UPDATE';
 
+    /**
+     * @param Security $security
+     */
     public function __construct(Security $security)
     {
         $this->security = $security;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @return bool
+     */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
@@ -27,6 +35,12 @@ class CommentVoter extends Voter
             && $subject instanceof \App\Entity\Comment;
     }
 
+    /**
+     * @param string $attribute
+     * @param $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -49,6 +63,9 @@ class CommentVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canDelete(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -60,6 +77,9 @@ class CommentVoter extends Voter
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function canUpdate(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {

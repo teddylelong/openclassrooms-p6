@@ -9,6 +9,9 @@ class UserManager
 {
     private $userRepository;
 
+    /**
+     * @param UserRepository $userRepository
+     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -26,6 +29,10 @@ class UserManager
         $this->userRepository->add($user);
     }
 
+    /**
+     * @param $id
+     * @return User|null
+     */
     public function find($id)
     {
         return $this->userRepository->find($id);
@@ -43,6 +50,10 @@ class UserManager
 
     /**
      * Find a User by one given criteria
+     *
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @return User|null
      */
     public function findOneBy(array $criteria, array $orderBy = null)
     {
@@ -51,6 +62,10 @@ class UserManager
 
     /**
      * Find a user by given email. Null on failure, User on success
+     *
+     * @param string $value
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByMail(string $value): ?User
     {
@@ -59,6 +74,9 @@ class UserManager
 
     /**
      * Delete a User in database
+     *
+     * @param User $user
+     * @return void
      */
     public function delete(User $user)
     {

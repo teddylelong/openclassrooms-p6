@@ -15,12 +15,19 @@ class AccessDeniedListener implements EventSubscriberInterface
     private RouterInterface $router;
     private $security;
 
+    /**
+     * @param RouterInterface $router
+     * @param Security $security
+     */
     public function __construct(RouterInterface $router, Security $security)
     {
         $this->router = $router;
         $this->security = $security;
     }
 
+    /**
+     * @return array[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -31,6 +38,10 @@ class AccessDeniedListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param ExceptionEvent $event
+     * @return void
+     */
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
@@ -38,7 +49,6 @@ class AccessDeniedListener implements EventSubscriberInterface
             return;
         }
 
-        // ... perform some action (e.g. logging)
         $request = $event->getRequest();
 
         $user = $this->security->getUser();
@@ -50,13 +60,9 @@ class AccessDeniedListener implements EventSubscriberInterface
 
         $request->getSession()->getFlashBag()->add('danger', $message);
 
-        // optionally set the custom response
         $response = new RedirectResponse(
             $this->router->generate('app_login')
         );
         $event->setResponse($response);
-
-        // or stop propagation (prevents the next exception listeners from being called)
-        //$event->stopPropagation();
     }
 }
