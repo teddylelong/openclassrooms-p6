@@ -66,11 +66,10 @@ class Category
      */
     private $is_default;
 
-    /* @TODO: créer des fixtures */
-
     public function __construct()
     {
         $this->figure = new ArrayCollection();
+        $this->setIsDefault(0);
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
     }
