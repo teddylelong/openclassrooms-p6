@@ -61,8 +61,6 @@ class Category
      */
     private $slug;
 
-    /* @TODO: annotations sur méthodes */
-    /* @TODO: créer catégory par défaut + assignation automatique lorsque supprimée */
     /* @TODO: gestion des espaces dans name (assert) */
     /* @TODO: créer des fixtures */
 

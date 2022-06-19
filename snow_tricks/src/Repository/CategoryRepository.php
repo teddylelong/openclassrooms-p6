@@ -39,12 +39,38 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Category|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getDefaultCategory(): ?Category
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id = :id')
+            ->setParameter('id', 0)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
      * @return Category[] Returns an array of Category objects
      */
     public function findAllOrderByName()
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Category[] Returns an array of Category objects
+     */
+    public function findAllOrderById()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult()
             ;

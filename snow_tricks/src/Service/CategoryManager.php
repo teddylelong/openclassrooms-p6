@@ -31,6 +31,15 @@ class CategoryManager
     }
 
     /**
+     * @return Category|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getDefaultCategory(): ?Category
+    {
+        return $this->repository->getDefaultCategory();
+    }
+
+    /**
      * Find all categories in DB
      *
      * @return array|null
@@ -48,6 +57,14 @@ class CategoryManager
     public function findAllOrderByName(): ?array
     {
         return $this->repository->findAllOrderByName();
+    }
+
+    /**
+     * @return array|null
+     */
+    public function findAllOrderById(): ?array
+    {
+        return $this->repository->findAllOrderById();
     }
 
     /**

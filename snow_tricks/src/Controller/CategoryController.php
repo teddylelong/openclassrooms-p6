@@ -21,7 +21,7 @@ class CategoryController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryManager->findAllOrderByName(),
+            'categories' => $categoryManager->findAllOrderById(),
         ]);
     }
 
@@ -81,6 +81,11 @@ class CategoryController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        if ($category->getId() === 0) {
+            $this->addFlash('danger', "Vous ne pouvez pas supprimer la catégorie par défaut.");
+            return $this->redirectToRoute('app_category');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
 
             // Set all figures in this category to null category (unclassified)
@@ -88,7 +93,7 @@ class CategoryController extends AbstractController
 
             if ($figures) {
                 foreach ($figures as $figure ) {
-                    $figure->setCategory(null);
+                    $figure->setCategory($categoryManager->getDefaultCategory());
                     $figureManager->add($figure);
                 }
             }
