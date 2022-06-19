@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ConfirmUserEmailRequestRepository;
+use App\Repository\ResetUserPasswordRequestRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @ORM\Entity(repositoryClass=ConfirmUserEmailRequestRepository::class)
+ * @ORM\Entity(repositoryClass=ResetUserPasswordRequestRepository::class)
  */
-class ConfirmUserEmailRequest
+class ResetUserPasswordRequest
 {
     /**
      * @ORM\Id

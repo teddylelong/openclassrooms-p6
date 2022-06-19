@@ -109,7 +109,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/activate/{id?null}-{uuid?null}", name="app_activate_account", methods={"GET"})
+     * @Route("/activate/{id}-{uuid}", name="app_activate_account", methods={"GET"})
      */
     public function activate(Request $request, UserManager $userManager, ConfirmUserEmailRequestManager $confirmEmailManager): Response
     {
