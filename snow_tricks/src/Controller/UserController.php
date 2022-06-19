@@ -7,6 +7,7 @@ use App\Form\UserAvatarType;
 use App\Form\UserType;
 use App\Security\Voter\AdminVoter;
 use App\Security\Voter\UserVoter;
+use App\Service\FigureManager;
 use App\Service\FileUploader;
 use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -157,7 +158,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/delete/{id<\d+>}", name="app_user_delete", methods={"POST"})
      */
-    public function delete(Request $request, User $user, UserManager $userManager): Response
+    public function delete(Request $request, User $user, UserManager $userManager, FigureManager $figureManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -168,6 +169,16 @@ class UserController extends AbstractController
                 $this->addFlash('danger', "Vous ne pouvez pas vous supprimer vous-même...");
                 return $this->redirectToRoute('app_user_index');
             }
+
+            // Get all user's figures and set author to null
+            $figures = $user->getFigures();
+            if ($figures) {
+                foreach ($figures as $figure ) {
+                    $figure->setUser(null);
+                    $figureManager->add($figure);
+                }
+            }
+
             $userManager->delete($user);
             $this->addFlash('success', "L'utilisateur a été supprimé avec succès !");
         }

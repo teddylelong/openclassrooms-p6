@@ -79,7 +79,7 @@ class Figure
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\Type("App\Entity\User")
      */
     private $user;
