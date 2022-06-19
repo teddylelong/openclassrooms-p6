@@ -11,6 +11,8 @@ use Symfony\Component\Uid\Uuid;
  */
 class ResetUserPasswordRequest
 {
+    const EXPIRATION_HOUR = 'PT1H';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -29,6 +31,11 @@ class ResetUserPasswordRequest
     private $created_at;
 
     /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $expires_at;
+
+    /**
      * @ORM\OneToOne(targetEntity=User::class, cascade={"persist"})
      */
     private $user;
@@ -37,6 +44,7 @@ class ResetUserPasswordRequest
     {
         $this->setUuid(Uuid::v6());
         $this->setCreatedAt(new \DateTimeImmutable());
+        $this->setExpiresAt($this->getCreatedAt()->add(new \DateInterval(self::EXPIRATION_HOUR)));
     }
 
     /**
@@ -100,6 +108,18 @@ class ResetUserPasswordRequest
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expires_at;
+    }
+
+    public function setExpiresAt(\DateTimeImmutable $expires_at): self
+    {
+        $this->expires_at = $expires_at;
 
         return $this;
     }
