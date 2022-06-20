@@ -1,7 +1,5 @@
 <?php
 
-/* @TODO: Fixtures comment + tests */
-
 namespace App\DataFixtures;
 
 use App\Entity\FigureImages;

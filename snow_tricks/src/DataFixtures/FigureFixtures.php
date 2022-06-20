@@ -39,7 +39,6 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
                 ->setStatus(Figure::STATUS_ACCEPTED)
                 ->setUser($this->getReference($userRef[$user]))
                 ->setCategory($this->getReference($categoryRef[$cat]))
-                ->setCreatedAt($faker->dateTime());
             ;
             $this->addReference('figure-'.$i, $figure);
 
