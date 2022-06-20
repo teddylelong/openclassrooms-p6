@@ -4,7 +4,14 @@ Développez de A à Z le site communautaire SnowTricks
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8d0751cb175e4103be8b02766326d85d)](https://www.codacy.com/gh/teddylelong/openclassrooms-p6/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=teddylelong/openclassrooms-p6&amp;utm_campaign=Badge_Grade)
 
-Ce dépot est un projet étudiant en cours de réalisation dans le cadre de ma formation *Développeur d'Applications PHP/Symfony*.
+Ce dépot est un projet étudiant en cours de réalisation dans le cadre de ma formation *Développeur d'Applications PHP/Symfony* avec OpenClassrooms.
+
+## Arborescence du projet
+
+Trois dossiers se trouvent à la racine du projet :
+- `php` : Lié à Docker - contient le fichier de configuration vhost, recommandé par Symfony
+- `snow_tricks` : Dossier racine du projet web
+- `uml` : Contient l'ensemble des diagrammes UML relatifs au projet
 
 
 ## Comment l'installer ?
@@ -13,6 +20,7 @@ Ce dépot est un projet étudiant en cours de réalisation dans le cadre de ma f
 
 - Installez [Docker](https://docs.docker.com/get-docker/)
 - Installez [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (pour utiliser NPM)
+- Installez [Composer](https://getcomposer.org/download/)
 
 
 ### 1. Clonez le projet 
@@ -54,18 +62,16 @@ cd {chemin/vers/le/projet/}openclassrooms-p6/
 docker-compose up
 ```
 
-### 4. Mise en place de la base de données
+### 4. Mise en place des Fixtures
 
-Une fois l'initialisation terminée, rendez-vous sur http://localhost:8080.
+Une fois l'initialisation terminée, lancez la commande suivante afin de charger un jeu
+d'enregistrements fictifs (Fixtures) :
 
-Utilisez le nom d'utilisateur `root` puis laissez vide le champ du mot de passe afin de
-vous connecter.
-
-Créez ensuite une nouvelle base de données avec comme nom `snowtricks` et comme interclassement
-`utf8mb4_unicode_ci`.
-
-Depuis cette base de données, cliquez ensuite sur "Importer", puis sous "Fichier à importer" 
-sélectionnez le fichier `snowtricks.sql` situé à la racine du projet.
+```
+cd {chemin/vers/le/projet}/openclassrooms-p6/snow_tricks/
+php bin/console doctrine:fixtures:load
+```
+L'opération peut durer plus d'une minute.
 
 ### Fin de l'installation
 
@@ -73,19 +79,18 @@ Le projet est à présent installé !
 
 - Vous devriez pouvoir le tester en vous rendant sur http://localhost:8000. 
 - Accédez à PHPMyAdmin via http://localhost:8080 
-- Consultez les emails envoyés et reçus avec l'aide
-de MailDev via http://localhost:8081.
+- Consultez les emails reçus avec l'aide de MailDev via http://localhost:8081.
 
 ## Comptes utilisateurs
 
 Afin de pouvoir tester le site-web et ses fonctionnalités, sont mis à disposition trois comptes utilisateurs
 qui disposent chacun d'un rôle différent. Utilisez-les comme bon vous semble.
 
-Rendez-vous sur la [page de connexion du projet](◊http://localhost:8000/login) et saisissez l'un des
+Rendez-vous sur la [page de connexion du projet](http://localhost:8000/login) et saisissez l'un des
 identifiants ci-dessous :
 
 | Nom d'utilisateur | Mot de passe | Rôle       |
 |-------------------|--------------|------------|
-| Admin             | 12345678     | ROLE_ADMIN |
-| Modo              | 12345678     | ROLE_MODO  |
-| User              | 12345678     | ROLE_USER  |
+| admin             | admin        | ROLE_ADMIN |
+| modo              | modo         | ROLE_MODO  |
+| user              | user         | ROLE_USER  |
