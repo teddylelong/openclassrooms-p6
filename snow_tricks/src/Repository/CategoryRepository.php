@@ -45,8 +45,8 @@ class CategoryRepository extends ServiceEntityRepository
     public function getDefaultCategory(): ?Category
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.id = :id')
-            ->setParameter('id', 0)
+            ->andWhere('c.is_default = :default')
+            ->setParameter('default', 1)
             ->getQuery()
             ->getOneOrNullResult()
             ;

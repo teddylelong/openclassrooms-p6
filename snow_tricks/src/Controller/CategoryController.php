@@ -81,8 +81,8 @@ class CategoryController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        if ($category->getId() === 0) {
-            $this->addFlash('danger', "Vous ne pouvez pas supprimer la catégorie par défaut.");
+        if ($category->getIsDefault()) {
+            $this->addFlash('danger', "Vous ne pouvez pas supprimer cette catégorie.");
             return $this->redirectToRoute('app_category');
         }
 

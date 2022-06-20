@@ -61,11 +61,15 @@ class Category
      */
     private $slug;
 
-    /* @TODO: créer des fixtures */
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $is_default;
 
     public function __construct()
     {
         $this->figure = new ArrayCollection();
+        $this->setIsDefault(0);
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->setUpdatedAt(new \DateTimeImmutable());
     }
@@ -199,6 +203,18 @@ class Category
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getIsDefault(): ?bool
+    {
+        return $this->is_default;
+    }
+
+    public function setIsDefault(bool $is_default): self
+    {
+        $this->is_default = $is_default;
 
         return $this;
     }
