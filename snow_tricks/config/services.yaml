@@ -36,3 +36,7 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%images_directory%'
+
+    App\DataFixtures\FigureImagesFixtures:
+        arguments:
+            $targetDirectory: '%images_directory%'

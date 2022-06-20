@@ -20,18 +20,28 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
             'user',
         ];
 
-        for ($i = 0; $i < 20; $i++) {
+        $categoryRef = [
+            'nonClasse',
+            'debutant',
+            'intermediaire',
+            'avance',
+            'expert',
+        ];
+
+        for ($i = 0; $i < 60; $i++) {
 
             $user = array_rand($userRef);
+            $cat = array_rand($categoryRef);
 
             $figure = (new Figure())
-                ->setName(ucfirst($faker->unique()->words(2, true)))
-                ->setSlug($faker->unique()->slug(2))
-                ->setDescription($faker->paragraphs(5, true))
+                ->setName(ucfirst($faker->unique()->words(mt_rand(1, 3), true)))
+                ->setDescription($faker->paragraphs(mt_rand(4, 8), true))
                 ->setStatus(Figure::STATUS_ACCEPTED)
                 ->setUser($this->getReference($userRef[$user]))
-                ->setCategory(null)
+                ->setCategory($this->getReference($categoryRef[$cat]))
+                ->setCreatedAt($faker->dateTime());
             ;
+            $this->addReference('figure-'.$i, $figure);
 
             $manager->persist($figure);
         }
@@ -43,7 +53,7 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             CategoryFixtures::class,
-            UserFixtures::class
+            UserFixtures::class,
         ];
     }
 }
