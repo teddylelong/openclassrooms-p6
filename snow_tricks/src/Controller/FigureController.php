@@ -38,7 +38,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/loadmore/{page<\d+>?1}", name="app_loadmore", condition="request.isXmlHttpRequest()", methods={"GET"})
+     * @Route("/loadmore/{page<\d+>?1}", name="app_loadmore", methods={"GET"})
      */
     public function loadMore(FigureManager $figureManager, int $page = 1): Response
     {
