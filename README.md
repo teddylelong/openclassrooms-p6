@@ -76,7 +76,7 @@ pratiques. Éxecutez donc les commandes suivantes afin d'initialiser la base de 
 ```
 docker exec -it st_www bash
 cd snow_tricks/
-php bin/console doctrine:create:database
+php bin/console doctrine:database:create
 php bin/console doctrine:migration:migrate
 ```
 Validez en saisissant « y ». La base de données est à présent prête !
