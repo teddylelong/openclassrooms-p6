@@ -33,15 +33,13 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
             $user = array_rand($userRef);
             $cat = array_rand($categoryRef);
 
-            $dt = (new \DateTimeImmutable)::createFromMutable($faker->dateTimeBetween('-1 month'));
-
             $figure = (new Figure())
                 ->setName(ucfirst($faker->unique()->words(mt_rand(1, 3), true)))
                 ->setDescription($faker->paragraphs(mt_rand(4, 8), true))
                 ->setStatus(Figure::STATUS_ACCEPTED)
                 ->setUser($this->getReference($userRef[$user]))
                 ->setCategory($this->getReference($categoryRef[$cat]))
-                ->setCreatedAt($dt);
+                ->setCreatedAt((new \DateTimeImmutable)::createFromMutable($faker->dateTimeBetween('-1 month')));
             ;
             $this->addReference('figure-'.$i, $figure);
 

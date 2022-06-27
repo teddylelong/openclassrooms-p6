@@ -121,11 +121,14 @@ class Figure
     }
 
     /**
+     * This function is called by FigureEntityListener
+     *
      * @param SluggerInterface $slugger
      * @return void
      */
     public function computeSlug(SluggerInterface $slugger): void
     {
+        // When adding a Figure, the slug is required. So we need a non-empty value (like "-") that tells the application that we want the slug to be generated automatically :
         if (!$this->getSlug() || '-' === $this->getSlug()) {
             $this->setSlug($slugger->slug($this->getName())->lower());
         }

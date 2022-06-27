@@ -75,11 +75,15 @@ class Category
     }
 
     /**
+     * This function is called by CategoryEntityListener
+     *
      * @param SluggerInterface $slugger
      * @return void
      */
     public function computeSlug(SluggerInterface $slugger): void
     {
+        // When adding a Category via Admin interface, the slug is required.
+        // So we need a non-empty value (like "-") that tells the application that we want the slug to be generated automatically :
         if (!$this->getSlug() || '-' === $this->getSlug()) {
             $this->setSlug($slugger->slug($this->getName())->lower());
         }

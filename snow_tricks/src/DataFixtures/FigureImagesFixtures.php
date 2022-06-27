@@ -14,9 +14,9 @@ class FigureImagesFixtures extends Fixture implements DependentFixtureInterface
     private $targetDirectory;
 
     /**
-     * @param $targetDirectory
+     * @param string $targetDirectory
      */
-    public function __construct($targetDirectory)
+    public function __construct(string $targetDirectory)
     {
         $this->targetDirectory = $targetDirectory;
     }
