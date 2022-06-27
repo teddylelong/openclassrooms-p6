@@ -53,6 +53,7 @@ cd {chemin/vers/le/projet/}openclassrooms-p6/snow_tricks/public/assets
 npm install
 ```
 
+
 ### 3. Initialisez les conteneurs Docker
 
 Depuis le dossier racine du projet, lancez la commande suivante :
@@ -62,7 +63,25 @@ cd {chemin/vers/le/projet/}openclassrooms-p6/
 docker-compose up
 ```
 
-### 4. Mise en place des Fixtures
+Afin de prévenir de potentiels problèmes de droits d'accès, éxecutez juste après cette commande :
+```
+sudo chown -R $USER ./
+```
+
+### 4. Création de la base de données
+
+Nous allons désormais lancer les commandes directement depuis le conteneur Docker, pour des raisons
+pratiques. Éxecutez donc les commandes suivantes afin d'initialiser la base de données :
+
+```
+docker exec -it st_www bash
+cd snow_tricks/
+php bin/console doctrine:create:database
+php bin/console doctrine:migration:migrate
+```
+Validez en saisissant « y ». La base de données est à présent prête !
+
+### 5. Mise en place des Fixtures
 
 Une fois l'initialisation terminée, lancez la commande suivante afin de charger un jeu
 d'enregistrements fictifs (Fixtures) :
