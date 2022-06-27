@@ -7,4 +7,6 @@
 /public/assets/node_modules
 /var/
 /vendor/
+/public/uploads/images/*
+!/public/uploads/images/.gitkeep
 ###< symfony/framework-bundle ###
