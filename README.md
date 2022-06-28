@@ -83,14 +83,13 @@ Validez en saisissant « y ». La base de données est à présent prête !
 
 ### 5. Mise en place des Fixtures
 
-Une fois l'initialisation terminée, lancez la commande suivante afin de charger un jeu
-d'enregistrements fictifs (Fixtures) :
+Une fois l'initialisation de la base de donnée terminée, toujours depuis le conteneur Docker, 
+lancez la commande suivante afin de charger un jeu d'enregistrements fictifs (Fixtures) :
 
 ```
-cd {chemin/vers/le/projet}/openclassrooms-p6/snow_tricks/
 php bin/console doctrine:fixtures:load
 ```
-L'opération peut durer plus d'une minute.
+Validez en saisissant « y ». L'opération peut durer plus d'une minute.
 
 ### Fin de l'installation
 
